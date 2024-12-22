@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { BrowserRouter as Router, Link } from 'react-router-dom';
-import General from './components/MainPage/General/General';
 import Header from './components/MainPage/Header/Header';
+import General from './components/MainPage/Page/General';
 
 const App = () => {
   const [user, setUser] = useState(null);
@@ -28,6 +28,9 @@ const App = () => {
 
     <div className="wrap">
       <div className="MainPage">
+
+        <Header />
+        <General />
 
       </div>
 

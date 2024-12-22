@@ -3,7 +3,8 @@ import './General.css'
 
 export default function General() {
   return (
-    <div>
+    <div className='general'> 
+     
       
     </div>
   )
