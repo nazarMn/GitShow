@@ -3,9 +3,17 @@ const mongoose = require('mongoose');
 const passport = require('passport');
 const GitHubStrategy = require('passport-github2').Strategy;
 const session = require('express-session');
+const helmet = require('helmet');
+const path = require('path');
+const axios = require('axios');
 require('dotenv').config();
 
 const app = express();
+
+// Безпека Helmet
+app.use(helmet({
+  contentSecurityPolicy: false,
+}));
 
 // MongoDB модель користувача
 const UserSchema = new mongoose.Schema({
@@ -13,8 +21,80 @@ const UserSchema = new mongoose.Schema({
   username: String,
   profileUrl: String,
   apiKey: String,
+  firstName: String,
+  lastName: String,
+  email: { type: String, unique: true },
+  avatar: String,
+  isActive: { type: Boolean, default: true },
+  isAdmin: { type: Boolean, default: false },
+  theme: { type: String, enum: ['light', 'dark'], default: 'light' },
+  language: { type: String, default: 'en' },
+  twitter: String,
+  facebook: String,
+  linkedin: String,
+  password: String,
+  twoFactorEnabled: { type: Boolean, default: false },
+  lastLogin: { type: Date },
+  ipAddress: String,
+  notificationsEnabled: { type: Boolean, default: true },
+  privacySettings: { type: Object, default: {} },
+  githubProjects: [
+    {
+      repoName: String, // Назва репозиторію
+      repoUrl: String, // Посилання на репозиторій
+      stars: { type: Number, default: 0 }, // Кількість зірок
+      forks: { type: Number, default: 0 }, // Кількість форків
+      description: String, // Опис репозиторію
+      language: String, // Мова програмування
+    }
+  ],
+  createdAt: { type: Date, default: Date.now },
+  updatedAt: { type: Date, default: Date.now },
+  projects: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Project' }],
+  comments: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Comment' }],
+  likes: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Like' }],
+  dislikes: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Dislike' }],
+  views: [{ type: mongoose.Schema.Types.ObjectId, ref: 'View' }],
+  downloads: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Download' }],
+  bookmarks: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Bookmark' }],
+  notifications: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Notification' }],
+  messages: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Message' }],
 });
+
 const User = mongoose.model('User', UserSchema);
+
+
+
+
+
+
+
+
+
+
+async function getGitHubProjects(githubUsername) {
+  try {
+    const response = await axios.get(`https://api.github.com/users/${githubUsername}/repos`);
+    return response.data.map(repo => ({
+      repoName: repo.name,
+      repoUrl: repo.html_url,
+      stars: repo.stargazers_count,
+      forks: repo.forks_count,
+      description: repo.description,
+      language: repo.language,
+    }));
+  } catch (error) {
+    console.error('Error fetching GitHub projects:', error);
+    return [];
+  }
+}
+
+
+
+
+
+
+
 
 // Підключення до MongoDB
 mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
@@ -58,7 +138,14 @@ app.use(session({ secret: 'secret', resave: false, saveUninitialized: true }));
 app.use(passport.initialize());
 app.use(passport.session());
 
-// Роутери
+// Підключення статичних файлів із папки dist, яка знаходиться за директорією server
+app.use(express.static(path.join(__dirname, '..', 'dist')));
+
+// API маршрути
+app.get('/api/test', (req, res) => {
+  res.json({ message: 'API is working' });
+});
+
 app.get('/auth/github', passport.authenticate('github', { scope: ['user', 'repo'] }));
 
 app.get(
@@ -82,7 +169,13 @@ app.get('/logout', (req, res) => {
   });
 });
 
+// Усі інші маршрути відправляють index.html з папки dist
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '..', 'dist', 'index.html'));
+});
+
 // Старт сервера
-app.listen(3000, () => {
-  console.log('Server running on http://localhost:3000');
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`Server running on http://localhost:${PORT}`);
 });

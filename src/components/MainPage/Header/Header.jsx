@@ -47,8 +47,8 @@ export default function Header() {
     </div>
     <h2>Support</h2>
       
-      <FontAwesomeIcon icon={faMoon} size="2xl" />
-      <FontAwesomeIcon icon={faGithub} size="2xl" />
+      <FontAwesomeIcon icon={faMoon} size="2xl" color='#15014b' cursor={'pointer'} />
+      <FontAwesomeIcon icon={faGithub} size="2xl" color='#15014b' cursor={'pointer'} />
         
       </div>
 
