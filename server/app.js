@@ -5,176 +5,151 @@ const GitHubStrategy = require('passport-github2').Strategy;
 const session = require('express-session');
 const helmet = require('helmet');
 const path = require('path');
-const axios = require('axios');
 require('dotenv').config();
+
+const User = require('./models/User'); // User model
 
 const app = express();
 
-// Безпека Helmet
-app.use(helmet({
-  contentSecurityPolicy: false,
-}));
+// Middleware
+app.use(helmet());
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET || 'your_secret_key',
+    resave: false,
+    saveUninitialized: false,
+  })
+);
 
-// MongoDB модель користувача
-const UserSchema = new mongoose.Schema({
-  githubId: String,
-  username: String,
-  profileUrl: String,
-  apiKey: String,
-  firstName: String,
-  lastName: String,
-  email: { type: String, unique: true },
-  avatar: String,
-  isActive: { type: Boolean, default: true },
-  isAdmin: { type: Boolean, default: false },
-  theme: { type: String, enum: ['light', 'dark'], default: 'light' },
-  language: { type: String, default: 'en' },
-  twitter: String,
-  facebook: String,
-  linkedin: String,
-  password: String,
-  twoFactorEnabled: { type: Boolean, default: false },
-  lastLogin: { type: Date },
-  ipAddress: String,
-  notificationsEnabled: { type: Boolean, default: true },
-  privacySettings: { type: Object, default: {} },
-  githubProjects: [
+// Passport Configuration
+passport.use(
+  new GitHubStrategy(
     {
-      repoName: String, // Назва репозиторію
-      repoUrl: String, // Посилання на репозиторій
-      stars: { type: Number, default: 0 }, // Кількість зірок
-      forks: { type: Number, default: 0 }, // Кількість форків
-      description: String, // Опис репозиторію
-      language: String, // Мова програмування
+      clientID: process.env.GITHUB_CLIENT_ID,
+      clientSecret: process.env.GITHUB_CLIENT_SECRET,
+      callbackURL: '/auth/github/callback',
+    },
+    async (accessToken, refreshToken, profile, done) => {
+      try {
+        let user = await User.findOne({ githubId: profile.id });
+
+        // Якщо користувач не існує, створюємо нового
+        if (!user) {
+          user = new User({
+            githubId: profile.id,
+            username: profile.username,
+            name: profile.displayName || profile.username, // Зберігаємо повне ім'я
+            profileUrl: profile.profileUrl,
+            avatarUrl: profile.photos[0]?.value,
+            apiKey: accessToken,
+            location: profile._json.location || null, 
+            bio: profile._json.bio || null,
+          });
+          await user.save();
+        } else {
+          // Якщо користувач існує, оновлюємо дані
+          user.apiKey = accessToken;
+          user.name = profile.displayName || user.name; // Оновлюємо ім'я, якщо воно доступне
+          user.location = profile._json.location;
+          user.bio = profile._json.bio;
+          await user.save();
+        }
+
+        return done(null, user);
+      } catch (err) {
+        return done(err);
+      }
     }
-  ],
-  createdAt: { type: Date, default: Date.now },
-  updatedAt: { type: Date, default: Date.now },
-  projects: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Project' }],
-  comments: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Comment' }],
-  likes: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Like' }],
-  dislikes: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Dislike' }],
-  views: [{ type: mongoose.Schema.Types.ObjectId, ref: 'View' }],
-  downloads: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Download' }],
-  bookmarks: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Bookmark' }],
-  notifications: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Notification' }],
-  messages: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Message' }],
-});
+  )
+);
 
-const User = mongoose.model('User', UserSchema);
-
-
-
-
-
-
-
-
-
-
-async function getGitHubProjects(githubUsername) {
-  try {
-    const response = await axios.get(`https://api.github.com/users/${githubUsername}/repos`);
-    return response.data.map(repo => ({
-      repoName: repo.name,
-      repoUrl: repo.html_url,
-      stars: repo.stargazers_count,
-      forks: repo.forks_count,
-      description: repo.description,
-      language: repo.language,
-    }));
-  } catch (error) {
-    console.error('Error fetching GitHub projects:', error);
-    return [];
-  }
-}
-
-
-
-
-
-
-
-
-// Підключення до MongoDB
-mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
-  .then(() => console.log('MongoDB Connected'))
-  .catch(err => console.log(err));
-
-// Налаштування Passport
-passport.use(new GitHubStrategy({
-  clientID: process.env.GITHUB_CLIENT_ID,
-  clientSecret: process.env.GITHUB_CLIENT_SECRET,
-  callbackURL: 'http://localhost:3000/auth/github/callback',
-},
-async (accessToken, refreshToken, profile, done) => {
-  try {
-    let user = await User.findOne({ githubId: profile.id });
-    if (!user) {
-      user = await User.create({
-        githubId: profile.id,
-        username: profile.username,
-        profileUrl: profile.profileUrl,
-        apiKey: accessToken,
-      });
-    }
-    done(null, user);
-  } catch (err) {
-    done(err, null);
-  }
-}));
 
 passport.serializeUser((user, done) => {
   done(null, user.id);
 });
 
 passport.deserializeUser(async (id, done) => {
-  const user = await User.findById(id);
-  done(null, user);
+  try {
+    const user = await User.findById(id);
+    done(null, user);
+  } catch (err) {
+    done(err);
+  }
 });
 
-// Сесії
-app.use(session({ secret: 'secret', resave: false, saveUninitialized: true }));
 app.use(passport.initialize());
 app.use(passport.session());
 
-// Підключення статичних файлів із папки dist, яка знаходиться за директорією server
-app.use(express.static(path.join(__dirname, '..', 'dist')));
+// MongoDB Connection
+mongoose
+  .connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
+  .then(() => console.log('MongoDB Connected'))
+  .catch((err) => console.log(err));
 
-// API маршрути
-app.get('/api/test', (req, res) => {
-  res.json({ message: 'API is working' });
-});
+// Authentication Middleware
+const ensureAuthenticated = (req, res, next) => {
+  if (req.isAuthenticated()) {
+    return next();
+  }
+  res.status(401).json({ message: 'Unauthorized' });
+};
 
-app.get('/auth/github', passport.authenticate('github', { scope: ['user', 'repo'] }));
+// Routes
+app.get('/auth/github', passport.authenticate('github', { scope: ['user:email'] }));
 
 app.get(
   '/auth/github/callback',
   passport.authenticate('github', { failureRedirect: '/' }),
   (req, res) => {
-    res.redirect('/profile');
+    res.redirect('/home'); // Redirect to React app home
   }
 );
 
-app.get('/profile', (req, res) => {
-  if (!req.isAuthenticated()) {
-    return res.redirect('/');
-  }
-  res.json(req.user);
-});
-
 app.get('/logout', (req, res) => {
-  req.logout(() => {
+  req.logout(err => {
+    if (err) return next(err);
     res.redirect('/');
   });
 });
 
-// Усі інші маршрути відправляють index.html з папки dist
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '..', 'dist', 'index.html'));
+app.get('/api/user', ensureAuthenticated, (req, res) => {
+  res.json({
+    username: req.user.username,
+    name: req.user.name,  // Відправляємо повне ім'я
+    profileUrl: req.user.profileUrl,
+    avatarUrl: req.user.avatarUrl,
+    apiKey: req.user.apiKey, // Відправляємо GitHub токен
+    location: req.user.location,
+    bio: req.user.bio
+  });
 });
 
-// Старт сервера
+
+
+
+
+app.use(
+  helmet({
+    contentSecurityPolicy: {
+      directives: {
+        defaultSrc: ["'self'"],
+        imgSrc: ["'self'", 'data:', 'https://avatars.githubusercontent.com'], // Додано джерело аватарок
+      },
+    },
+  })
+);
+
+
+// Serve React App
+app.use(express.static(path.join(__dirname, '..', 'dist')));
+
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../dist/index.html'));
+});
+
+// Start Server
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
