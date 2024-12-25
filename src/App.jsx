@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-d
 import General from './components/MainPage/Page/General';
 import Header from './components/MainPage/Header/Header';
 import Home from './components/HomePage/Home/Home';
-import Portfolio from './components/HomePage/Portfolio/Portfolio';
+import Portfolio from './components/HomePage/PortfolioPage/Portfolio/Portfolio';
 
 const App = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(null);

@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const UserSchema = new mongoose.Schema({
   githubId: { type: String, required: true },
   username: { type: String, required: true },
-  name: { type: String },  // Додаємо повне ім'я
+  name: { type: String },
   profileUrl: { type: String },
   avatarUrl: { type: String },
   apiKey: { type: String },

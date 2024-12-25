@@ -1,5 +1,6 @@
 import React from 'react'
 import './Portfolio.css'
+import PortfolioWorks from '../PortfolioWorks/PortfolioWorks'
 
 export default function Portfolio() {
   return (
@@ -11,6 +12,8 @@ export default function Portfolio() {
 
         </div>
         <div className="portfolioBottom">
+
+            <PortfolioWorks />
 
         </div>
 
