@@ -4,6 +4,7 @@ import General from './components/MainPage/Page/General';
 import Header from './components/MainPage/Header/Header';
 import Home from './components/HomePage/Home/Home';
 import Portfolio from './components/HomePage/PortfolioPage/Portfolio/Portfolio';
+import AccountSettings from './components/HomePage/Setting/AccountSettings/AccountSettings';
 
 const App = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(null);
@@ -37,6 +38,7 @@ const App = () => {
               <>
                 <Header />
                 <General />
+                
               </>
             )
           }
@@ -45,7 +47,7 @@ const App = () => {
         <Route
           path="/home"
           element={
-            isAuthenticated ?<> <Home /> <Portfolio /> </> : <Navigate to="/" replace />
+            isAuthenticated ?<> <Home /> <Portfolio /> <AccountSettings /> </> : <Navigate to="/" replace />
           }
         />
       </Routes>
