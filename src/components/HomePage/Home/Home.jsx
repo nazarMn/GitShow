@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBars, faP } from '@fortawesome/free-solid-svg-icons';
-import {faPen} from '@fortawesome/free-solid-svg-icons'
-import {faLocationDot} from '@fortawesome/free-solid-svg-icons'
+import { faBars, faCog, faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
+import { faLocationDot } from '@fortawesome/free-solid-svg-icons';
 import './Home.css';
+
 export default function Home() {
   const [user, setUser] = useState(null);
+  const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
     fetch('/api/user')
@@ -16,10 +17,13 @@ export default function Home() {
       })
       .catch(() => setUser(null));
   }, []);
-  
 
   const handleLogout = () => {
     window.location.href = '/logout';
+  };
+
+  const toggleMenu = () => {
+    setMenuOpen(!menuOpen);
   };
 
   if (!user) return <p>Loading...</p>;
@@ -27,31 +31,40 @@ export default function Home() {
   return (
     <div className="home">
       <div className="homeTop">
-        <FontAwesomeIcon icon={faBars} size="2xl" color='#fff' cursor={'pointer'} />
-        
-
-
+        <div className="menuWrapper">
+          <FontAwesomeIcon
+            icon={faBars}
+            size="2xl"
+            color="#fff"
+            cursor="pointer"
+            onClick={toggleMenu}
+          />
+          {menuOpen && (
+            <div className="dropdownMenu">
+              <div className="menuItem" onClick={() => alert('Open settings')}>
+                <FontAwesomeIcon icon={faCog} size="lg" color="#000" /> 
+              </div>
+              <div className="menuItem" onClick={handleLogout}>
+                <FontAwesomeIcon icon={faSignOutAlt} size="lg" color="#000" /> 
+              </div>
+            </div>
+          )}
+        </div>
       </div>
       <div className="homeBottom">
         <div className="homeBottomLeft">
-        <h2> {user.name} </h2>
-        <p> {user.bio}</p>
-
+          <h2>{user.name}</h2>
+          <p>{user.bio}</p>
         </div>
         <div className="homeBottomRight">
-        <img src={user.avatarUrl} alt="avatar" />
-        <h2>{user.username}</h2>
-        <div className="from"><FontAwesomeIcon icon={faLocationDot} size="lg" color='#fff' /> <p> {user.location}</p> </div>
-
+          <img src={user.avatarUrl} alt="avatar" />
+          <h2>{user.username}</h2>
+          <div className="from">
+            <FontAwesomeIcon icon={faLocationDot} size="lg" color="#fff" />{' '}
+            <p>{user.location}</p>
+          </div>
         </div>
-        
       </div>
-      {/* <h2> {user.username}!</h2>
-      
-      <p>
-        View your profile on <a href={user.profileUrl}>GitHub</a>
-      </p>
-      <button onClick={handleLogout}>Logout</button> */}
     </div>
   );
 }
