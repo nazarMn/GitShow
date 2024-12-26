@@ -10,6 +10,11 @@ const UserSchema = new mongoose.Schema({
   location: { type: String },
   bio: { type: String },
   company: { type: String },
+  email: { type: String }, // Додано email
+  instagram: { type: String },
+  twitter: { type: String },
+  facebook: { type: String },
 });
+
 
 module.exports = mongoose.model('User', UserSchema);

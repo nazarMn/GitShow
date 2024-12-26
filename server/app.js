@@ -124,41 +124,45 @@ app.get('/logout', (req, res) => {
 app.get('/api/user', ensureAuthenticated, (req, res) => {
   res.json({
     username: req.user.username,
-    name: req.user.name,  // Відправляємо повне ім'я
+    name: req.user.name,
     profileUrl: req.user.profileUrl,
     avatarUrl: req.user.avatarUrl,
-    apiKey: req.user.apiKey, // Відправляємо GitHub токен
     location: req.user.location,
     bio: req.user.bio,
-    company: req.user.Company
+    company: req.user.company,
+    email: req.user.email, // Додано email
+    instagram: req.user.instagram || '',
+    twitter: req.user.twitter || '',
+    facebook: req.user.facebook || '',
   });
 });
 
 
-
 app.put('/api/user', ensureAuthenticated, async (req, res) => {
   try {
-    const userId = req.user.id;
+    const { name, bio, company, location, email, instagram, twitter, facebook } = req.body;
 
-    const updatedData = {
-      name: req.body.name,
-      bio: req.body.bio,
-      company: req.body.company,
-      location: req.body.location,
-      email: req.body.email,
-      instagram: req.body.instagram,
-      twitter: req.body.twitter,
-      facebook: req.body.facebook,
-    };
+    const updatedUser = await User.findByIdAndUpdate(
+      req.user.id,
+      {
+        name,
+        bio,
+        company,
+        location,
+        email,
+        instagram,
+        twitter,
+        facebook,
+      },
+      { new: true }
+    );
 
-    const updatedUser = await User.findByIdAndUpdate(userId, updatedData, { new: true });
     res.json(updatedUser);
-  } catch (err) {
-    console.error(err);
+  } catch (error) {
+    console.error(error);
     res.status(500).json({ message: 'Error updating user' });
   }
 });
-
 
 
 

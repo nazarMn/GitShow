@@ -15,6 +15,7 @@ export default function AccountSettings() {
     twitter: '',
     facebook: '',
   });
+  const [errors, setErrors] = useState({});
 
   useEffect(() => {
     fetch('/api/user')
@@ -35,16 +36,54 @@ export default function AccountSettings() {
       .catch(() => setUser(null));
   }, []);
 
+  const validateField = (id, value) => {
+    let error = '';
+
+    if (id === 'instagram' && value) {
+      const instagramRegex = /^https:\/\/(www\.)?instagram\.com\/[a-zA-Z0-9_.]+\/?$/;
+      if (!instagramRegex.test(value)) {
+        error = 'Please enter a valid Instagram URL.';
+      }
+    }
+
+    if (id === 'twitter' && value) {
+      const twitterRegex = /^https:\/\/(www\.)?twitter\.com\/[a-zA-Z0-9_]+\/?$/;
+      if (!twitterRegex.test(value)) {
+        error = 'Please enter a valid Twitter URL.';
+      }
+    }
+
+    if (id === 'facebook' && value) {
+      const facebookRegex = /^https:\/\/(www\.)?facebook\.com\/[a-zA-Z0-9.]+\/?$/;
+      if (!facebookRegex.test(value)) {
+        error = 'Please enter a valid Facebook URL.';
+      }
+    }
+
+    setErrors((prevErrors) => ({
+      ...prevErrors,
+      [id]: error,
+    }));
+  };
+
   const handleInputChange = (e) => {
     const { id, value } = e.target;
     setFormData((prevData) => ({
       ...prevData,
       [id]: value,
     }));
+    validateField(id, value);
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    const hasErrors = Object.values(errors).some((error) => error);
+    if (hasErrors) {
+      alert('Please fix the errors before submitting.');
+      return;
+    }
+
     fetch('/api/user', {
       method: 'PUT',
       headers: {
@@ -141,6 +180,7 @@ export default function AccountSettings() {
                   onChange={handleInputChange}
                   placeholder="Your Instagram"
                 />
+                {errors.instagram && <p className="error">{errors.instagram}</p>}
               </div>
               <div className="social-input">
                 <FontAwesomeIcon icon={faLink} />
@@ -151,6 +191,7 @@ export default function AccountSettings() {
                   onChange={handleInputChange}
                   placeholder="Your Twitter"
                 />
+                {errors.twitter && <p className="error">{errors.twitter}</p>}
               </div>
               <div className="social-input">
                 <FontAwesomeIcon icon={faLink} />
@@ -161,6 +202,7 @@ export default function AccountSettings() {
                   onChange={handleInputChange}
                   placeholder="Your Facebook"
                 />
+                {errors.facebook && <p className="error">{errors.facebook}</p>}
               </div>
             </div>
             <button type="submit" className="btn-save">
