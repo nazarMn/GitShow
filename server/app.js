@@ -23,7 +23,6 @@ app.use(
   })
 );
 
-// Passport Configuration
 passport.use(
   new GitHubStrategy(
     {
@@ -35,26 +34,34 @@ passport.use(
       try {
         let user = await User.findOne({ githubId: profile.id });
 
-        // Якщо користувач не існує, створюємо нового
         if (!user) {
+          // Створення нового користувача, якщо його немає в базі
           user = new User({
             githubId: profile.id,
             username: profile.username,
-            name: profile.displayName || profile.username, // Зберігаємо повне ім'я
+            name: profile.displayName || profile.username,
             profileUrl: profile.profileUrl,
             avatarUrl: profile.photos[0]?.value,
             apiKey: accessToken,
-            location: profile._json.location || null, 
-            bio: profile._json.bio || null,
+            location: profile._json.location || '',
+            bio: profile._json.bio || '',
+            company: profile._json.company || '',
           });
           await user.save();
         } else {
-          // Якщо користувач існує, оновлюємо дані
-          user.apiKey = accessToken;
-          user.name = profile.displayName || user.name; // Оновлюємо ім'я, якщо воно доступне
-          user.location = profile._json.location;
-          user.bio = profile._json.bio;
-          await user.save();
+          // Не перезаписувати дані, якщо вони були оновлені користувачем
+          const updatedFields = {};
+          if (!user.name) updatedFields.name = profile.displayName || user.name;
+          if (!user.avatarUrl) updatedFields.avatarUrl = profile.photos[0]?.value;
+          if (!user.location) updatedFields.location = profile._json.location;
+          if (!user.bio) updatedFields.bio = profile._json.bio;
+          if (!user.company) updatedFields.company = profile._json.company;
+
+          updatedFields.apiKey = accessToken; // Оновлюємо токен доступу
+
+          if (Object.keys(updatedFields).length > 0) {
+            await User.findByIdAndUpdate(user.id, updatedFields);
+          }
         }
 
         return done(null, user);
@@ -122,10 +129,35 @@ app.get('/api/user', ensureAuthenticated, (req, res) => {
     avatarUrl: req.user.avatarUrl,
     apiKey: req.user.apiKey, // Відправляємо GitHub токен
     location: req.user.location,
-    bio: req.user.bio
+    bio: req.user.bio,
+    company: req.user.Company
   });
 });
 
+
+
+app.put('/api/user', ensureAuthenticated, async (req, res) => {
+  try {
+    const userId = req.user.id;
+
+    const updatedData = {
+      name: req.body.name,
+      bio: req.body.bio,
+      company: req.body.company,
+      location: req.body.location,
+      email: req.body.email,
+      instagram: req.body.instagram,
+      twitter: req.body.twitter,
+      facebook: req.body.facebook,
+    };
+
+    const updatedUser = await User.findByIdAndUpdate(userId, updatedData, { new: true });
+    res.json(updatedUser);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Error updating user' });
+  }
+});
 
 
 

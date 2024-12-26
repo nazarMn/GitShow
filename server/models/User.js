@@ -9,6 +9,7 @@ const UserSchema = new mongoose.Schema({
   apiKey: { type: String },
   location: { type: String },
   bio: { type: String },
+  company: { type: String },
 });
 
 module.exports = mongoose.model('User', UserSchema);
