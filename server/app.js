@@ -171,7 +171,7 @@ app.use(
     contentSecurityPolicy: {
       directives: {
         defaultSrc: ["'self'"],
-        imgSrc: ["'self'", 'data:', 'https://avatars.githubusercontent.com'], // Додано джерело аватарок
+        imgSrc: ["'self'", 'data:', 'https://avatars.githubusercontent.com', 'https://gitshow.onrender.com'], // Додано джерело аватарок
       },
     },
   })
