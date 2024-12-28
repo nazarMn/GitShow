@@ -166,8 +166,6 @@ app.put('/api/user', ensureAuthenticated, async (req, res) => {
 
 
 
-const helmet = require('helmet');
-
 app.use(
   helmet.contentSecurityPolicy({
     directives: {
