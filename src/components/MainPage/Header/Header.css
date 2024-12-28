@@ -99,4 +99,26 @@
   .headerRight h2:hover{
     color: #3c3c3c;
   }
+
+  [data-theme='dark'] .header {
+    background-color: #101010;
+    color: #fff;
+    border-bottom: solid 1px #fff;
+  }
   
+  [data-theme='dark'] .headerLeft h1{
+    color: #fff;
+  }
+  
+  [data-theme='dark']   .LangBox select{
+    background-color: #101010;
+    color: #fff;
+  }
+  
+  [data-theme='dark'] .Icon{
+    color: #fff;
+  }
+  
+  [data-theme='dark'] .arrow{
+    border: solid #fff;
+  }

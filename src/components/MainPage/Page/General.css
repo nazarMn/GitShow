@@ -115,3 +115,34 @@
     background-color: #5c3f7d; 
     transform: translateY(0); 
 }
+
+
+[data-theme='dark'] .general {
+    background-color: #101010;
+    color: #fff;
+  }
+  
+  [data-theme='dark'] .generalTop h2 {
+    color: #fff;
+  }
+  
+  [data-theme='dark'] .generalMiddle h2 {
+    color: #fff;
+  }
+  
+  [data-theme='dark'] .generalBottom h2 {
+    color: #fff;
+  }
+  
+  [data-theme='dark'] .generalBottomButton button {
+    background-color: #fff;
+    color: #101010;
+  }
+  
+  [data-theme='dark'] .generalBottomButton button:hover {
+    background-color: #8c6fa9;
+  }
+  
+  [data-theme='dark'] .generalBottomButton button:active {
+    background-color: #5c3f7d;
+  }
