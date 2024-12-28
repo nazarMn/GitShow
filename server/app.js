@@ -166,16 +166,17 @@ app.put('/api/user', ensureAuthenticated, async (req, res) => {
 
 
 
+const helmet = require('helmet');
+
 app.use(
-  helmet({
-    contentSecurityPolicy: {
-      directives: {
-        defaultSrc: ["'self'"],
-        imgSrc: ["'self'", 'data:', 'https://avatars.githubusercontent.com', 'https://gitshow.onrender.com'], // Додано джерело аватарок
-      },
+  helmet.contentSecurityPolicy({
+    directives: {
+      defaultSrc: ["'self'"], // Дозволяємо завантаження ресурсів лише з того ж домену
+      imgSrc: ["'self'", 'https://gitshow.onrender.com', 'data:'], // Дозволяємо зображення з вашого домену і gitshow.onrender.com
     },
   })
 );
+
 
 
 
