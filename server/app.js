@@ -178,6 +178,26 @@ app.use(
 );
 
 
+
+
+
+app.get('/api/github/projects', ensureAuthenticated, async (req, res) => {
+  try {
+    const githubApiUrl = `https://api.github.com/users/${req.user.username}/repos`;
+    const response = await fetch(githubApiUrl, {
+      headers: {
+        Authorization: `token ${req.user.apiKey}`,
+      },
+    });
+    const repos = await response.json();
+    res.json(repos.map((repo) => ({ id: repo.id, name: repo.name, url: repo.html_url })));
+  } catch (error) {
+    console.error('Error fetching GitHub projects:', error);
+    res.status(500).json({ message: 'Failed to fetch GitHub projects' });
+  }
+});
+
+
 // Serve React App
 app.use(express.static(path.join(__dirname, '..', 'dist')));
 
