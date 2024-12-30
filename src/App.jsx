@@ -6,6 +6,8 @@ import Home from './components/HomePage/Home/Home';
 import Portfolio from './components/HomePage/PortfolioPage/Portfolio/Portfolio';
 import AccountSettings from './components/HomePage/Setting/AccountSettings/AccountSettings';
 import SettingsProjects from './components/HomePage/Setting/SettingsProjects/SettingsProjects';
+import Resume from './components/HomePage/ResumePage/Resume/Resume';
+import ResumeSettings from './components/HomePage/Setting/ResumeSettings/ResumeSettings';
 
 const App = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(null);
@@ -48,7 +50,7 @@ const App = () => {
         <Route
           path="/home"
           element={
-            isAuthenticated ?<> <Home /> <Portfolio /> <AccountSettings /> <SettingsProjects /> </> : <Navigate to="/" replace />
+            isAuthenticated ?<> <Home /> <Portfolio /> <AccountSettings /> <SettingsProjects /> <Resume /> <ResumeSettings /> </> : <Navigate to="/" replace />
           }
         />
       </Routes>
