@@ -15,6 +15,7 @@ export default function ResumeSettings() {
   ]);
 
   const [formData, setFormData] = useState({ id: null, title: '', university: '', description: '' });
+  const [yearsOfExperience, setYearsOfExperience] = useState('');
   const [editing, setEditing] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -23,17 +24,28 @@ export default function ResumeSettings() {
     setFormData((prev) => ({ ...prev, [id]: value }));
   };
 
+  const handleExperienceChange = (e) => {
+    setYearsOfExperience(e.target.value);
+  };
+
   const handleAdd = () => {
+    if (!formData.title.trim() || !formData.university.trim() || !formData.description.trim()) {
+      alert('All fields must be filled out before adding.');
+      return;
+    }
     setItems((prev) => [...prev, { ...formData, id: Date.now() }]);
     setFormData({ id: null, title: '', university: '', description: '' });
   };
-
   const handleEdit = (item) => {
     setFormData(item);
     setEditing(true);
   };
 
   const handleUpdate = () => {
+    if (!formData.title.trim() || !formData.university.trim() || !formData.description.trim()) {
+      alert('All fields must be filled out before updating.');
+      return;
+    }
     setItems((prev) => prev.map((item) => (item.id === formData.id ? formData : item)));
     setFormData({ id: null, title: '', university: '', description: '' });
     setEditing(false);
@@ -41,6 +53,11 @@ export default function ResumeSettings() {
 
   const handleDelete = (id) => {
     setItems((prev) => prev.filter((item) => item.id !== id));
+  };
+
+  const handleExperienceUpdate = () => {
+    console.log('Years of Experience Updated:', yearsOfExperience);
+    // Logic to save years of experience
   };
 
   const totalPages = Math.ceil(items.length / ITEMS_PER_PAGE);
@@ -99,6 +116,21 @@ export default function ResumeSettings() {
             onClick={editing ? handleUpdate : handleAdd}
           >
             {editing ? 'Update' : 'Add'}
+          </button>
+        </div>
+        <div className="resume-experience">
+          <input
+            type="number"
+            id="yearsOfExperience"
+            value={yearsOfExperience}
+            onChange={handleExperienceChange}
+            placeholder="Years of Experience"
+          />
+          <button
+            className="btn-update-experience"
+            onClick={handleExperienceUpdate}
+          >
+            Update
           </button>
         </div>
         <div className="resume-list">
