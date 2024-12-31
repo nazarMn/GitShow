@@ -124,9 +124,12 @@ export default function ResumeSettings() {
   useEffect(() => {
     const fetchResumes = async () => {
       try {
-        const response = await fetch('http://localhost:3000/api/resumes');
+        const response = await fetch('http://localhost:3000/api/resumes', {
+          credentials: 'include', // Це дозволяє передавати сесію з браузера
+        });
         if (response.ok) {
           const data = await response.json();
+          console.log('Fetched resumes:', data); // Перевіряємо отримані дані
           setItems(data);
         } else {
           console.error('Failed to fetch resumes.');
@@ -135,9 +138,10 @@ export default function ResumeSettings() {
         console.error(err);
       }
     };
-
+  
     fetchResumes();
   }, []);
+  
 
   return (
     <div className="resume-settings-container">
@@ -202,23 +206,27 @@ export default function ResumeSettings() {
           </button>
         </div>
         <div className="resume-list">
-        {paginatedItems.map((item) => (
-  <div key={item._id} className="resume-card">
-    <h3>{item.title}</h3>
-    <p className="university">{item.university}</p>
-    <p className="description">{item.description}</p>
-    <div className="card-actions">
-      <button className="btn-edit" onClick={() => handleEdit(item)}>
-        <FontAwesomeIcon icon={faEdit} /> Edit
-      </button>
-      <button className="btn-delete" onClick={() => handleDelete(item._id)}>
-        <FontAwesomeIcon icon={faTrash} /> Delete
-      </button>
-    </div>
-  </div>
-))}
-
+  {paginatedItems.length > 0 ? (
+    paginatedItems.map((item) => (
+      <div key={item._id} className="resume-card">
+        <h3>{item.title}</h3>
+        <p className="university">{item.university}</p>
+        <p className="description">{item.description}</p>
+        <div className="card-actions">
+          <button className="btn-edit" onClick={() => handleEdit(item)}>
+            <FontAwesomeIcon icon={faEdit} /> Edit
+          </button>
+          <button className="btn-delete" onClick={() => handleDelete(item._id)}>
+            <FontAwesomeIcon icon={faTrash} /> Delete
+          </button>
         </div>
+      </div>
+    ))
+  ) : (
+    <p>No resumes found.</p>
+  )}
+</div>
+
         <div className="pagination">
           {Array.from({ length: totalPages }, (_, index) => (
             <button
