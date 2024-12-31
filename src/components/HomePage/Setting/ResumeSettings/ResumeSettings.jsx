@@ -105,10 +105,26 @@ export default function ResumeSettings() {
   };
   
 
-  const handleExperienceUpdate = () => {
-    console.log('Years of Experience Updated:', yearsOfExperience);
-    // Logic to save years of experience
+  const handleExperienceUpdate = async () => {
+    try {
+      const response = await fetch('http://localhost:3000/api/user', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ YearsOfExperience: parseInt(yearsOfExperience, 10) }),
+      });
+  
+      if (response.ok) {
+        const updatedUser = await response.json();
+        console.log('Years of Experience Updated:', updatedUser.YearsOfExperience);
+      } else {
+        alert('Failed to update Years of Experience.');
+      }
+    } catch (err) {
+      console.error(err);
+    }
   };
+  
 
   const totalPages = Math.ceil(items.length / ITEMS_PER_PAGE);
 
@@ -141,6 +157,33 @@ export default function ResumeSettings() {
   
     fetchResumes();
   }, []);
+
+
+
+
+
+
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const response = await fetch('http://localhost:3000/api/user', {
+          credentials: 'include',
+        });
+        if (response.ok) {
+          const userData = await response.json();
+          setYearsOfExperience(userData.YearsOfExperience || ''); // Set YearsOfExperience
+        } else {
+          console.error('Failed to fetch user data.');
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    };
+  
+    fetchUserData();
+  }, []);
+  
   
 
   return (

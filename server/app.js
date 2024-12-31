@@ -135,13 +135,14 @@ app.get('/api/user', ensureAuthenticated, (req, res) => {
     instagram: req.user.instagram || '',
     twitter: req.user.twitter || '',
     facebook: req.user.facebook || '',
+    YearsOfExperience: req.user.YearsOfExperience || 2,
   });
 });
 
 
 app.put('/api/user', ensureAuthenticated, async (req, res) => {
   try {
-    const { name, bio, company, location, email, instagram, twitter, facebook } = req.body;
+    const { name, bio, company, location, email, instagram, twitter, facebook, YearsOfExperience } = req.body;
 
     const updatedUser = await User.findByIdAndUpdate(
       req.user.id,
@@ -154,6 +155,7 @@ app.put('/api/user', ensureAuthenticated, async (req, res) => {
         instagram,
         twitter,
         facebook,
+        YearsOfExperience,
       },
       { new: true }
     );
