@@ -189,13 +189,14 @@ const resumeSchema = new mongoose.Schema({
   title: String,
   university: String,
   description: String,
+  user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true }, // Reference to User
 });
 
 const Resume = mongoose.model('Resume', resumeSchema);
 
-app.get('/api/resumes', async (req, res) => {
+app.get('/api/resumes', ensureAuthenticated, async (req, res) => {
   try {
-    const resumes = await Resume.find();
+    const resumes = await Resume.find({ user: req.user._id }); // Fetch resumes for the logged-in user
     res.json(resumes);
   } catch (error) {
     console.error('Error fetching resumes:', error);
@@ -203,9 +204,18 @@ app.get('/api/resumes', async (req, res) => {
   }
 });
 
-app.post('/api/resumes', async (req, res) => {
+
+app.post('/api/resumes', ensureAuthenticated, async (req, res) => {
   try {
-    const resume = new Resume(req.body);
+    const { title, university, description } = req.body;
+
+    const resume = new Resume({
+      title,
+      university,
+      description,
+      user: req.user._id, // Associate the resume with the logged-in user
+    });
+
     await resume.save();
     res.status(201).json(resume);
   } catch (error) {
