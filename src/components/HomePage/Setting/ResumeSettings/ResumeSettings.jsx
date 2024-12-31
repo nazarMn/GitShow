@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './ResumeSettings.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus, faEdit, faTrash, faUser, faFileLines, faBrain } from '@fortawesome/free-solid-svg-icons';
@@ -6,18 +6,11 @@ import { faPlus, faEdit, faTrash, faUser, faFileLines, faBrain } from '@fortawes
 const ITEMS_PER_PAGE = 6;
 
 export default function ResumeSettings() {
-  const [items, setItems] = useState([
-    { id: 1, title: 'Computer Science', university: 'Cambridge University / 2005 - 2008', description: 'Studied algorithms, data structures, and computer architecture.' },
-    { id: 2, title: 'Software Engineer', university: 'Google / 2009 - 2015', description: 'Developed scalable backend systems and optimized performance.' },
-    { id: 3, title: 'Frontend Developer', university: 'Meta / 2016 - 2020', description: 'Built modern web interfaces using React and TypeScript.' },
-    { id: 4, title: 'Backend Developer', university: 'Amazon / 2021 - Present', description: 'Designed and implemented RESTful APIs and microservices.' },
-    { id: 5, title: 'DevOps Engineer', university: 'Netflix / 2022 - Present', description: 'Streamlined CI/CD pipelines and enhanced deployment workflows.' },
-  ]);
-
   const [formData, setFormData] = useState({ id: null, title: '', university: '', description: '' });
   const [yearsOfExperience, setYearsOfExperience] = useState('');
   const [editing, setEditing] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
+  const [items, setItems] = useState([]);
 
   const handleInputChange = (e) => {
     const { id, value } = e.target;
@@ -28,32 +21,89 @@ export default function ResumeSettings() {
     setYearsOfExperience(e.target.value);
   };
 
-  const handleAdd = () => {
+  const handleAdd = async () => {
     if (!formData.title.trim() || !formData.university.trim() || !formData.description.trim()) {
       alert('All fields must be filled out before adding.');
       return;
     }
-    setItems((prev) => [...prev, { ...formData, id: Date.now() }]);
-    setFormData({ id: null, title: '', university: '', description: '' });
-  };
-  const handleEdit = (item) => {
-    setFormData(item);
-    setEditing(true);
+
+    try {
+      const response = await fetch('http://localhost:3000/api/resumes', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+      });
+
+      if (response.ok) {
+        const newResume = await response.json();
+        setItems((prev) => [...prev, newResume]);
+        setFormData({ id: null, title: '', university: '', description: '' });
+      } else {
+        alert('Failed to add resume.');
+      }
+    } catch (err) {
+      console.error(err);
+    }
   };
 
-  const handleUpdate = () => {
+  const handleEdit = (item) => {
+    setFormData({ id: item._id, title: item.title, university: item.university, description: item.description });
+    setEditing(true);
+  };
+  
+  const handleUpdate = async () => {
+    if (!formData.id) {
+      alert('Resume ID is missing.');
+      return;
+    }
+  
     if (!formData.title.trim() || !formData.university.trim() || !formData.description.trim()) {
       alert('All fields must be filled out before updating.');
       return;
     }
-    setItems((prev) => prev.map((item) => (item.id === formData.id ? formData : item)));
-    setFormData({ id: null, title: '', university: '', description: '' });
-    setEditing(false);
+  
+    try {
+      const response = await fetch(`http://localhost:3000/api/resumes/${formData.id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          title: formData.title,
+          university: formData.university,
+          description: formData.description,
+        }),
+      });
+  
+      if (response.ok) {
+        const updatedResume = await response.json();
+        setItems((prev) => prev.map((item) => (item._id === updatedResume._id ? updatedResume : item)));
+        setFormData({ id: null, title: '', university: '', description: '' });
+        setEditing(false);
+      } else {
+        alert('Failed to update resume.');
+      }
+    } catch (err) {
+      console.error(err);
+    }
   };
-
-  const handleDelete = (id) => {
-    setItems((prev) => prev.filter((item) => item.id !== id));
+  
+  const handleDelete = async (id) => {
+    try {
+      const response = await fetch(`http://localhost:3000/api/resumes/${id}`, {
+        method: 'DELETE',
+      });
+  
+      if (response.ok) {
+        // Видаляємо об'єкт з локального стану
+        setItems((prevItems) => prevItems.filter((item) => item._id !== id));
+      } else {
+        alert('Failed to delete resume.');
+      }
+    } catch (err) {
+      console.error(err);
+      alert('An error occurred while deleting the resume.');
+    }
   };
+  
 
   const handleExperienceUpdate = () => {
     console.log('Years of Experience Updated:', yearsOfExperience);
@@ -70,6 +120,24 @@ export default function ResumeSettings() {
   const handlePageChange = (newPage) => {
     setCurrentPage(newPage);
   };
+
+  useEffect(() => {
+    const fetchResumes = async () => {
+      try {
+        const response = await fetch('http://localhost:3000/api/resumes');
+        if (response.ok) {
+          const data = await response.json();
+          setItems(data);
+        } else {
+          console.error('Failed to fetch resumes.');
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    };
+
+    fetchResumes();
+  }, []);
 
   return (
     <div className="resume-settings-container">
@@ -134,24 +202,22 @@ export default function ResumeSettings() {
           </button>
         </div>
         <div className="resume-list">
-          {paginatedItems.map((item) => (
-            <div key={item.id} className="resume-card">
-              <h3>{item.title}</h3>
-              <p className="university">{item.university}</p>
-              <p className="description">{item.description}</p>
-              <div className="card-actions">
-                <button className="btn-edit" onClick={() => handleEdit(item)}>
-                  <FontAwesomeIcon icon={faEdit} /> Edit
-                </button>
-                <button
-                  className="btn-delete"
-                  onClick={() => handleDelete(item.id)}
-                >
-                  <FontAwesomeIcon icon={faTrash} /> Delete
-                </button>
-              </div>
-            </div>
-          ))}
+        {paginatedItems.map((item) => (
+  <div key={item._id} className="resume-card">
+    <h3>{item.title}</h3>
+    <p className="university">{item.university}</p>
+    <p className="description">{item.description}</p>
+    <div className="card-actions">
+      <button className="btn-edit" onClick={() => handleEdit(item)}>
+        <FontAwesomeIcon icon={faEdit} /> Edit
+      </button>
+      <button className="btn-delete" onClick={() => handleDelete(item._id)}>
+        <FontAwesomeIcon icon={faTrash} /> Delete
+      </button>
+    </div>
+  </div>
+))}
+
         </div>
         <div className="pagination">
           {Array.from({ length: totalPages }, (_, index) => (

@@ -5,6 +5,7 @@ const GitHubStrategy = require('passport-github2').Strategy;
 const session = require('express-session');
 const helmet = require('helmet');
 const path = require('path');
+const fetch = require('node-fetch');
 require('dotenv').config();
 
 const User = require('./models/User'); // User model
@@ -178,6 +179,74 @@ app.use(
 );
 
 
+
+
+
+
+
+// Resume Schema and Routes
+const resumeSchema = new mongoose.Schema({
+  title: String,
+  university: String,
+  description: String,
+});
+
+const Resume = mongoose.model('Resume', resumeSchema);
+
+app.get('/api/resumes', async (req, res) => {
+  try {
+    const resumes = await Resume.find();
+    res.json(resumes);
+  } catch (error) {
+    console.error('Error fetching resumes:', error);
+    res.status(500).json({ message: 'Error fetching resumes' });
+  }
+});
+
+app.post('/api/resumes', async (req, res) => {
+  try {
+    const resume = new Resume(req.body);
+    await resume.save();
+    res.status(201).json(resume);
+  } catch (error) {
+    console.error('Error saving resume:', error);
+    res.status(500).json({ message: 'Error saving resume' });
+  }
+});
+
+app.delete('/api/resumes/:id', async (req, res) => {
+  try {
+    await Resume.findByIdAndDelete(req.params.id);
+    res.status(204).send();
+  } catch (error) {
+    console.error('Error deleting resume:', error);
+    res.status(500).json({ message: 'Error deleting resume' });
+  }
+});
+
+
+
+app.put('/api/resumes/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { title, university, description } = req.body;
+
+    const updatedResume = await Resume.findByIdAndUpdate(
+      id,
+      { title, university, description },
+      { new: true }
+    );
+
+    if (!updatedResume) {
+      return res.status(404).send('Resume not found');
+    }
+
+    res.json(updatedResume);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Error updating resume');
+  }
+});
 
 
 
