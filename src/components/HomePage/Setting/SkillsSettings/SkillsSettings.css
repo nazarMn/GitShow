@@ -4,3 +4,170 @@
   box-sizing: border-box;
   font-family:  'Montserrat', sans-serif;
 }
+.skills-settings {
+  width: 100%;
+  color: #fff;
+  background-color: #101010;
+  padding: 40px;
+}
+
+h1 {
+  font-size: 28px;
+  margin-bottom: 20px;
+  color: #fff;
+}
+
+.skills-form {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  gap: 15px;
+  margin-bottom: 30px;
+}
+
+.skills-form input,
+.skills-form textarea {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #404040;
+  border-radius: 8px;
+  background-color: #303030;
+  font-size: 16px;
+  color: #fff;
+}
+
+ 
+.skills-form textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+.skills-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: space-between;
+}
+.skills-card {
+  width: calc(50% - 10px); /* Два елементи в ряд, з відступом */
+  background-color: #202020;
+  padding: 20px;
+  border: 1px solid #303030;
+  border-radius: 6px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.skills-card h3 {
+  font-size: 20px;
+  margin-bottom: 10px;
+}
+
+.skills-card .description {
+  margin: 10px 0;
+  line-height: 1.6;
+}
+
+
+
+
+
+.btn-saveSkill,
+.btn-edit,
+.btn-delete {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.btn-saveSkill {
+  width: 98%;
+  background-color: #007bff;
+  color: #fff;
+}
+
+
+
+
+.btn-saveSkill:hover {
+  background-color: #0056b3;
+  transform: scale(1.04);
+}
+
+.btn-edit {
+  background-color: #ffa500;
+  color: #fff;
+}
+
+.btn-edit:hover {
+  background-color: #cc8400;
+  transform: scale(1.05);
+}
+
+.btn-delete {
+  background-color: #dc3545;
+  color: #fff;
+}
+
+.btn-delete:hover {
+  background-color: #a71d2a;
+  transform: scale(1.05);
+}
+
+.skillsSettingsContainer {
+  background-color: #181818;;
+  display: flex;
+  height: 100vh;
+  gap: 20px;
+}
+
+
+
+
+.skills-settings {
+  flex: 1;
+  padding: 20px;
+  background-color: #181818;
+  border-radius: 8px;
+}
+
+.skills-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-bottom: 25px;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 20px;
+}
+
+
+
+
+
+
+.pagination button {
+  border: none;
+  padding: 8px 16px;
+  cursor: pointer;
+  background-color: #303030;
+  color: #fff;
+  border-radius: 5px;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.pagination button.active {
+  background-color: #007bff;
+  color: white;
+  transform: scale(1.1);
+}
+
+.pagination button:hover {
+  background-color: #444;
+  transform: scale(1.05);
+}
