@@ -279,6 +279,110 @@ app.get('/api/github/projects', ensureAuthenticated, async (req, res) => {
 });
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+const skillsSchema = new mongoose.Schema({
+  name: { type: String, required: true },
+  description: { type: String, required: true },
+  user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+});
+
+const Skill = mongoose.model('Skill', skillsSchema);
+
+// Routes for managing skills
+
+// Fetch all skills for the logged-in user
+app.get('/api/skills', ensureAuthenticated, async (req, res) => {
+  try {
+    const skills = await Skill.find({ user: req.user._id }); // Find skills created by the logged-in user
+    res.json(skills);
+  } catch (error) {
+    console.error('Error fetching skills:', error);
+    res.status(500).json({ message: 'Error fetching skills' });
+  }
+});
+
+// Create a new skill
+app.post('/api/skills', ensureAuthenticated, async (req, res) => {
+  try {
+    const { name, description } = req.body;
+
+    if (!name || !description) {
+      return res.status(400).json({ message: 'Name and description are required' });
+    }
+
+    const skill = new Skill({
+      name,
+      description,
+      user: req.user._id, // Associate the skill with the logged-in user
+    });
+
+    await skill.save();
+    res.status(201).json(skill);
+  } catch (error) {
+    console.error('Error saving skill:', error);
+    res.status(500).json({ message: 'Error saving skill' });
+  }
+});
+
+// Update an existing skill
+app.put('/api/skills/:id', ensureAuthenticated, async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { name, description } = req.body;
+
+    const updatedSkill = await Skill.findOneAndUpdate(
+      { _id: id, user: req.user._id }, // Ensure the skill belongs to the logged-in user
+      { name, description },
+      { new: true }
+    );
+
+    if (!updatedSkill) {
+      return res.status(404).json({ message: 'Skill not found' });
+    }
+
+    res.json(updatedSkill);
+  } catch (error) {
+    console.error('Error updating skill:', error);
+    res.status(500).json({ message: 'Error updating skill' });
+  }
+});
+
+// Delete a skill
+app.delete('/api/skills/:id', ensureAuthenticated, async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const deletedSkill = await Skill.findOneAndDelete({ _id: id, user: req.user._id }); // Ensure the skill belongs to the logged-in user
+
+    if (!deletedSkill) {
+      return res.status(404).json({ message: 'Skill not found' });
+    }
+
+    res.status(204).send();
+  } catch (error) {
+    console.error('Error deleting skill:', error);
+    res.status(500).json({ message: 'Error deleting skill' });
+  }
+});
+
+
+
+
+
+
 // Serve React App
 app.use(express.static(path.join(__dirname, '..', 'dist')));
 

@@ -1,37 +1,72 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./SkillsSettings.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faUser, faFileLines, faBrain, faPlus, faEdit, faTrash } from "@fortawesome/free-solid-svg-icons";
+import { faUser, faFileLines, faBrain, faEdit, faTrash } from "@fortawesome/free-solid-svg-icons";
 
 export default function SkillsSettings() {
   const [skills, setSkills] = useState([]);
   const [currentSkill, setCurrentSkill] = useState({ id: null, name: "", description: "" });
   const [currentPage, setCurrentPage] = useState(1);
   const skillsPerPage = 6;
+  const [user, setUser] = useState(null);
 
+  // Fetch current user data
+  useEffect(() => {
+    fetch("/api/user")
+      .then((response) => response.json())
+      .then((data) => setUser(data))
+      .catch((error) => console.error("Error fetching user data:", error));
+  }, []);
+
+  // Fetch skills for the current user
+  useEffect(() => {
+    if (user) {
+      fetch(`/api/skills?userId=${user.id}`)
+        .then((response) => response.json())
+        .then((data) => setSkills(data))
+        .catch((error) => console.error("Error fetching skills:", error));
+    }
+  }, [user]);
+
+  // Handle add or update skill
   const handleAddOrUpdate = () => {
     if (currentSkill.name && currentSkill.description) {
-      if (currentSkill.id) {
-        setSkills((prevSkills) =>
-          prevSkills.map((skill) =>
-            skill.id === currentSkill.id ? currentSkill : skill
-          )
-        );
-      } else {
-        setSkills([...skills, { ...currentSkill, id: Date.now() }]);
-      }
-      setCurrentSkill({ id: null, name: "", description: "" });
+      const method = currentSkill.id ? "PUT" : "POST";
+      const url = currentSkill.id ? `/api/skills/${currentSkill.id}` : "/api/skills";
+
+      fetch(url, {
+        method,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ...currentSkill, userId: user.id }),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          if (currentSkill.id) {
+            setSkills((prevSkills) =>
+              prevSkills.map((skill) => (skill.id === data.id ? data : skill))
+            );
+          } else {
+            setSkills([...skills, data]);
+          }
+          setCurrentSkill({ id: null, name: "", description: "" });
+        })
+        .catch((error) => console.error("Error saving skill:", error));
     }
   };
 
+  // Handle edit skill
   const handleEdit = (skill) => {
     setCurrentSkill(skill);
   };
 
+  // Handle delete skill
   const handleDelete = (id) => {
-    setSkills(skills.filter((skill) => skill.id !== id));
+    fetch(`/api/skills/${id}`, { method: "DELETE" })
+      .then(() => setSkills(skills.filter((skill) => skill.id !== id)))
+      .catch((error) => console.error("Error deleting skill:", error));
   };
 
+  // Pagination logic
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
   };
