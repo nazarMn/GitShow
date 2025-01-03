@@ -27,7 +27,7 @@ const App = () => {
   }, []);
 
   if (isAuthenticated === null) {
-    return <p>Loading...</p>; // Show a loader while authentication status is being checked
+    return <p>Loading...</p>;
   }
 
   return (
