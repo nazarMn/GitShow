@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import './ResumeSettings.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus, faEdit, faTrash, faUser, faFileLines, faBrain } from '@fortawesome/free-solid-svg-icons';
+import SettingsSidebar from '../SettingsSidebar/SettingsSidebar';
 
 const ITEMS_PER_PAGE = 6;
 
@@ -188,21 +189,9 @@ export default function ResumeSettings() {
 
   return (
     <div className="resume-settings-container">
-      <div className="settings-sidebar">
-        <nav>
-          <ul>
-            <li className="active">
-              <FontAwesomeIcon icon={faUser} /> Public profile
-            </li>
-            <li>
-              <FontAwesomeIcon icon={faFileLines} /> Resume
-            </li>
-            <li>
-              <FontAwesomeIcon icon={faBrain} /> Skills
-            </li>
-          </ul>
-        </nav>
-      </div>
+
+      <SettingsSidebar />
+   
       <div className="resume-settings">
         <h1>Resume</h1>
         <div className="resume-form">

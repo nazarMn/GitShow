@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import './AccountSettings.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser, faPencil, faLink, faFileLines, faBrain } from '@fortawesome/free-solid-svg-icons';
+import SettingsSidebar from '../SettingsSidebar/SettingsSidebar';
 
 export default function AccountSettings() {
   const [user, setUser] = useState(null);
@@ -101,21 +102,13 @@ export default function AccountSettings() {
 
   return (
     <div className="account-settings">
-      <div className="settings-sidebar">
-        <nav>
-          <ul>
-            <li className="active">
-              <FontAwesomeIcon icon={faUser} /> Public profile
-            </li>
-            <li>
-              <FontAwesomeIcon icon={faFileLines} /> Resume
-            </li>
-            <li>
-              <FontAwesomeIcon icon={faBrain} /> Skills
-            </li>
-          </ul>
-        </nav>
-      </div>
+
+
+      <SettingsSidebar />
+
+
+
+
       <div className="settings-content">
         <div className="settings-main">
           <h1>Public profile</h1>

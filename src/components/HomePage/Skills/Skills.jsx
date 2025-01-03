@@ -1,24 +1,27 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import './Skills.css';
 
-const services = [
-  { id: 1, title: 'Web Design', description: 'Website development is the process of building, programming, maintaining websites and web applications.' },
-  { id: 2, title: 'UI/UX Design', description: 'Website development is the process of building, programming, maintaining websites and web applications.' },
-  { id: 3, title: 'Mobile Application', description: 'Website development is the process of building, programming, maintaining websites and web applications.' },
-  { id: 4, title: 'User Research', description: 'Website development is the process of building, programming, maintaining websites and web applications.' },
-  { id: 5, title: 'Animation', description: 'Website development is the process of building, programming, maintaining websites and web applications.' },
-  { id: 6, title: 'Game Development', description: 'Website development is the process of building, programming, maintaining websites and web applications.' },
-  { id: 7, title: 'AI Development', description: 'Website development is the process of building, programming, maintaining websites and web applications.' },
-  { id: 8, title: 'Cloud Computing', description: 'Website development is the process of building, programming, maintaining websites and web applications.' },
-  { id: 9, title: 'Cybersecurity', description: 'Website development is the process of building, programming, maintaining websites and web applications.' },
-];
-
 export default function Skills() {
+  const [skills, setSkills] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 6;
 
-  const totalPages = Math.ceil(services.length / itemsPerPage);
-  const currentServices = services.slice(
+  useEffect(() => {
+    const fetchSkills = async () => {
+      try {
+        const response = await axios.get('/api/skills'); // Запит до бекенду
+        setSkills(response.data); // Зберігаємо отримані дані
+      } catch (error) {
+        console.error('Error fetching skills:', error);
+      }
+    };
+
+    fetchSkills();
+  }, []);
+
+  const totalPages = Math.ceil(skills.length / itemsPerPage);
+  const currentSkills = skills.slice(
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage
   );
@@ -39,11 +42,11 @@ export default function Skills() {
       </div>
       <div className="skillsBottom">
         <section className="skills-list">
-          {currentServices.map((service) => (
-            <div key={service.id} className="skill-card">
-              <h2>{`0${service.id}`}</h2>
-              <h3>{service.title}</h3>
-              <p>{service.description}</p>
+          {currentSkills.map((skill, index) => (
+            <div key={skill._id} className="skill-card">
+              <h2>{String(index + 1).padStart(2, '0')}</h2>
+              <h3>{skill.titleSkill}</h3>
+              <p>{skill.descriptionSkill}</p>
             </div>
           ))}
         </section>

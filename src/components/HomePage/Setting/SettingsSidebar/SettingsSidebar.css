@@ -1,0 +1,37 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family:  'Montserrat', sans-serif;
+  }
+  .settings-sidebar {
+    width: 250px;
+    height: 100vh;
+    padding: 20px;
+    border-radius: 8px;
+  }
+  
+  .settings-sidebar nav ul {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .c nav ul li {
+    margin-bottom: 10px;
+    padding: 10px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background 0.2s ease;
+  }
+  
+  .settings-sidebar nav ul li:hover {
+    background-color: #007bff;
+    color: white;
+    border-radius: 5px;
+  }
+  
+  .settings-sidebar nav ul li.active {
+    background-color: #007bff;
+    color: white;
+    border-radius: 5px;
+  }

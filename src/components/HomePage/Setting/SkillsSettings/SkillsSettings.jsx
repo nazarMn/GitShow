@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import "./SkillsSettings.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faUser, faFileLines, faBrain, faPlus, faEdit, faTrash } from "@fortawesome/free-solid-svg-icons";
+import { faPlus, faEdit, faTrash, faUser, faFileLines, faBrain } from "@fortawesome/free-solid-svg-icons";
+import SettingsSidebar from "../SettingsSidebar/SettingsSidebar";
 
 const ITEMS_PER_PAGE = 6;
 
@@ -132,21 +133,9 @@ export default function SkillsSettings() {
 
   return (
     <div className="skillsSettingsContainer">
-      <div className="settings-sidebar">
-        <nav>
-          <ul>
-            <li className="active">
-              <FontAwesomeIcon icon={faUser} /> Public profile
-            </li>
-            <li>
-              <FontAwesomeIcon icon={faFileLines} /> Resume
-            </li>
-            <li>
-              <FontAwesomeIcon icon={faBrain} /> Skills
-            </li>
-          </ul>
-        </nav>
-      </div>
+
+      <SettingsSidebar />
+      
 
       <div className="skills-settings">
         <h1>Skills</h1>
