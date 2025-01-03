@@ -13,35 +13,6 @@
     color: #fff;
 }
 
-/* Сайдбар */
-.settings-sidebar {
-    width: 250px;
-    background-color: #202020;
-    border-right: 1px solid #303030;
-    padding: 20px 0;
-}
-
-.settings-sidebar nav ul {
-    list-style: none;
-    padding: 0;
-}
-
-.settings-sidebar nav ul li {
-    padding: 10px 20px;
-    cursor: pointer;
-    font-size: 14px;
-    color: #8a8a8a;
-    border-left: 3px solid transparent;
-    transition: all 0.3s ease;
-}
-
-.settings-sidebar nav ul li.active,
-.settings-sidebar nav ul li:hover {
-    background-color: #303030;
-    color: #fff;
-    border-left-color: #007bff;
-}
-
 /* Контент */
 .settings-content {
     display: flex;
