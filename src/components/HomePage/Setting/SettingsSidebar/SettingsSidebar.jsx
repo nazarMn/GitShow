@@ -8,15 +8,23 @@ export default function SettingsSidebar() {
       <div className="settings-sidebar">
             <nav>
               <ul>
+                <a href="/PublicProfileSettings">
                 <li className="active">
                   <FontAwesomeIcon icon={faUser} /> Public profile
                 </li>
+                </a>
+                <a href="/ResumeSettings">
                 <li>
+                  
                   <FontAwesomeIcon icon={faFileLines} /> Resume
+                  
                 </li>
+                </a>
+                <a href="/SkillsSettings">
                 <li>
                   <FontAwesomeIcon icon={faBrain} /> Skills
                 </li>
+                </a>
               </ul>
             </nav>
           </div>
