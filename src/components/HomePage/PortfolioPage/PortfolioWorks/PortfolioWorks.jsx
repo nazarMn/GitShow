@@ -10,13 +10,14 @@ export default function PortfolioWorks() {
   // Функція для завантаження проектів користувача з GitHub
   const fetchGitHubProjects = async () => {
     try {
-      const response = await fetch('/api/github/projects'); // Створіть ендпоінт для отримання проектів
+      const response = await fetch('/api/github/projects');
       const data = await response.json();
       setProjects(data);
     } catch (error) {
       console.error('Error fetching GitHub projects:', error);
     }
   };
+  
 
   // Відкрити попап
   const handleOpenPopup = () => {

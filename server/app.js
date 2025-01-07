@@ -6,6 +6,7 @@ const session = require('express-session');
 const helmet = require('helmet');
 const path = require('path');
 const fetch = require('node-fetch');
+const axios = require('axios');
 require('dotenv').config();
 
 const User = require('./models/User'); // User model
@@ -344,23 +345,21 @@ app.put('/api/skills/:idSkill', async (req, res) => {
 
 
 
-
 app.get('/api/github/projects', ensureAuthenticated, async (req, res) => {
   try {
     const githubApiUrl = `https://api.github.com/users/${req.user.username}/repos`;
-    const response = await fetch(githubApiUrl, {
+    const response = await axios.get(githubApiUrl, {
       headers: {
         Authorization: `token ${req.user.apiKey}`,
       },
     });
-    const repos = await response.json();
-    res.json(repos.map((repo) => ({ id: repo.id, name: repo.name, url: repo.html_url })));
+
+    res.json(response.data.map((repo) => ({ id: repo.id, name: repo.name, url: repo.html_url })));
   } catch (error) {
     console.error('Error fetching GitHub projects:', error);
-    res.status(500).json({ message: 'Failed to fetch GitHub projects' });
+    res.status(500).json({ message: 'Failed to fetch GitHub projects', error: error.message });
   }
 });
-
 
 app.use(express.static(path.join(__dirname, '..', 'dist')));
 
