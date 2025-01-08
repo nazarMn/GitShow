@@ -43,39 +43,49 @@ const App = () => {
               <>
                 <Header />
                 <General />
-                
               </>
             )
           }
         />
+
+        <Route
+          path="/settings-projects"
+          element={
+            isAuthenticated ? <SettingsProjects /> : <Navigate to="/" replace />
+          }
+        />
+
         {/* Protect the Home route */}
         <Route
           path="/home"
           element={
-            isAuthenticated ?<> <Home /> <Portfolio />   <Skills /> <Resume />  <SettingsProjects />  </> : <Navigate to="/" replace />
+            isAuthenticated ? (
+              <>
+                <Home />
+                <Portfolio />
+                <Skills />
+                <Resume />
+                <SettingsProjects />
+              </>
+            ) : (
+              <Navigate to="/" replace />
+            )
           }
         />
-        <Route 
-        path='/ResumeSettings'
-        element={
-          isAuthenticated ? <ResumeSettings /> : <Navigate to="/" replace />
-        }
-        
-        />
-        <Route 
-        path='/PublicProfileSettings'
-        element={
-          isAuthenticated ? <AccountSettings /> : <Navigate to="/" replace />
-        }
-        
+
+        <Route
+          path="/ResumeSettings"
+          element={isAuthenticated ? <ResumeSettings /> : <Navigate to="/" replace />}
         />
 
-        <Route 
-        path='/SkillsSettings'
-        element={
-          isAuthenticated ? <SkillsSettings /> : <Navigate to="/" replace />
-        }
+        <Route
+          path="/PublicProfileSettings"
+          element={isAuthenticated ? <AccountSettings /> : <Navigate to="/" replace />}
+        />
 
+        <Route
+          path="/SkillsSettings"
+          element={isAuthenticated ? <SkillsSettings /> : <Navigate to="/" replace />}
         />
       </Routes>
     </Router>

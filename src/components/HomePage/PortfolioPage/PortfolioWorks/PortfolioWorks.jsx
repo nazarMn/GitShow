@@ -2,38 +2,38 @@ import React, { useState } from 'react';
 import './PortfolioWorks.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
+import { useNavigate } from 'react-router-dom';
 
 export default function PortfolioWorks() {
   const [showPopup, setShowPopup] = useState(false);
   const [projects, setProjects] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
 
-  // Функція для завантаження проектів користувача з GitHub
   const fetchGitHubProjects = async () => {
+    setIsLoading(true);
     try {
       const response = await fetch('/api/github/projects');
       const data = await response.json();
       setProjects(data);
     } catch (error) {
       console.error('Error fetching GitHub projects:', error);
+    } finally {
+      setIsLoading(false);
     }
   };
-  
 
-  // Відкрити попап
   const handleOpenPopup = () => {
     setShowPopup(true);
     fetchGitHubProjects();
   };
 
-  // Закрити попап
   const handleClosePopup = () => {
     setShowPopup(false);
   };
 
-  // Додати проект (можна реалізувати API-запит для збереження)
   const handleAddProject = (project) => {
-    console.log('Adding project:', project);
-    // Тут можна викликати API для збереження проекту
+    navigate('/settings-projects', { state: { project } });
     setShowPopup(false);
   };
 
@@ -52,7 +52,9 @@ export default function PortfolioWorks() {
               ✖
             </button>
             <h3>Your GitHub Projects</h3>
-            {projects.length > 0 ? (
+            {isLoading ? (
+              <p>Loading projects...</p>
+            ) : (
               <ul className="projectsList">
                 {projects.map((project) => (
                   <li key={project.id} className="projectItem">
@@ -61,8 +63,6 @@ export default function PortfolioWorks() {
                   </li>
                 ))}
               </ul>
-            ) : (
-              <p>No projects found.</p>
             )}
           </div>
         </div>

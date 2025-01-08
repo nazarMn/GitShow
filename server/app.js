@@ -263,6 +263,10 @@ app.put('/api/resumes/:id', async (req, res) => {
 
 
 
+app.use((req, res, next) => {
+  res.setHeader("Content-Security-Policy", "img-src 'self' https://avatars.githubusercontent.com blob: data:");
+  next();
+});
 
 
 
@@ -342,9 +346,45 @@ app.put('/api/skills/:idSkill', async (req, res) => {
   }
 });
 
+const multer = require('multer');
+
+const Project = require('./models/Project');
 
 
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'uploads/');
+  },
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + '-' + file.originalname);
+  },
+});
 
+const upload = multer({ storage });
+
+// POST route to save project
+app.post('/api/projects', upload.single('image'), async (req, res) => {
+  try {
+    const { name, link, description } = req.body;
+    const image = req.file ? `/uploads/${req.file.filename}` : '';
+
+    const newProject = new Project({
+      name,
+      link,
+      description,
+      imageUrl: image,
+      userId: req.user._id,
+    });
+
+    await newProject.save();
+    res.status(201).json({ message: 'Project saved successfully' });
+  } catch (error) {
+    console.error('Error saving project:', error);
+    res.status(500).json({ message: 'Error saving project' });
+  }
+});
+
+// GET route to fetch GitHub projects
 app.get('/api/github/projects', ensureAuthenticated, async (req, res) => {
   try {
     const githubApiUrl = `https://api.github.com/users/${req.user.username}/repos`;
@@ -354,11 +394,17 @@ app.get('/api/github/projects', ensureAuthenticated, async (req, res) => {
       },
     });
 
-    res.json(response.data.map((repo) => ({ id: repo.id, name: repo.name, url: repo.html_url })));
+    res.json(response.data.map((repo) => ({ id: repo.id, name: repo.name, url: repo.html_url, description: repo.description, userId: req.user._id })));
   } catch (error) {
     console.error('Error fetching GitHub projects:', error);
     res.status(500).json({ message: 'Failed to fetch GitHub projects', error: error.message });
   }
+});
+
+// Error handling middleware
+app.use((err, req, res, next) => {
+  console.error(err);
+  res.status(500).send('Something went wrong!');
 });
 
 app.use(express.static(path.join(__dirname, '..', 'dist')));
