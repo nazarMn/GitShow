@@ -10,6 +10,7 @@ import Resume from './components/HomePage/ResumePage/Resume/Resume';
 import ResumeSettings from './components/HomePage/Setting/ResumeSettings/ResumeSettings';
 import Skills from './components/HomePage/Skills/Skills';
 import SkillsSettings from './components/HomePage/Setting/SkillsSettings/SkillsSettings';
+import PortfolioCard from './components/HomePage/PortfolioPage/PortfolioCard/PortfolioCard';
 
 const App = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(null);
@@ -66,6 +67,7 @@ const App = () => {
                 <Skills />
                 <Resume />
                 <SettingsProjects />
+                <PortfolioCard />
               </>
             ) : (
               <Navigate to="/" replace />

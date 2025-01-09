@@ -5,8 +5,8 @@
     font-family:  'Montserrat', sans-serif;
 }
 .portfolioWorks{
-    width: 100%;
-    height: 100%;
+  width: 650px;
+  height: 340px;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;

@@ -7,6 +7,8 @@ const helmet = require('helmet');
 const path = require('path');
 const fetch = require('node-fetch');
 const axios = require('axios');
+const fs = require('fs');
+const cors = require('cors');
 require('dotenv').config();
 
 const User = require('./models/User'); // User model
@@ -24,6 +26,7 @@ app.use(
     saveUninitialized: false,
   })
 );
+app.use(cors());
 
 passport.use(
   new GitHubStrategy(
@@ -90,6 +93,8 @@ passport.deserializeUser(async (id, done) => {
 
 app.use(passport.initialize());
 app.use(passport.session());
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
 
 // MongoDB Connection
 mongoose
@@ -400,6 +405,29 @@ app.get('/api/github/projects', ensureAuthenticated, async (req, res) => {
     res.status(500).json({ message: 'Failed to fetch GitHub projects', error: error.message });
   }
 });
+
+
+
+app.get('/api/projects', async (req, res) => {
+  try {
+    const projects = await Project.find({ userId: req.user._id }); // Фільтруйте за userId, якщо необхідно
+    res.json(projects);
+  } catch (error) {
+    console.error('Error fetching projects:', error);
+    res.status(500).json({ message: 'Error fetching projects' });
+  }
+});
+
+
+
+
+
+const uploadDir = path.join(__dirname, 'uploads');
+if (!fs.existsSync(uploadDir)) {
+  fs.mkdirSync(uploadDir);
+}
+
+
 
 // Error handling middleware
 app.use((err, req, res, next) => {
