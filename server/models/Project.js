@@ -5,6 +5,7 @@ const projectSchema = new mongoose.Schema({
   link: { type: String, required: true },
   description: { type: String },
   imageUrl: { type: String },
+  websiteUrl: { type: String },
   userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
 });
 

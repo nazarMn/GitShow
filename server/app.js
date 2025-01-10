@@ -351,10 +351,9 @@ app.put('/api/skills/:idSkill', async (req, res) => {
   }
 });
 
+
 const multer = require('multer');
-
 const Project = require('./models/Project');
-
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -370,14 +369,20 @@ const upload = multer({ storage });
 // POST route to save project
 app.post('/api/projects', upload.single('image'), async (req, res) => {
   try {
-    const { name, link, description } = req.body;
+    const { name, link, description, websiteUrl } = req.body;
+
+    if (!name) {
+      return res.status(400).json({ message: 'Project name is required' });
+    }
+
     const image = req.file ? `/uploads/${req.file.filename}` : '';
 
     const newProject = new Project({
       name,
-      link,
-      description,
+      link: link || '', // Optional field
+      description: description || '', // Optional field
       imageUrl: image,
+      websiteUrl: websiteUrl || '', // Optional field
       userId: req.user._id,
     });
 
@@ -399,12 +404,18 @@ app.get('/api/github/projects', ensureAuthenticated, async (req, res) => {
       },
     });
 
-    res.json(response.data.map((repo) => ({ id: repo.id, name: repo.name, url: repo.html_url, description: repo.description, userId: req.user._id })));
+    res.json(response.data.map((repo) => ({ id: repo.id, name: repo.name, url: repo.html_url, description: repo.description, userId: req.user._id, websiteUrl: repo.homepage })));
   } catch (error) {
     console.error('Error fetching GitHub projects:', error);
     res.status(500).json({ message: 'Failed to fetch GitHub projects', error: error.message });
   }
 });
+
+
+
+
+
+
 
 
 

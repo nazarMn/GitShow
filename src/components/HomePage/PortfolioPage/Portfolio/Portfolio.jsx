@@ -26,7 +26,7 @@ const indexOfFirstProject = currentPage === 1 ? 0 : indexOfLastProject - project
 
   const currentProjects = projects.slice(indexOfFirstProject, indexOfLastProject);
 
-  const totalPages = Math.ceil((projects.length + 1) / projectsPerPage); // +1 для PortfolioWorks
+  const totalPages = Math.ceil((projects.length + 1) / projectsPerPage); 
 
   const handleNextPage = () => {
     if (currentPage < totalPages) {
@@ -50,7 +50,7 @@ const indexOfFirstProject = currentPage === 1 ? 0 : indexOfLastProject - project
       <div className="portfolioBottom">
   {currentPage === 1 ? (
     <>
-      {/* Перша сторінка з PortfolioWorks та однією карткою праворуч */}
+  
       <div className="portfolioRow">
         <div className="portfolioWorksAndCard">
           <PortfolioWorks />
@@ -61,6 +61,8 @@ const indexOfFirstProject = currentPage === 1 ? 0 : indexOfLastProject - project
               description={currentProjects[0].description}
               imageUrl={currentProjects[0].imageUrl}
               link={currentProjects[0].link}
+              websiteUrl={currentProjects[0].websiteUrl}
+              
             />
           )}
         </div>
@@ -73,24 +75,27 @@ const indexOfFirstProject = currentPage === 1 ? 0 : indexOfLastProject - project
             description={project.description}
             imageUrl={project.imageUrl}
             link={project.link}
+            websiteUrl={project.websiteUrl}
           />
         ))}
       </div>
     </>
   ) : (
     <>
-      {/* Інші сторінки з 4 картками */}
+ 
       <div className="portfolioGrid">
-        {currentProjects.map((project) => (
-          <PortfolioCard
-            key={project._id}
-            title={project.name}
-            description={project.description}
-            imageUrl={project.imageUrl}
-            link={project.link}
-          />
-        ))}
-      </div>
+  {currentProjects.map((project) => (
+    <PortfolioCard
+      key={project._id}
+      title={project.name}
+      description={project.description}
+      imageUrl={project.imageUrl}
+      link={project.link}
+      websiteUrl={project.websiteUrl}
+    />
+  ))}
+</div>
+
     </>
   )}
 </div>
