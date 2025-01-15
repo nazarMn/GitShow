@@ -5,6 +5,9 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import { Navigation } from 'swiper/modules';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faArrowRight , faArrowLeft } from '@fortawesome/free-solid-svg-icons';
+
 
 export default function Reviews() {
   return (
@@ -13,20 +16,21 @@ export default function Reviews() {
         <p className="section-label">TESTIMONIALS</p>
         <h2 className="section-title">What Our Clients Say</h2>
         
-        <div className="custom-navigation">
-          <button className="swiper-button-prev"></button>
-          <button className="swiper-button-next"></button>
+        <div className="custom-navigation1">
+        <FontAwesomeIcon icon={faArrowLeft} size="xl" color="#fff" className="swiper-button-next1" />
+
+        <FontAwesomeIcon icon={faArrowRight} size="xl" color="#fff"  className="swiper-button-prev1" />
         </div>
       </header>
       <Swiper
         className="reviews-swiper"
         modules={[Navigation]}
         navigation={{
-          nextEl: '.swiper-button-next',
-          prevEl: '.swiper-button-prev',
+          nextEl: '.swiper-button-next1',
+          prevEl: '.swiper-button-prev1',
         }}
         spaceBetween={30}
-        slidesPerView={2} // Показуємо 2 картки одночасно
+        slidesPerView={2} 
         loop={true}
       >
         <SwiperSlide>

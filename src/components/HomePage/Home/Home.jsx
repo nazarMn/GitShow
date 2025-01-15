@@ -14,7 +14,7 @@ export default function Home() {
     fetch('/api/user')
       .then((res) => res.json())
       .then((data) => {
-        console.log('User data:', data); // Додано консоль для перевірки
+        console.log('User data:', data); 
         setUser(data);
       })
       .catch(() => setUser(null));
