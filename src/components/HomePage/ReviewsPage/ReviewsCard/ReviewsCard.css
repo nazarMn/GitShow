@@ -1,9 +1,10 @@
 .reviews-card {
   background-color: #111;
-  border-radius: 10px;
+  border-radius: 4px;
+  border: solid 1px #333;
   padding: 20px;
-  width: 450px;
-  height: 300px;
+  width: 650px;
+  height: 350px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
