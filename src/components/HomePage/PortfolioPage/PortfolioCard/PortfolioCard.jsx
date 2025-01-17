@@ -1,17 +1,10 @@
-import React, { useState } from 'react';
+import React from 'react';
 import './PortfolioCard.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faGithub } from '@fortawesome/free-brands-svg-icons';
-import { faPaperclip } from '@fortawesome/free-solid-svg-icons';
+import { faPaperclip, faTrash } from '@fortawesome/free-solid-svg-icons';
 
-
-export default function PortfolioCard({ title, description, imageUrl, link, websiteUrl }) {
-  const [isStarred, setIsStarred] = useState(false);
-
-  const toggleStar = () => {
-    setIsStarred(!isStarred);
-  };
-
+export default function PortfolioCard({ title, description, imageUrl, link, websiteUrl, onDelete }) {
   return (
     <div className="portfolioCard">
       <div className="cardImage">
@@ -30,12 +23,12 @@ export default function PortfolioCard({ title, description, imageUrl, link, webs
             <FontAwesomeIcon icon={faPaperclip} size="2x" color="#fff" />
           </a>
         )}
-        <span
-          className={`saveIcon ${isStarred ? 'starred' : ''}`}
-          onClick={toggleStar}
-        >
-          &#9733;
-        </span>
+        <FontAwesomeIcon
+          icon={faTrash}
+          size="2x"
+          className="deleteIcon"
+          onClick={onDelete}
+        />
       </div>
     </div>
   );

@@ -433,6 +433,27 @@ app.get('/api/projects', async (req, res) => {
 
 
 
+// DELETE route to delete a project
+app.delete('/api/projects/:id', ensureAuthenticated, async (req, res) => {
+  try {
+    const projectId = req.params.id;
+    const deletedProject = await Project.findOneAndDelete({ _id: projectId, userId: req.user._id });
+
+    if (!deletedProject) {
+      return res.status(404).json({ message: 'Project not found or unauthorized' });
+    }
+
+    res.status(200).json({ message: 'Project deleted successfully' });
+  } catch (error) {
+    console.error('Error deleting project:', error);
+    res.status(500).json({ message: 'Error deleting project' });
+  }
+});
+
+
+
+
+
 const uploadDir = path.join(__dirname, 'uploads');
 if (!fs.existsSync(uploadDir)) {
   fs.mkdirSync(uploadDir);

@@ -40,6 +40,17 @@ const indexOfFirstProject = currentPage === 1 ? 0 : indexOfLastProject - project
     }
   };
 
+
+
+  const deleteProject = async (projectId) => {
+    try {
+      await axios.delete(`/api/projects/${projectId}`);
+      setProjects(projects.filter((project) => project._id !== projectId));
+    } catch (error) {
+      console.error('Error deleting project:', error);
+    }
+  };
+
   return (
     <div className="portfolio">
       <div className="portfolioTop">
@@ -62,6 +73,8 @@ const indexOfFirstProject = currentPage === 1 ? 0 : indexOfLastProject - project
               imageUrl={currentProjects[0].imageUrl}
               link={currentProjects[0].link}
               websiteUrl={currentProjects[0].websiteUrl}
+              onDelete={() => deleteProject(currentProjects[0]._id)}
+              
               
             />
           )}
@@ -76,6 +89,7 @@ const indexOfFirstProject = currentPage === 1 ? 0 : indexOfLastProject - project
             imageUrl={project.imageUrl}
             link={project.link}
             websiteUrl={project.websiteUrl}
+            onDelete={() => deleteProject(project._id)}
           />
         ))}
       </div>
@@ -92,6 +106,7 @@ const indexOfFirstProject = currentPage === 1 ? 0 : indexOfLastProject - project
       imageUrl={project.imageUrl}
       link={project.link}
       websiteUrl={project.websiteUrl}
+      onDelete={() => deleteProject(project._id)}
     />
   ))}
 </div>
