@@ -1,10 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './PortfolioCard.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faGithub } from '@fortawesome/free-brands-svg-icons';
-import { faPaperclip, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faPaperclip, faTrash, faEdit } from '@fortawesome/free-solid-svg-icons';
 
-export default function PortfolioCard({ title, description, imageUrl, link, websiteUrl, onDelete }) {
+export default function PortfolioCard({ title, description, imageUrl, link, websiteUrl, onDelete, onEdit }) {
   return (
     <div className="portfolioCard">
       <div className="cardImage">
@@ -28,6 +28,12 @@ export default function PortfolioCard({ title, description, imageUrl, link, webs
           size="2x"
           className="deleteIcon"
           onClick={onDelete}
+        />
+        <FontAwesomeIcon
+          icon={faEdit}
+          size="2x"
+          className="editIcon"
+          onClick={onEdit} 
         />
       </div>
     </div>

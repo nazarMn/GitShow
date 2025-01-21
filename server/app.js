@@ -11,7 +11,7 @@ const fs = require('fs');
 const cors = require('cors');
 require('dotenv').config();
 
-const User = require('./models/User'); // User model
+const User = require('./models/User'); 
 
 const app = express();
 
@@ -62,7 +62,7 @@ passport.use(
           if (!user.bio) updatedFields.bio = profile._json.bio;
           if (!user.company) updatedFields.company = profile._json.company;
 
-          updatedFields.apiKey = accessToken; // Оновлюємо токен доступу
+          updatedFields.apiKey = accessToken; 
 
           if (Object.keys(updatedFields).length > 0) {
             await User.findByIdAndUpdate(user.id, updatedFields);
@@ -117,7 +117,7 @@ app.get(
   '/auth/github/callback',
   passport.authenticate('github', { failureRedirect: '/' }),
   (req, res) => {
-    res.redirect('/home'); // Redirect to React app home
+    res.redirect('/home');
   }
 );
 
@@ -137,7 +137,7 @@ app.get('/api/user', ensureAuthenticated, (req, res) => {
     location: req.user.location,
     bio: req.user.bio,
     company: req.user.company,
-    email: req.user.email, // Додано email
+    email: req.user.email, 
     instagram: req.user.instagram || '',
     twitter: req.user.twitter || '',
     facebook: req.user.facebook || '',
@@ -180,7 +180,7 @@ app.use(
     contentSecurityPolicy: {
       directives: {
         defaultSrc: ["'self'"],
-        imgSrc: ["'self'", 'data:', 'https://avatars.githubusercontent.com'], // Додано джерело аватарок
+        imgSrc: ["'self'", 'data:', 'https://avatars.githubusercontent.com'], 
       },
     },
   })
@@ -197,14 +197,14 @@ const resumeSchema = new mongoose.Schema({
   title: String,
   university: String,
   description: String,
-  user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true }, // Reference to User
+  user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
 });
 
 const Resume = mongoose.model('Resume', resumeSchema);
 
 app.get('/api/resumes', ensureAuthenticated, async (req, res) => {
   try {
-    const resumes = await Resume.find({ user: req.user._id }); // Fetch resumes for the logged-in user
+    const resumes = await Resume.find({ user: req.user._id });
     res.json(resumes);
   } catch (error) {
     console.error('Error fetching resumes:', error);
@@ -221,7 +221,7 @@ app.post('/api/resumes', ensureAuthenticated, async (req, res) => {
       title,
       university,
       description,
-      user: req.user._id, // Associate the resume with the logged-in user
+      user: req.user._id, 
     });
 
     await resume.save();
@@ -289,7 +289,7 @@ const Skills = mongoose.model('Skills', skillsSchema);
 // Fetch Skills
 app.get('/api/skills', ensureAuthenticated, async (req, res) => {
   try {
-    const skills = await Skills.find({ user: req.user._id });  // Correct model reference
+    const skills = await Skills.find({ user: req.user._id }); 
     res.json(skills);
   } catch (error) {
     console.error('Error fetching skills:', error);
@@ -319,7 +319,7 @@ app.post('/api/skills', ensureAuthenticated, async (req, res) => {
 // Delete Skill
 app.delete('/api/skills/:idSkill', async (req, res) => {
   try {
-    await Skills.findByIdAndDelete(req.params.idSkill); // Correct reference for id
+    await Skills.findByIdAndDelete(req.params.idSkill); 
     res.status(204).send();
   } catch (error) {
     console.error('Error deleting skill:', error);
@@ -327,11 +327,10 @@ app.delete('/api/skills/:idSkill', async (req, res) => {
   }
 });
 
-// Update Skill
 // Оновлення навички
 app.put('/api/skills/:idSkill', async (req, res) => {
   try {
-    const { idSkill } = req.params; // Вірне посилання на ID
+    const { idSkill } = req.params; 
     const { titleSkill, descriptionSkill } = req.body;
 
     const updatedSkill = await Skills.findByIdAndUpdate(
@@ -379,10 +378,10 @@ app.post('/api/projects', upload.single('image'), async (req, res) => {
 
     const newProject = new Project({
       name,
-      link: link || '', // Optional field
-      description: description || '', // Optional field
+      link: link || '', 
+      description: description || '', 
       imageUrl: image,
-      websiteUrl: websiteUrl || '', // Optional field
+      websiteUrl: websiteUrl || '', 
       userId: req.user._id,
     });
 
@@ -421,7 +420,7 @@ app.get('/api/github/projects', ensureAuthenticated, async (req, res) => {
 
 app.get('/api/projects', async (req, res) => {
   try {
-    const projects = await Project.find({ userId: req.user._id }); // Фільтруйте за userId, якщо необхідно
+    const projects = await Project.find({ userId: req.user._id }); 
     res.json(projects);
   } catch (error) {
     console.error('Error fetching projects:', error);
@@ -451,6 +450,27 @@ app.delete('/api/projects/:id', ensureAuthenticated, async (req, res) => {
 });
 
 
+app.put('/api/projects/:id', ensureAuthenticated, async (req, res) => {
+  try {
+    const projectId = req.params.id;
+    const { name, description, link, websiteUrl } = req.body;
+
+    const updatedProject = await Project.findOneAndUpdate(
+      { _id: projectId, userId: req.user._id },
+      { name, description, link, websiteUrl },
+      { new: true }
+    );
+
+    if (!updatedProject) {
+      return res.status(404).json({ message: 'Project not found or unauthorized' });
+    }
+
+    res.json(updatedProject);
+  } catch (error) {
+    console.error('Error updating project:', error);
+    res.status(500).json({ message: 'Error updating project' });
+  }
+});
 
 
 
