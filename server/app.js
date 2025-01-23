@@ -450,14 +450,25 @@ app.delete('/api/projects/:id', ensureAuthenticated, async (req, res) => {
 });
 
 
-app.put('/api/projects/:id', ensureAuthenticated, async (req, res) => {
+app.put('/api/projects/:id', ensureAuthenticated, upload.single('image'), async (req, res) => {
   try {
     const projectId = req.params.id;
     const { name, description, link, websiteUrl } = req.body;
 
+    const updateData = {
+      name,
+      description,
+      link,
+      websiteUrl,
+    };
+
+    if (req.file) {
+      updateData.imageUrl = `/uploads/${req.file.filename}`;
+    }
+
     const updatedProject = await Project.findOneAndUpdate(
       { _id: projectId, userId: req.user._id },
-      { name, description, link, websiteUrl },
+      updateData,
       { new: true }
     );
 
@@ -471,6 +482,7 @@ app.put('/api/projects/:id', ensureAuthenticated, async (req, res) => {
     res.status(500).json({ message: 'Error updating project' });
   }
 });
+
 
 
 

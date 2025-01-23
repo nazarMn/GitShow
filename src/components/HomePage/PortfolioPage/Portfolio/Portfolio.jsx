@@ -62,10 +62,20 @@ export default function Portfolio() {
 
   const handleEditProject = async () => {
     try {
-      const { name, description, imageUrl, websiteUrl } = currentProject;
-      const response = await axios.put(`/api/projects/${currentProject._id}`, {
-        name, description, imageUrl, websiteUrl
+      const formData = new FormData();
+      formData.append('name', currentProject.name);
+      formData.append('description', currentProject.description);
+      formData.append('websiteUrl', currentProject.websiteUrl);
+      if (currentProject.image) {
+        formData.append('image', currentProject.image);
+      }
+  
+      const response = await axios.put(`/api/projects/${currentProject._id}`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
       });
+  
       setProjects(projects.map((project) =>
         project._id === currentProject._id ? response.data : project
       ));
@@ -74,6 +84,7 @@ export default function Portfolio() {
       console.error('Error updating project:', error);
     }
   };
+  
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -147,42 +158,52 @@ export default function Portfolio() {
 
       {/* Модалка для редагування */}
       {showModal && (
-        <div className="modal">
-          <div className="modalContent">
-            <h3>Edit Project</h3>
-            <label>
-              Name:
-              <input
-                type="text"
-                name="name"
-                value={currentProject.name}
-                onChange={handleInputChange}
-              />
-            </label>
-            <label>
-              Description:
-              <textarea
-                name="description"
-                value={currentProject.description}
-                onChange={handleInputChange}
-              />
-            </label>
-            <label>
-              Website URL:
-              <input
-                type="text"
-                name="websiteUrl"
-                value={currentProject.websiteUrl}
-                onChange={handleInputChange}
-              />
-            </label>
-            <div className="modalActions">
-              <button onClick={handleEditProject}>Save Changes</button>
-              <button onClick={closeEditModal}>Cancel</button>
-            </div>
-          </div>
-        </div>
-      )}
+  <div className="modal">
+    <div className="modalContent">
+      <h3>Edit Project</h3>
+      <label>
+        Name:
+        <input
+          type="text"
+          name="name"
+          value={currentProject.name}
+          onChange={handleInputChange}
+        />
+      </label>
+      <label>
+        Description:
+        <textarea
+          name="description"
+          value={currentProject.description}
+          onChange={handleInputChange}
+        />
+      </label>
+      <label>
+        Website URL:
+        <input
+          type="text"
+          name="websiteUrl"
+          value={currentProject.websiteUrl}
+          onChange={handleInputChange}
+        />
+      </label>
+      <label>
+        Image:
+        <input
+          type="file"
+          name="image"
+          accept="image/*"
+          onChange={(e) => setCurrentProject({ ...currentProject, image: e.target.files[0] })}
+        />
+      </label>
+      <div className="modalActions">
+        <button onClick={handleEditProject}>Save Changes</button>
+        <button onClick={closeEditModal}>Cancel</button>
+      </div>
+    </div>
+  </div>
+)}
+
 
       <div className="pagination">
         <button onClick={handlePreviousPage} disabled={currentPage === 1}>
