@@ -197,7 +197,7 @@ export default function Portfolio() {
         />
       </label>
       <div className="modalActions">
-        <button onClick={handleEditProject}>Save Changes</button>
+        <button onClick={handleEditProject} >Save Changes</button>
         <button onClick={closeEditModal}>Cancel</button>
       </div>
     </div>
