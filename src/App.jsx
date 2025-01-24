@@ -68,7 +68,6 @@ const App = () => {
                 <Portfolio />
                 <Skills />
                 <Resume />
-                <SettingsProjects />
                 <Reviews />
             
               </>
