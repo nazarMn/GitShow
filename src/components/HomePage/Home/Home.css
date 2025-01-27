@@ -141,6 +141,6 @@
   
   .socialIcons a:hover {
     transform: scale(1.2);
-    color: #1da1f2; /* Змінюється колір під час наведення */
+    color: #1da1f2;
   }
   
