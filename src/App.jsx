@@ -11,6 +11,7 @@ import ResumeSettings from './components/HomePage/Setting/ResumeSettings/ResumeS
 import Skills from './components/HomePage/Skills/Skills';
 import SkillsSettings from './components/HomePage/Setting/SkillsSettings/SkillsSettings';
 import Reviews from './components/HomePage/ReviewsPage/Reviews/Reviews';
+import Navigation from './components/NavigationСomponent/NavigationСomponent';
 
 
 
@@ -64,6 +65,7 @@ const App = () => {
           element={
             isAuthenticated ? (
               <>
+              <Navigation />
                 <Home />
                 <Portfolio />
                 <Skills />
