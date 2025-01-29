@@ -3,3 +3,26 @@
     padding: 0;
     box-sizing: border-box;
 }
+.project-container {
+    width: 100%;
+    height: 100vh;
+    margin: 0 auto;
+    padding: 20px;
+    text-align: center;
+    background-color: #141318;
+  }
+  
+  .project-title {
+    font-size: 2rem;
+    margin-bottom: 20px;
+    color: #333;
+  }
+  
+  .project-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+    justify-content: center;
+    align-items: stretch;
+  }
+  

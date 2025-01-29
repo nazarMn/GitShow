@@ -12,6 +12,7 @@ import Skills from './components/HomePage/Skills/Skills';
 import SkillsSettings from './components/HomePage/Setting/SkillsSettings/SkillsSettings';
 import Reviews from './components/HomePage/ReviewsPage/Reviews/Reviews';
 import Navigation from './components/NavigationСomponent/NavigationСomponent';
+import Project from './components/ProjectPage/Project/Project';
 
 
 
@@ -71,6 +72,7 @@ const App = () => {
                 <Skills />
                 <Resume />
                 <Reviews />
+                <Project />
             
               </>
             ) : (
