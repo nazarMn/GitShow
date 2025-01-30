@@ -20,16 +20,24 @@ export default function Project() {
 
   return (
     <div className="project-container">
-      {projects.map((project) => (
-        <ProjectCard
-          key={project._id}
-          title={project.name}
-          description={project.description}
-          imageUrl={project.imageUrl}
-          link={project.link}
-          websiteUrl={project.websiteUrl}
-        />
-      ))}
+      <header className="project-header">Projects</header>
+
+      <div className="project-input">
+        <input type="text" placeholder="Search puple" />
+      </div>
+
+      <div className="project-grid">
+        {projects.map((project) => (
+          <ProjectCard
+            key={project._id}
+            title={project.name}
+            description={project.description}
+            imageUrl={project.imageUrl}
+            link={project.link}
+            websiteUrl={project.websiteUrl}
+          />
+        ))}
+      </div>
     </div>
   );
 }

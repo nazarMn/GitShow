@@ -72,11 +72,24 @@ const App = () => {
                 <Skills />
                 <Resume />
                 <Reviews />
-                <Project />
             
               </>
             ) : (
               <Navigate to="/" replace />
+            )
+          }
+        />
+         <Route
+          path="/project"
+          element={
+            isAuthenticated ? (
+              <>
+              <Navigation />
+              <Project /> 
+            
+              </>
+            ) : (
+              <Navigate to="/home" replace />
             )
           }
         />
