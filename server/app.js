@@ -383,6 +383,7 @@ app.post('/api/projects', upload.single('image'), async (req, res) => {
       imageUrl: image,
       websiteUrl: websiteUrl || '', 
       userId: req.user._id,
+      userAvatar: req.user.avatarUrl,
     });
 
     await newProject.save();
@@ -403,7 +404,7 @@ app.get('/api/github/projects', ensureAuthenticated, async (req, res) => {
       },
     });
 
-    res.json(response.data.map((repo) => ({ id: repo.id, name: repo.name, url: repo.html_url, description: repo.description, userId: req.user._id, websiteUrl: repo.homepage })));
+    res.json(response.data.map((repo) => ({ id: repo.id, name: repo.name, url: repo.html_url, description: repo.description, userId: req.user._id, websiteUrl: repo.homepage, userAvatar: req.user.avatarUrl })));
   } catch (error) {
     console.error('Error fetching GitHub projects:', error);
     res.status(500).json({ message: 'Failed to fetch GitHub projects', error: error.message });
