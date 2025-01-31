@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import './Project.css';
 import ProjectCard from '../ProjectCard/ProjectCard';
+import ProjectInput from '../ProjectInput/ProjectInput';
 import axios from 'axios';
 
 export default function Project() {
@@ -22,9 +23,9 @@ export default function Project() {
     <div className="project-container">
       <header className="project-header">Projects</header>
 
-      <div className="project-input">
-        <input type="text" placeholder="Search for creators" />
-      </div>
+      <ProjectInput />
+
+    
 
       <div className="project-grid">
         {projects.map((project) => (

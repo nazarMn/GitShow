@@ -510,6 +510,21 @@ if (!fs.existsSync(uploadDir)) {
 
 
 
+// search users
+app.get('/api/users', async (req, res) => {
+  const { username } = req.query;
+  try {
+    const users = await User.find({
+      username: { $regex: username, $options: 'i' } 
+    }).select('githubId username avatarUrl'); 
+
+    res.json(users);
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching users' });
+  }
+});
+
+
 // Error handling middleware
 app.use((err, req, res, next) => {
   console.error(err);
