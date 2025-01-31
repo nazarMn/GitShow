@@ -35,6 +35,7 @@ export default function Project() {
             imageUrl={project.imageUrl}
             link={project.link}
             websiteUrl={project.websiteUrl}
+            userAvatar={project.userAvatar}
           />
         ))}
       </div>
