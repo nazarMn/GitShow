@@ -8,7 +8,6 @@
     background: #1a1a1a;
     color: white;
     transition: transform 0.3s ease;
-    cursor: pointer;
   }
   
   .portfolioCard:hover {

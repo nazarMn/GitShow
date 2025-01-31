@@ -418,9 +418,22 @@ app.get('/api/github/projects', ensureAuthenticated, async (req, res) => {
 
 
 
-
+// Для сторінки Project — всі проекти, крім проектів поточного користувача
 app.get('/api/projects', async (req, res) => {
   try {
+   
+    const projects = await Project.find({ userId: { $ne: req.user._id } }); 
+    res.json(projects);
+  } catch (error) {
+    console.error('Error fetching projects:', error);
+    res.status(500).json({ message: 'Error fetching projects' });
+  }
+});
+
+// Для проектів конкретного користувача (сторінка Home)
+app.get('/api/projects/home', async (req, res) => {
+  try {
+
     const projects = await Project.find({ userId: req.user._id }); 
     res.json(projects);
   } catch (error) {
@@ -428,6 +441,9 @@ app.get('/api/projects', async (req, res) => {
     res.status(500).json({ message: 'Error fetching projects' });
   }
 });
+
+
+
 
 
 

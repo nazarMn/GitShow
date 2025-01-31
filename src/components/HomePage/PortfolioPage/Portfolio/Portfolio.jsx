@@ -14,7 +14,7 @@ export default function Portfolio() {
   useEffect(() => {
     const fetchProjects = async () => {
       try {
-        const response = await axios.get('/api/projects');
+        const response = await axios.get('/api/projects/home');
         setProjects(response.data);
       } catch (error) {
         console.error('Error fetching projects:', error);
