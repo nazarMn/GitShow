@@ -54,6 +54,8 @@ export default function Home() {
           </a>
         )}
       </div>
+
+      
       <div className="homeTop">
         <div className="menuWrapper">
           <FontAwesomeIcon

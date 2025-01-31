@@ -23,7 +23,7 @@ export default function Project() {
       <header className="project-header">Projects</header>
 
       <div className="project-input">
-        <input type="text" placeholder="Search puple" />
+        <input type="text" placeholder="Search for creators" />
       </div>
 
       <div className="project-grid">
