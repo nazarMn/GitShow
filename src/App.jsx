@@ -13,6 +13,7 @@ import SkillsSettings from './components/HomePage/Setting/SkillsSettings/SkillsS
 import Reviews from './components/HomePage/ReviewsPage/Reviews/Reviews';
 import Navigation from './components/NavigationСomponent/NavigationСomponent';
 import Project from './components/ProjectPage/Project/Project';
+import CEOAISettings from './components/HomePage/Setting/CEOAISettings/CEOAISettings';
 
 
 
@@ -107,6 +108,11 @@ const App = () => {
         <Route
           path="/SkillsSettings"
           element={isAuthenticated ? <SkillsSettings /> : <Navigate to="/" replace />}
+        />
+
+        <Route
+          path="/CEOAISettings"
+          element={isAuthenticated ? <CEOAISettings /> : <Navigate to="/" replace />}
         />
       </Routes>
     </Router>
