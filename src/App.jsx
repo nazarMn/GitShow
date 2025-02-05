@@ -14,6 +14,7 @@ import Reviews from './components/HomePage/ReviewsPage/Reviews/Reviews';
 import Navigation from './components/NavigationСomponent/NavigationСomponent';
 import Project from './components/ProjectPage/Project/Project';
 import CEOAISettings from './components/HomePage/Setting/CEOAISettings/CEOAISettings';
+import CEOAIModels from './components/CEOAIComponents/CEOAIModels/CEOAIModels';
 
 
 
@@ -113,6 +114,10 @@ const App = () => {
         <Route
           path="/CEOAISettings"
           element={isAuthenticated ? <CEOAISettings /> : <Navigate to="/" replace />}
+        />
+        <Route
+          path="/CEOAIModels"
+          element={isAuthenticated ? <CEOAIModels /> : <Navigate to="/" replace />}
         />
       </Routes>
     </Router>
