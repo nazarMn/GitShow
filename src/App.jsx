@@ -15,6 +15,7 @@ import Navigation from './components/NavigationСomponent/NavigationСomponent';
 import Project from './components/ProjectPage/Project/Project';
 import CEOAISettings from './components/HomePage/Setting/CEOAISettings/CEOAISettings';
 import CEOAIModels from './components/CEOAIComponents/CEOAIModels/CEOAIModels';
+import CEOAIEditing from './components/CEOAIComponents/CEOAIEditing/CEOAIEditing';
 
 
 
@@ -74,6 +75,7 @@ const App = () => {
                 <Skills />
                 <Resume />
                 <Reviews />
+                <CEOAIEditing />
             
               </>
             ) : (
