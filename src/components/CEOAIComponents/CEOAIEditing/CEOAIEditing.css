@@ -61,11 +61,11 @@
 }
 .triangle {
     position: absolute;
-    bottom: -105px; /* Висувається вниз */
+    bottom: -105px; 
     left: 0;
     width: 0;
     height: 0;
     border-left: 190px solid transparent;
     border-right: 190px solid transparent;
-    border-top: 105px solid #36383E; /* Колір фону header */
+    border-top: 105px solid #36383E; 
 }
