@@ -16,7 +16,7 @@ import Project from './components/ProjectPage/Project/Project';
 import CEOAISettings from './components/HomePage/Setting/CEOAISettings/CEOAISettings';
 import CEOAIModels from './components/CEOAIComponents/CEOAIModels/CEOAIModels';
 import CEOAIEditing from './components/CEOAIComponents/CEOAIEditing/CEOAIEditing';
-
+import BookmarksPage from './components/ProjectPage/BookmarksPage/BookmarksPage';
 
 
 const App = () => {
@@ -120,6 +120,23 @@ const App = () => {
         <Route
           path="/CEOAIModels"
           element={isAuthenticated ? <CEOAIModels /> : <Navigate to="/" replace />}
+        />
+
+
+
+<Route
+          path="/bookmarks"
+          element={
+            isAuthenticated ? (
+              <>
+              <Navigation />
+              <BookmarksPage /> 
+            
+              </>
+            ) : (
+              <Navigate to="/home" replace />
+            )
+          }
         />
       </Routes>
     </Router>
