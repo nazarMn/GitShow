@@ -75,7 +75,7 @@ const App = () => {
                 <Skills />
                 <Resume />
                 <Reviews />
-                <CEOAIEditing />
+                {/* <CEOAIEditing /> */}
             
               </>
             ) : (
