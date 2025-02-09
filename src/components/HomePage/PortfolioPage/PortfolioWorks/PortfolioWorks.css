@@ -15,27 +15,39 @@
     background-color: #141318;
    
 }
-.AddWorksBox{
-    width: 650px;
-    height: 340px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: #1C1B21;
-    border: solid 1px #272727;
-    border-radius: 18px;
+.AddWorksBox {
+  width: 600px;
+  height: 300px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #2c2c33; 
+  border: solid 1px #3a3a3a; 
+  border-radius: 16px; 
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease; 
 }
-.AddWorks{
-    width: 120px;
-    height: 120px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border-radius: 50%;
-    background-color: #141318;
-    cursor: pointer;
-    font-size: 38px;
-    rotate: 45deg;
+
+.AddWorksBox:hover {
+  transform: translateY(-5px); 
+}
+
+.AddWorks {
+  width: 100px;
+  height: 100px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  background-color: #1e1e22; 
+  cursor: pointer;
+  font-size: 32px; 
+  transition: all 0.2s ease; 
+}
+
+.AddWorks:hover {
+  background-color: #333340; 
+  transform: rotate(45deg) scale(1.1); 
 }
 
 .popupOverlay {
@@ -56,9 +68,9 @@
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    width: 300px; /* Менший розмір */
-    max-height: 400px; /* Обмеження по висоті */
-    overflow: hidden; /* Сховати надлишковий вміст */
+    width: 300px; 
+    max-height: 400px; 
+    overflow: hidden; 
     position: relative;
     text-align: center;
   }
@@ -82,23 +94,23 @@
     list-style: none;
     padding: 0;
     margin: 0;
-    max-height: 300px; /* Обмеження висоти списку */
-    overflow-y: auto; /* Вертикальний скрол */
-    scrollbar-width: thin; /* Тонкий скрол для Firefox */
+    max-height: 300px;
+    overflow-y: auto;
+    scrollbar-width: thin; 
     scrollbar-color: #ccc transparent;
   }
   
   .projectsList::-webkit-scrollbar {
-    width: 8px; /* Ширина скролу */
+    width: 8px; 
   }
   
   .projectsList::-webkit-scrollbar-thumb {
-    background: #ccc; /* Колір ползунка */
+    background: #ccc; 
     border-radius: 4px;
   }
   
   .projectsList::-webkit-scrollbar-thumb:hover {
-    background: #aaa; /* Колір ползунка при ховері */
+    background: #aaa;
   }
   
   .projectItem {
