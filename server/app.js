@@ -39,8 +39,11 @@ passport.use(
       try {
         let user = await User.findOne({ githubId: profile.id });
 
+        // Отримуємо contributions
+        const contributions = await fetchGitHubContributions(profile.username, accessToken);
+
         if (!user) {
-          // Створення нового користувача, якщо його немає в базі
+          // Створюємо нового користувача
           user = new User({
             githubId: profile.id,
             username: profile.username,
@@ -51,22 +54,12 @@ passport.use(
             location: profile._json.location || '',
             bio: profile._json.bio || '',
             company: profile._json.company || '',
+            contributions, // Додаємо contributions
           });
           await user.save();
         } else {
-          // Не перезаписувати дані, якщо вони були оновлені користувачем
-          const updatedFields = {};
-          if (!user.name) updatedFields.name = profile.displayName || user.name;
-          if (!user.avatarUrl) updatedFields.avatarUrl = profile.photos[0]?.value;
-          if (!user.location) updatedFields.location = profile._json.location;
-          if (!user.bio) updatedFields.bio = profile._json.bio;
-          if (!user.company) updatedFields.company = profile._json.company;
-
-          updatedFields.apiKey = accessToken; 
-
-          if (Object.keys(updatedFields).length > 0) {
-            await User.findByIdAndUpdate(user.id, updatedFields);
-          }
+          // Оновлюємо contributions кожен раз при логіні
+          await User.findByIdAndUpdate(user.id, { contributions });
         }
 
         return done(null, user);
@@ -76,6 +69,38 @@ passport.use(
     }
   )
 );
+
+async function fetchGitHubContributions(username, token) {
+  try {
+    const today = new Date();
+    const contributions = [];
+
+    for (let i = 7; i >= 0; i--) {
+      const date = new Date();
+      date.setDate(today.getDate() - i);
+      const formattedDate = date.toISOString().split('T')[0];
+
+      // Робимо запит до GitHub API на комміти за конкретну дату
+      const response = await axios.get(
+        `https://api.github.com/search/commits?q=author:${username}+committer-date:${formattedDate}`,
+        {
+          headers: {
+            Authorization: `token ${token}`,
+            Accept: 'application/vnd.github.cloak-preview',
+          },
+        }
+      );
+
+      contributions.push({ date: formattedDate, count: response.data.total_count || 0 });
+    }
+
+    return contributions;
+  } catch (error) {
+    console.error('Помилка при отриманні contributions:', error.message);
+    return [];
+  }
+}
+
 
 
 passport.serializeUser((user, done) => {
@@ -128,20 +153,19 @@ app.get('/logout', (req, res) => {
   });
 });
 
-app.get('/api/user', ensureAuthenticated, (req, res) => {
+app.get('/api/user', async (req, res) => {
+  if (!req.isAuthenticated()) {
+    return res.status(401).json({ message: 'Unauthorized' });
+  }
+
   res.json({
     username: req.user.username,
     name: req.user.name,
-    profileUrl: req.user.profileUrl,
     avatarUrl: req.user.avatarUrl,
     location: req.user.location,
     bio: req.user.bio,
     company: req.user.company,
-    email: req.user.email, 
-    instagram: req.user.instagram || '',
-    twitter: req.user.twitter || '',
-    facebook: req.user.facebook || '',
-    YearsOfExperience: req.user.YearsOfExperience || 2,
+    contributions: req.user.contributions, // Відправляємо contributions
   });
 });
 

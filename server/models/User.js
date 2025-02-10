@@ -15,6 +15,7 @@ const UserSchema = new mongoose.Schema({
   twitter: { type: String },
   facebook: { type: String },
   YearsOfExperience: { type: Number },
+  contributions: { type: Array, default: [] }
 });
 
 
