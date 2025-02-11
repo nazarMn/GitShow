@@ -4,6 +4,7 @@ import {
   faBars, faCog, faSignOutAlt, faLocationDot, faBuilding, faEnvelope,
 } from '@fortawesome/free-solid-svg-icons';
 import { faGithub, faInstagram, faFacebook, faTwitter } from '@fortawesome/free-brands-svg-icons';
+import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
 import './Home.css';
 
 export default function Home() {
@@ -55,7 +56,6 @@ export default function Home() {
         )}
       </div>
 
-      
       <div className="homeTop">
         <div className="menuWrapper">
           <FontAwesomeIcon
@@ -68,9 +68,9 @@ export default function Home() {
           {menuOpen && (
             <div className="dropdownMenu">
               <a href="/PublicProfileSettings">
-              <div className="menuItem" >
-                <FontAwesomeIcon icon={faCog} size="lg" color="#000" />
-              </div>
+                <div className="menuItem">
+                  <FontAwesomeIcon icon={faCog} size="lg" color="#000" />
+                </div>
               </a>
               <div className="menuItem" onClick={handleLogout}>
                 <FontAwesomeIcon icon={faSignOutAlt} size="lg" color="#000" />
@@ -79,6 +79,7 @@ export default function Home() {
           )}
         </div>
       </div>
+
       <div className="homeBottom">
         <div className="homeBottomLeft">
           <h2>{user.name}</h2>
@@ -106,6 +107,18 @@ export default function Home() {
             </div>
           )}
         </div>
+      </div>
+      
+      <div className="contributionsChart">
+        <h3>Статистика активності</h3>
+        <ResponsiveContainer width="100%" height={300}>
+          <BarChart data={user.contributions}>
+            <XAxis dataKey="date" />
+            <YAxis />
+            <Tooltip />
+            <Bar dataKey="count" fill="#82ca9d" />
+          </BarChart>
+        </ResponsiveContainer>
       </div>
     </div>
   );
