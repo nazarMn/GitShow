@@ -4,7 +4,7 @@ import {
   faBars, faCog, faSignOutAlt, faLocationDot, faBuilding, faEnvelope,
 } from '@fortawesome/free-solid-svg-icons';
 import { faGithub, faInstagram, faFacebook, faTwitter } from '@fortawesome/free-brands-svg-icons';
-import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
+import { AreaChart, Area, XAxis, Tooltip, ResponsiveContainer } from 'recharts';
 import './Home.css';
 
 export default function Home() {
@@ -15,7 +15,7 @@ export default function Home() {
     fetch('/api/user')
       .then((res) => res.json())
       .then((data) => {
-        console.log('User data:', data); 
+        console.log('User data:', data);
         setUser(data);
       })
       .catch(() => setUser(null));
@@ -81,44 +81,43 @@ export default function Home() {
       </div>
 
       <div className="homeBottom">
-        <div className="homeBottomLeft">
-          <h2>{user.name}</h2>
-          <p>{user.bio}</p>
-        </div>
         <div className="homeBottomRight">
           <img src={user.avatarUrl} alt="avatar" />
           <h2>{user.username}</h2>
+          <p>{user.bio}</p>
           {user.location && (
             <div className="infoGroup">
-              <FontAwesomeIcon icon={faLocationDot} size="lg" color="#fff" />{' '}
+              <FontAwesomeIcon icon={faLocationDot} size="lg" color="#fff" />
               <p>{user.location}</p>
             </div>
           )}
           {user.company && (
             <div className="infoGroup">
-              <FontAwesomeIcon icon={faBuilding} size="lg" color="#fff" />{' '}
+              <FontAwesomeIcon icon={faBuilding} size="lg" color="#fff" />
               <p>{user.company}</p>
             </div>
           )}
           {user.email && (
             <div className="infoGroup">
-              <FontAwesomeIcon icon={faEnvelope} size="lg" color="#fff" />{' '}
+              <FontAwesomeIcon icon={faEnvelope} size="lg" color="#fff" />
               <p>{user.email}</p>
             </div>
           )}
         </div>
-      </div>
-      
-      <div className="contributionsChart">
-        <h3>Статистика активності</h3>
-        <ResponsiveContainer width="100%" height={300}>
-          <BarChart data={user.contributions}>
-            <XAxis dataKey="date" />
-            <YAxis />
-            <Tooltip />
-            <Bar dataKey="count" fill="#82ca9d" />
-          </BarChart>
-        </ResponsiveContainer>
+        
+        <div className="homeBottomLeft">
+          <h2>{user.name}</h2>
+          <div className="contributionsChart">
+            <h3>Статистика активності</h3>
+            <ResponsiveContainer width="100%" height={350}>
+              <AreaChart data={user.contributions}>
+                <XAxis dataKey="date" stroke="#ccc" />
+                <Tooltip />
+                <Area type="monotone" dataKey="count" stroke="#82ca9d" fill="#82ca9d" fillOpacity={0.3} strokeWidth={2} width={"100%"} />
+              </AreaChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
       </div>
     </div>
   );

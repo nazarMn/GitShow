@@ -143,4 +143,12 @@
     transform: scale(1.2);
     color: #1da1f2;
   }
-  
+  .contributionsChart{
+    width: 100%;
+  }
+  .contributionsChart h3{
+    color: #fff;
+    font-size: 18px;
+    font-weight: 500;
+    letter-spacing: 2px;
+  }
