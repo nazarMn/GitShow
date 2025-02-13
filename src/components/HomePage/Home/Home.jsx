@@ -4,7 +4,8 @@ import {
   faBars, faCog, faSignOutAlt, faLocationDot, faBuilding, faEnvelope,
 } from '@fortawesome/free-solid-svg-icons';
 import { faGithub, faInstagram, faFacebook, faTwitter } from '@fortawesome/free-brands-svg-icons';
-import { AreaChart, Area, XAxis, Tooltip, ResponsiveContainer } from 'recharts';
+import { ResponsiveContainer, AreaChart, XAxis, YAxis, Tooltip, Area} from "recharts";
+
 import './Home.css';
 
 export default function Home() {
@@ -108,15 +109,39 @@ export default function Home() {
         <div className="homeBottomLeft">
           <h2>{user.name}</h2>
           <div className="contributionsChart">
-            <h3>Статистика активності</h3>
-            <ResponsiveContainer width="100%" height={350}>
-              <AreaChart data={user.contributions}>
-                <XAxis dataKey="date" stroke="#ccc" />
-                <Tooltip />
-                <Area type="monotone" dataKey="count" stroke="#82ca9d" fill="#82ca9d" fillOpacity={0.3} strokeWidth={2} width={"100%"} />
-              </AreaChart>
-            </ResponsiveContainer>
-          </div>
+  <h3>Статистика активності</h3>
+  <ResponsiveContainer width="100%" height={350}>
+    <AreaChart 
+      data={user.contributions} 
+      margin={{ top: 10, right: 20, bottom: 10, left: 20 }}
+    >
+      <defs>
+        <linearGradient id="colorGradient" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor="#82ca9d" stopOpacity={0.9} />
+          <stop offset="50%" stopColor="#82ca9d" stopOpacity={0.5} />
+          <stop offset="100%" stopColor="#82ca9d" stopOpacity={0.1} />
+        </linearGradient>
+      </defs>
+
+      <XAxis dataKey="date" stroke="#ccc" />
+      <YAxis domain={[0, 'dataMax + 3']} stroke="#ccc" />
+      <Tooltip />
+      <Area 
+        type="natural" 
+        dataKey="count" 
+        stroke="#82ca9d" 
+        strokeOpacity={0.8} 
+        fill="url(#colorGradient)" 
+        fillOpacity={1} 
+        strokeWidth={2} 
+        dot={false}  
+        activeDot={{ r: 6, fill: "#82ca9d", stroke: "#fff", strokeWidth: 2 }}
+      />
+    </AreaChart>
+  </ResponsiveContainer>
+</div>
+
+
         </div>
       </div>
     </div>

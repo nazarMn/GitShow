@@ -75,7 +75,7 @@ async function fetchGitHubContributions(username, token) {
     const today = new Date();
     const contributions = [];
 
-    for (let i = 7; i >= 0; i--) {
+    for (let i = 14; i >= 0; i--) {
       const date = new Date();
       date.setDate(today.getDate() - i);
       const formattedDate = date.toISOString().split('T')[0];
