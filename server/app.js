@@ -436,7 +436,51 @@ app.get('/api/github/projects', ensureAuthenticated, async (req, res) => {
 });
 
 
+app.get('/api/bookmarks', ensureAuthenticated, async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id);
+    res.json(user.bookmarkedProjects);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Помилка при отриманні закладок' });
+  }
+});
 
+app.post('/api/bookmark', ensureAuthenticated, async (req, res) => {
+  try {
+    const { title, description, imageUrl, link, websiteUrl, userAvatar } = req.body;
+    
+    const user = await User.findById(req.user.id);
+    
+    // Перевіряємо, чи вже є цей проєкт у закладках
+    if (user.bookmarkedProjects.some(proj => proj.title === title)) {
+      return res.status(400).json({ message: 'Проєкт вже в закладках' });
+    }
+
+    user.bookmarkedProjects.push({ title, description, imageUrl, link, websiteUrl, userAvatar });
+    await user.save();
+
+    res.json({ message: 'Проєкт додано до закладок', bookmarkedProjects: user.bookmarkedProjects });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Помилка при збереженні проєкту' });
+  }
+});
+app.delete('/api/bookmark', ensureAuthenticated, async (req, res) => {
+  try {
+    const { title } = req.body;
+    
+    const user = await User.findById(req.user.id);
+    
+    user.bookmarkedProjects = user.bookmarkedProjects.filter(proj => proj.title !== title);
+    await user.save();
+
+    res.json({ message: 'Проєкт видалено з закладок', bookmarkedProjects: user.bookmarkedProjects });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Помилка при видаленні проєкту' });
+  }
+});
 
 
 

@@ -8,32 +8,43 @@ export default function ProjectCard({ title, description, imageUrl, link, websit
   const [isSaved, setIsSaved] = useState(false);
 
   useEffect(() => {
-    const savedProjects = JSON.parse(localStorage.getItem('bookmarkedProjects')) || [];
-    const isProjectSaved = savedProjects.some(project => project.title === title);
-    setIsSaved(isProjectSaved);
-  }, [title]);
-
-  const toggleSave = () => {
-    const project = {
-      title,
-      description,
-      imageUrl,
-      link,
-      websiteUrl,
-      userAvatar
+    const fetchBookmarks = async () => {
+      try {
+        const response = await fetch('/api/bookmarks');
+        const bookmarks = await response.json();
+        setIsSaved(bookmarks.some(proj => proj.title === title));
+      } catch (error) {
+        console.error('Помилка при отриманні закладок:', error);
+      }
     };
-    
-    let savedProjects = JSON.parse(localStorage.getItem('bookmarkedProjects')) || [];
-    
-    if (isSaved) {
-      savedProjects = savedProjects.filter(project => project.title !== title);
-    } else {
-      savedProjects.push(project);
+  
+    fetchBookmarks();
+  }, [title]);
+  
+  const toggleSave = async () => {
+    try {
+      const project = { title, description, imageUrl, link, websiteUrl, userAvatar };
+  
+      if (isSaved) {
+        await fetch('/api/bookmark', {
+          method: 'DELETE',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ title })
+        });
+      } else {
+        await fetch('/api/bookmark', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(project)
+        });
+      }
+  
+      setIsSaved(!isSaved);
+    } catch (error) {
+      console.error('Помилка при оновленні закладок:', error);
     }
-    
-    localStorage.setItem('bookmarkedProjects', JSON.stringify(savedProjects));
-    setIsSaved(!isSaved);
   };
+  
 
   return (
     <div className="projectCard">
