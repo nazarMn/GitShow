@@ -70,20 +70,8 @@ passport.use(
   )
 );
 
-let cachedContributions = [];
-let lastFetchTime = 0;
-
 async function fetchGitHubContributions(username, token) {
   try {
-    const now = Date.now();
-    const twelveHours = 60 * 1000; // 12 годин у мілісекундах
-
-    if (now - lastFetchTime < twelveHours && cachedContributions.length > 0) {
-      console.log('Використовується кешовані дані');
-      return cachedContributions;
-    }
-
-    console.log('Оновлення даних з GitHub API...');
     const today = new Date();
     const contributions = [];
 
@@ -92,6 +80,7 @@ async function fetchGitHubContributions(username, token) {
       date.setDate(today.getDate() - i);
       const formattedDate = date.toISOString().split('T')[0];
 
+      // Робимо запит до GitHub API на комміти за конкретну дату
       const response = await axios.get(
         `https://api.github.com/search/commits?q=author:${username}+committer-date:${formattedDate}`,
         {
@@ -105,23 +94,12 @@ async function fetchGitHubContributions(username, token) {
       contributions.push({ date: formattedDate, count: response.data.total_count || 0 });
     }
 
-    cachedContributions = contributions;
-    lastFetchTime = Date.now();
     return contributions;
   } catch (error) {
     console.error('Помилка при отриманні contributions:', error.message);
-    return cachedContributions.length > 0 ? cachedContributions : [];
+    return [];
   }
 }
-
-// Оновлення даних кожні 12 годин
-setInterval(() => {
-  fetchGitHubContributions('ТВОЄ_ІМ’Я_НА_GITHUB', 'ТВІЙ_ТОКЕН');
-}, 12 * 60 * 60 * 1000);
-
-// Викликати один раз при старті
-fetchGitHubContributions('ТВОЄ_ІМ’Я_НА_GITHUB', 'ТВІЙ_ТОКЕН');
-
 
 
 
