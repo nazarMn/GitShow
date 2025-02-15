@@ -1,13 +1,22 @@
 import React, { useEffect, useState } from 'react';
 import './BookmarksPage.css';
-import ProjectCard from '../ProjectCard/ProjectCard'; 
+import ProjectCard from '../ProjectCard/ProjectCard';
+import axios from 'axios';
 
 export default function BookmarksPage() {
   const [bookmarkedProjects, setBookmarkedProjects] = useState([]);
 
   useEffect(() => {
-    const savedProjects = JSON.parse(localStorage.getItem('bookmarkedProjects')) || [];
-    setBookmarkedProjects(savedProjects);
+    const fetchBookmarks = async () => {
+      try {
+        const response = await axios.get('/api/bookmarks');
+        setBookmarkedProjects(response.data);
+      } catch (error) {
+        console.error('Помилка при отриманні закладок:', error);
+      }
+    };
+
+    fetchBookmarks();
   }, []);
 
   return (

@@ -5,6 +5,7 @@ import { faUser } from "@fortawesome/free-solid-svg-icons";
 import { faBriefcase } from "@fortawesome/free-solid-svg-icons";
 import { faBookmark } from "@fortawesome/free-regular-svg-icons";
 import { Link } from "react-router-dom";  
+import axios from "axios";
 
 import "./NavigationСomponent.css";
 
@@ -13,8 +14,16 @@ const Navigation = () => {
   const [hasBookmarks, setHasBookmarks] = useState(false);
 
   useEffect(() => {
-    const savedProjects = JSON.parse(localStorage.getItem('bookmarkedProjects')) || [];
-    setHasBookmarks(savedProjects.length > 0);
+    const fetchBookmarks = async () => {
+      try {
+        const response = await axios.get('/api/bookmarks');
+        setHasBookmarks(response.data.length > 0);
+      } catch (error) {
+        console.error("Помилка при отриманні закладок:", error);
+      }
+    };
+
+    fetchBookmarks();
   }, []);
 
   const toggleNavigation = () => {
