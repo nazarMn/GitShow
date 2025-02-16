@@ -1,15 +1,15 @@
 import React from 'react'
-import './CEOAISettings.css'
+import './CVAISettings.css'
 import SettingsSidebar from "../SettingsSidebar/SettingsSidebar";
 
-export default function CEOAISettings() {
+export default function CVAISettings() {
 
   return (
-    <div className="CEO-AI-Settings">
+    <div className="CV-AI-Settings">
             <SettingsSidebar />
-            <div className="CEO-Generate-container">
-              <a href="CEOAIModels">
-      <button className="generate-btn">Generate CEO</button>
+            <div className="CV-Generate-container">
+              <a href="CVAIModels">
+      <button className="generate-btn">Generate CV</button>
       </a>
       </div>
     </div>

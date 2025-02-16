@@ -13,9 +13,9 @@ import SkillsSettings from './components/HomePage/Setting/SkillsSettings/SkillsS
 import Reviews from './components/HomePage/ReviewsPage/Reviews/Reviews';
 import Navigation from './components/NavigationСomponent/NavigationСomponent';
 import Project from './components/ProjectPage/Project/Project';
-import CEOAISettings from './components/HomePage/Setting/CEOAISettings/CEOAISettings';
-import CEOAIModels from './components/CEOAIComponents/CEOAIModels/CEOAIModels';
-import CEOAIEditing from './components/CEOAIComponents/CEOAIEditing/CEOAIEditing';
+import CVAISettings from './components/HomePage/Setting/CVAISettings/CVAISettings';
+import CVAIModels from './components/CVAIComponents/CVAIModels/CVAIModels';
+import CVAIEditing from './components/CVAIComponents/CVAIEditing/CVAIEditing';
 import BookmarksPage from './components/ProjectPage/BookmarksPage/BookmarksPage';
 
 
@@ -75,7 +75,7 @@ const App = () => {
                 <Skills />
                 <Resume />
                 <Reviews />
-                {/* <CEOAIEditing /> */}
+                {/* <CVAIEditing /> */}
             
               </>
             ) : (
@@ -114,12 +114,12 @@ const App = () => {
         />
 
         <Route
-          path="/CEOAISettings"
-          element={isAuthenticated ? <CEOAISettings /> : <Navigate to="/" replace />}
+          path="/CVAISettings"
+          element={isAuthenticated ? <CVAISettings /> : <Navigate to="/" replace />}
         />
         <Route
-          path="/CEOAIModels"
-          element={isAuthenticated ? <CEOAIModels /> : <Navigate to="/" replace />}
+          path="/CVAIModels"
+          element={isAuthenticated ? <CVAIModels /> : <Navigate to="/" replace />}
         />
 
 

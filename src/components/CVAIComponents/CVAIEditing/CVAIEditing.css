@@ -3,7 +3,7 @@
     padding: 0;
     box-sizing: border-box;
 }
-.CEO-AI-Editing{
+.CV-AI-Editing{
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -12,14 +12,14 @@
     height: 100vh;
     border: solid 2px #0443ff;
 }
-.CEO-AI-Editing-header {
+.CV-AI-Editing-header {
     display: flex;
     width: 100%;
     height: 20%;
     background-color: #36383E;
     position: relative;
 }
-.CEO-AI-Editing-header-Left{
+.CV-AI-Editing-header-Left{
     display: flex;
     align-items: center;
     justify-content: center;
@@ -27,7 +27,7 @@
     height: 100%;
     background-color: #36383E;
 }
-.CEO-AI-Editing-header-Right{
+.CV-AI-Editing-header-Right{
     display: flex;
     flex-direction: column;
     align-items: flex-start;
@@ -37,24 +37,24 @@
     height: 100%;
     background-color: #36383E;
 }
-.CEO-AI-Editing-header h2{
+.CV-AI-Editing-header h2{
     font-size: 2rem;
     color: #ccc;
     text-transform: uppercase;
     font-weight: bold;
     margin-bottom: 20px;
 }
-.CEO-AI-Editing-Container{
+.CV-AI-Editing-Container{
     display: flex   ;
     width: 100%;
     height: 80%;
 }
-.CEO-AI-Editing-Container-Left{
+.CV-AI-Editing-Container-Left{
     width: 25%;
     height: 100%;
     background-color: #ff7300;
 }
-.CEO-AI-Editing-Container-Right{
+.CV-AI-Editing-Container-Right{
     width: 75%;
     height: 100%;
     background-color: #ff0000;

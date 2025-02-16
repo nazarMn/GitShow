@@ -4,13 +4,13 @@
     box-sizing: border-box;
     font-family:  'Montserrat', sans-serif;
 }
-.CEO-AI-Settings{
+.CV-AI-Settings{
     width: 100%;
     height: 100vh;
     display: flex;
     background-color: #101010;
 }
-.CEO-Generate-container{
+.CV-Generate-container{
     display: flex;
     justify-content: center;
     align-items: center;

@@ -38,7 +38,7 @@ export default function Reviews() {
             stars={5}
             text="The education should be very interactive. Ut tincidunt est ac dolor aliquam sodales."
             name="Mesud Ozill"
-            role="CEO Founder"
+            role="CV Founder"
             image="path-to-image-mesud.jpg"
           />
         </SwiperSlide>

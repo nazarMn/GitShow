@@ -25,9 +25,9 @@ export default function SettingsSidebar() {
                   <FontAwesomeIcon icon={faBrain} /> Skills
                 </li>
                 </a>
-                <a href="CEOAISettings">
+                <a href="CVAISettings">
                 <li>
-                  <FontAwesomeIcon icon={faBrain} /> CEO AI
+                  <FontAwesomeIcon icon={faBrain} /> CV AI
                 </li>
                 </a>
               </ul>
