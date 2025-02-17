@@ -8,9 +8,8 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    width: 80%;
+    width: 100%;
     height: 100vh;
-    border: solid 2px #0443ff;
 }
 .CV-Revue-header {
     display: flex;
@@ -27,18 +26,35 @@
     height: 100%;
     background-color: #36383E;
 }
+.profile-img {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: -35px;
+    z-index: 100;
+}
+
+
 .CV-Revue-header-Right{
     display: flex;
     flex-direction: column;
     align-items: flex-start;
     justify-content: center;
-    padding-left: 120px;
+    padding-left: 35px;
     width: 75%;
     height: 100%;
     background-color: #36383E;
 }
 .CV-Revue-header h2{
     font-size: 2rem;
+    color: #ccc;
+    text-transform: uppercase;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+.CV-Revue-header p{
+    font-size: 1.5rem;
     color: #ccc;
     text-transform: uppercase;
     font-weight: bold;
@@ -52,20 +68,23 @@
 .CV-Revue-Container-Left{
     width: 25%;
     height: 100%;
-    background-color: #ff7300;
+    background-color: #EEE7E1;
 }
 .CV-Revue-Container-Right{
+    display: flex;
+    align-items: center;
+    justify-content: flex-start ;
     width: 75%;
     height: 100%;
-    background-color: #ff0000;
+    background-color: #ffffff;
 }
 .triangle {
     position: absolute;
-    bottom: -105px; 
+    bottom: -75px; 
     left: 0;
     width: 0;
     height: 0;
-    border-left: 190px solid transparent;
-    border-right: 190px solid transparent;
-    border-top: 105px solid #36383E; 
+    border-left: 238px solid transparent;
+    border-right: 238px solid transparent;
+    border-top: 75px solid #36383E; 
 }
