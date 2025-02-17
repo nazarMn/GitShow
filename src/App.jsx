@@ -15,6 +15,7 @@ import Navigation from './components/NavigationСomponent/NavigationСomponent';
 import Project from './components/ProjectPage/Project/Project';
 import CVSettings from './components/HomePage/Setting/CVSettings/CVSettings';
 import CVModels from './components/CVComponents/CVModels/CVModels';
+import CVRevue from './components/CVComponents/CVRevue/CVRevue';
 import CVEditing from './components/CVComponents/CVEditing/CVEditing';
 import BookmarksPage from './components/ProjectPage/BookmarksPage/BookmarksPage';
 
@@ -75,7 +76,7 @@ const App = () => {
                 <Skills />
                 <Resume />
                 <Reviews />
-                {/* <CVEditing /> */}
+                <CVRevue />
             
               </>
             ) : (
