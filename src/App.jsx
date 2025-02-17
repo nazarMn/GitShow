@@ -13,9 +13,9 @@ import SkillsSettings from './components/HomePage/Setting/SkillsSettings/SkillsS
 import Reviews from './components/HomePage/ReviewsPage/Reviews/Reviews';
 import Navigation from './components/NavigationСomponent/NavigationСomponent';
 import Project from './components/ProjectPage/Project/Project';
-import CVAISettings from './components/HomePage/Setting/CVAISettings/CVAISettings';
-import CVAIModels from './components/CVAIComponents/CVAIModels/CVAIModels';
-import CVAIEditing from './components/CVAIComponents/CVAIEditing/CVAIEditing';
+import CVSettings from './components/HomePage/Setting/CVSettings/CVSettings';
+import CVModels from './components/CVComponents/CVModels/CVModels';
+import CVEditing from './components/CVComponents/CVEditing/CVEditing';
 import BookmarksPage from './components/ProjectPage/BookmarksPage/BookmarksPage';
 
 
@@ -75,7 +75,7 @@ const App = () => {
                 <Skills />
                 <Resume />
                 <Reviews />
-                {/* <CVAIEditing /> */}
+                {/* <CVEditing /> */}
             
               </>
             ) : (
@@ -114,12 +114,12 @@ const App = () => {
         />
 
         <Route
-          path="/CVAISettings"
-          element={isAuthenticated ? <CVAISettings /> : <Navigate to="/" replace />}
+          path="/CVSettings"
+          element={isAuthenticated ? <CVSettings /> : <Navigate to="/" replace />}
         />
         <Route
-          path="/CVAIModels"
-          element={isAuthenticated ? <CVAIModels /> : <Navigate to="/" replace />}
+          path="/CVModels"
+          element={isAuthenticated ? <CVModels /> : <Navigate to="/" replace />}
         />
 
 

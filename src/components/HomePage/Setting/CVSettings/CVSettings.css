@@ -4,20 +4,20 @@
     box-sizing: border-box;
     font-family:  'Montserrat', sans-serif;
 }
-.CV-AI-Settings{
+.CV-Settings{
     width: 100%;
     height: 100vh;
     display: flex;
     background-color: #101010;
 }
-.CV-Generate-container{
+.CV-Create-container{
     display: flex;
     justify-content: center;
     align-items: center;
     width: 100%;
     height: 100%;
 }
-.generate-btn{
+.create-btn{
     font-size: 32px;
     padding: 10px 20px;
     border: none;
@@ -26,10 +26,10 @@
     color: #fff;
     cursor: pointer;
 }
-.generate-btn:hover{
+.create-btn:hover{
     background-color: #0056b3;
 }
-.generate-btn:active{
+.create-btn:active{
     transform: scale(0.98);
     box-shadow: 3px 2px 22px 1px rgba(0, 0, 0, 0.24);
     background-color: #0062cc;
