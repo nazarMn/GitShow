@@ -17,8 +17,33 @@ export default function CVRevue() {
       </header>
 
       <div className="CV-Revue-Container">
-        <div className="CV-Revue-Container-Left"></div>
-        <div className="CV-Revue-Container-Right"></div>
+        <div className="CV-Revue-Container-Left">
+          <div className="Contact-Сontainer">
+            <div className="Contact-Email">Email</div>
+            <div className="Contact-Phone">Phone</div>
+            <div className="Contact-Adress">Adress</div>
+
+          </div>
+          <div className="Education-Container">
+
+          </div>
+          <div className="Skills-Container">
+
+          </div>
+
+        </div>
+        <div className="CV-Revue-Container-Right">
+          <div className="Summary-Container">
+            
+          </div>
+          <div className="Experience-Container">
+          </div>
+          <div className="Reference-Container">
+            
+          </div>
+          
+
+        </div>
       </div>     
     </div>
   );
