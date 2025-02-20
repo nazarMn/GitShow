@@ -21,15 +21,18 @@ export default function CVRevue() {
       <div className="CV-Revue-Container">
         <div className="CV-Revue-Container-Left">
           <div className="Contact-Сontainer">
+            <h2 className="Contact-Title">Contact Detalis</h2>
             <div className="Contact-Email"> <FontAwesomeIcon icon={faEnvelope}  size="xl" /> <h2>Email</h2></div>
             <div className="Contact-Phone"> <FontAwesomeIcon icon={faPhone}  size="xl" /> <h2>Phone</h2></div>
             <div className="Contact-Adress"><FontAwesomeIcon icon={faLocationDot}  size="xl" /> <h2>Adress</h2></div>
 
           </div>
           <div className="Education-Container">
+            <h2 className="Education-Title">Education</h2>
 
           </div>
           <div className="Skills-Container">
+            <h2 className="Skills-Title">Skills</h2>
 
           </div>
 
