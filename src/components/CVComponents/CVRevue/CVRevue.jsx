@@ -39,11 +39,14 @@ export default function CVRevue() {
         </div>
         <div className="CV-Revue-Container-Right">
           <div className="Summary-Container">
+            <header className="Summary-Title">Summary</header>
             
           </div>
           <div className="Experience-Container">
+            <header className="Experience-Title">Work Experience</header>
           </div>
           <div className="Reference-Container">
+            <header className="Reference-Title">Reference</header>
             
           </div>
           
