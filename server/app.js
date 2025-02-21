@@ -26,7 +26,13 @@ app.use(
     saveUninitialized: false,
   })
 );
-app.use(cors());
+
+app.use(cors({
+  origin: '*', // Дозволити доступ з усіх доменів
+  credentials: true, // Дозволяє використання cookie або авторизаційних заголовків
+}));
+
+
 
 passport.use(
   new GitHubStrategy(
