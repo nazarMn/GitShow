@@ -9,7 +9,8 @@ export default function Portfolio() {
   const [currentPage, setCurrentPage] = useState(1);
   const [showModal, setShowModal] = useState(false); 
   const [currentProject, setCurrentProject] = useState(null); 
-  const projectsPerPage = currentPage === 1 ? 3 : 4;
+  const projectsPerPageFirst = 2; // Кількість проектів на першій сторінці
+  const projectsPerPageOther = 4; // Кількість проектів на інших сторінках
 
   useEffect(() => {
     const fetchProjects = async () => {
@@ -23,11 +24,23 @@ export default function Portfolio() {
     fetchProjects();
   }, []);
 
-  const indexOfLastProject = currentPage * projectsPerPage;
-  const indexOfFirstProject = currentPage === 1 ? 0 : indexOfLastProject - projectsPerPage;
-  const currentProjects = projects.slice(indexOfFirstProject, indexOfLastProject);
+  // Логіка для кількості проектів на поточній сторінці
+  const projectsPerPage = currentPage === 1 ? projectsPerPageFirst : projectsPerPageOther;
 
-  const totalPages = Math.ceil((projects.length + 1) / projectsPerPage); 
+  const indexOfLastProject = currentPage * projectsPerPage;
+  const indexOfFirstProject = indexOfLastProject - projectsPerPage;
+
+  // Для першої сторінки відображаються перші 2 проекти, на наступних - по 4
+  let currentProjects = [];
+
+  if (currentPage === 1) {
+    currentProjects = projects.slice(0, projectsPerPageFirst);
+  } else {
+    const remainingProjects = projects.slice(projectsPerPageFirst);
+    currentProjects = remainingProjects.slice((currentPage - 2) * projectsPerPageOther, (currentPage - 1) * projectsPerPageOther);
+  }
+
+  const totalPages = Math.ceil((projects.length - projectsPerPageFirst) / projectsPerPageOther) + 1; 
 
   const handleNextPage = () => {
     if (currentPage < totalPages) {
@@ -102,108 +115,77 @@ export default function Portfolio() {
       </div>
 
       <div className="portfolioBottom">
-        {currentPage === 1 ? (
-          <>
-            <div className="portfolioRow">
-              <div className="portfolioWorksAndCard">
-                <PortfolioWorks />
-                {currentProjects[0] && (
-                  <PortfolioCard
-                    key={currentProjects[0]._id}
-                    title={currentProjects[0].name}
-                    description={currentProjects[0].description}
-                    imageUrl={currentProjects[0].imageUrl}
-                    link={currentProjects[0].link}
-                    websiteUrl={currentProjects[0].websiteUrl}
-                    onDelete={() => deleteProject(currentProjects[0]._id)}
-                    onEdit={() => openEditModal(currentProjects[0])} 
-                  />
-                )}
-              </div>
+        {currentPage === 1 && (
+          <div className="portfolioRow">
+            <div className="portfolioWorksAndCard">
+              <PortfolioWorks />
             </div>
-            <div className="portfolioGrid">
-              {currentProjects.slice(1).map((project) => (
-                <PortfolioCard
-                  key={project._id}
-                  title={project.name}
-                  description={project.description}
-                  imageUrl={project.imageUrl}
-                  link={project.link}
-                  websiteUrl={project.websiteUrl}
-                  onDelete={() => deleteProject(project._id)}
-                  onEdit={() => openEditModal(project)} 
-                />
-              ))}
-            </div>
-          </>
-        ) : (
-          <>
-            <div className="portfolioGrid">
-              {currentProjects.map((project) => (
-                <PortfolioCard
-                  key={project._id}
-                  title={project.name}
-                  description={project.description}
-                  imageUrl={project.imageUrl}
-                  link={project.link}
-                  websiteUrl={project.websiteUrl}
-                  onDelete={() => deleteProject(project._id)}
-                  onEdit={() => openEditModal(project)} 
-                />
-              ))}
-            </div>
-          </>
+          </div>
         )}
+        
+        <div className="portfolioGrid">
+          {currentProjects.map((project) => (
+            <PortfolioCard
+              key={project._id}
+              title={project.name}
+              description={project.description}
+              imageUrl={project.imageUrl}
+              link={project.link}
+              websiteUrl={project.websiteUrl}
+              onDelete={() => deleteProject(project._id)}
+              onEdit={() => openEditModal(project)} 
+            />
+          ))}
+        </div>
       </div>
 
       {/* Модалка для редагування */}
       {showModal && (
-  <div className="modal">
-    <div className="modalContent">
-      <h3>Edit Project</h3>
-      <label>
-        Name:
-        <input
-          type="text"
-          name="name"
-          value={currentProject.name}
-          onChange={handleInputChange}
-        />
-      </label>
-      <label>
-        Description:
-        <textarea
-          name="description"
-          value={currentProject.description}
-          onChange={handleInputChange}
-        />
-      </label>
-      <label>
-        Website URL:
-        <input
-          type="text"
-          name="websiteUrl"
-          value={currentProject.websiteUrl}
-          onChange={handleInputChange}
-        />
-      </label>
-      <label>
-        Image:
-        <input
-          type="file"
-          name="image"
-          accept="image/*"
-          onChange={(e) => setCurrentProject({ ...currentProject, image: e.target.files[0] })}
-        />
-      </label>
-      <div className="modalActions">
-        <button onClick={handleEditProject} >Save Changes</button>
-        <button onClick={closeEditModal}>Cancel</button>
-      </div>
-    </div>
-  </div>
-)}
-
+        <div className="modal">
+          <div className="modalContent">
+            <h3>Edit Project</h3>
+            <label>
+              Name:
+              <input
+                type="text"
+                name="name"
+                value={currentProject.name}
+                onChange={handleInputChange}
+              />
+            </label>
+            <label>
+              Description:
+              <textarea
+                name="description"
+                value={currentProject.description}
+                onChange={handleInputChange}
+              />
+            </label>
+            <label>
+              Website URL:
+              <input
+                type="text"
+                name="websiteUrl"
+                value={currentProject.websiteUrl}
+                onChange={handleInputChange}
+              />
+            </label>
+            <label>
+              Image:
+              <input
+                type="file"
+                name="image"
+                accept="image/*"
+                onChange={(e) => setCurrentProject({ ...currentProject, image: e.target.files[0] })}
+              />
+            </label>
+            <div className="modalActions">
+              <button onClick={handleEditProject} >Save Changes</button>
+              <button onClick={closeEditModal}>Cancel</button>
+            </div>
+          </div>
+        </div>
+      )}
 
       <div className="pagination">
         <button onClick={handlePreviousPage} disabled={currentPage === 1}>
