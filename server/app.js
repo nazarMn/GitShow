@@ -28,7 +28,8 @@ app.use(
 );
 
 app.use(cors({
-  origin: '*', // Дозволити доступ з усіх доменів
+  origin: ['https://git-show.vercel.app', 'https://localhost:3000', 'https://git-show.vercel.app'],
+  // Дозволити доступ з усіх доменів
   credentials: true, // Дозволяє використання cookie або авторизаційних заголовків
 }));
 
