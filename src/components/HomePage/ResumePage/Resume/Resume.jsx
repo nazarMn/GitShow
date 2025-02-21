@@ -7,9 +7,6 @@ export default function Resume() {
   const [currentPage, setCurrentPage] = useState(1);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const API_BASE_URL = process.env.API_BASE_URL || 'http://localhost:3000';
-
-
 
   const itemsPerPage = 5;
 
@@ -18,7 +15,7 @@ export default function Resume() {
     const fetchResumes = async () => {
       try {
         setLoading(true);
-        const response = await fetch(`${API_BASE_URL}/api/resumes`, {
+        const response = await fetch('http://localhost:3000/api/resumes', {
           credentials: 'include', // Include cookies for authentication
         });
         if (!response.ok) {
@@ -40,7 +37,7 @@ export default function Resume() {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const response = await fetch(`${API_BASE_URL}/api/user`, {
+        const response = await fetch('http://localhost:3000/api/user', {
           credentials: 'include', // Include cookies for authentication
         });
         if (!response.ok) {

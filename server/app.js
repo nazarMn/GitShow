@@ -28,26 +28,6 @@ app.use(
 );
 app.use(cors());
 
-const allowedOrigins = [
-  'http://localhost:5173', // Локальний фронтенд (для розробки)
-  'https://git-show.vercel.app' // Домен фронтенду на Vercel
-];
-
-app.use(cors({
-  origin: function (origin, callback) {
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error('Not allowed by CORS'));
-    }
-  },
-  credentials: true // Дозволяє передавати cookies, токени
-}));
-
-app.options('*', cors()); // Дозволяє всі preflight-запити
-
-
-
 passport.use(
   new GitHubStrategy(
     {
@@ -626,7 +606,6 @@ app.get('*', (req, res) => {
 });
 
 const PORT = process.env.PORT || 3000;
-
 app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+  console.log(`Server running on http://localhost:${PORT}`);
 });
