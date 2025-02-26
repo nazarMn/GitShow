@@ -3,3 +3,72 @@
     padding: 0;
     box-sizing: border-box;
 }
+
+.CV-Edit-Cont-Refs-Summary{
+    width: 100%;
+    height: 90%;
+    display: flex;
+    background-color: #101010;
+    color: #fff;
+}
+
+.CVECRS-Content{
+    display: flex;
+    flex: 1;
+    padding-top: 40px;
+    padding-left: 40px;
+    padding-right: 40px;
+    gap: 40px;
+}
+
+.CVECRS-Main{
+    width: 80%;
+    background: #202020;
+    padding: 20px;
+    border: 1px solid #303030;
+    border-radius: 6px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+.CVECRS-Main h1 {
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+.CVECRS-group {
+    margin-bottom: 20px;
+}
+
+.CVECRS-group label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: #fff;
+}
+
+.CVECRS-group input,
+.CVECRS-group textarea {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #404040;
+    border-radius: 6px;
+    background-color: #303030;
+    font-size: 14px;
+    color: #fff;
+    resize: none;
+}
+
+textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+.CVECRS-Picture{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    width: 20%;
+    padding: 20px;
+    border-radius: 6px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}

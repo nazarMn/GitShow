@@ -77,6 +77,7 @@ const App = () => {
                 <Resume />
                 <Reviews />
                 <CVRevue />
+                <CVEdit />
             
               </>
             ) : (

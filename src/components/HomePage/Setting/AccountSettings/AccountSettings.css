@@ -57,6 +57,7 @@
     background-color: #303030;
     font-size: 14px;
     color: #fff;
+    resize: none;
 }
 
 textarea {
