@@ -7,7 +7,7 @@ import CVEditExp from '../CVEditExp/CVEditExp';
 
 export default function CVEdit() {
   const [currentPage, setCurrentPage] = useState(1);
-  const totalPages = 3; 
+  const totalPages = 3;
 
   const handlePageChange = (page) => {
     if (page >= 1 && page <= totalPages) {
@@ -15,14 +15,25 @@ export default function CVEdit() {
     }
   };
 
+  const renderPage = () => {
+    switch (currentPage) {
+      case 1:
+        return <CVEditContRefsSummary />;
+      case 2:
+        return <CVEditEduSkills />;
+      case 3:
+        return <CVEditExp />;
+      default:
+        return <CVEditContRefsSummary />;
+    }
+  };
+
   return (
-    <div className="CV-Edit"> 
+    <div className="CV-Edit">
       <SettingsSidebar />
       <div className="CV-Edit-Main">
-        {/* <CVEditContRefsSummary /> */}
-        {/* <CVEditEduSkills /> */}
-        <CVEditExp />
-
+        {renderPage()}
+        
         <div className="CV-Edit-Pagination">
           <button 
             onClick={() => handlePageChange(currentPage - 1)} 

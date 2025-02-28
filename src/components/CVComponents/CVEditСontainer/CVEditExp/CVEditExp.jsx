@@ -44,6 +44,23 @@ export default function CVEditExp() {
               placeholder='Description of experience'
               />
             </div>
+            <div className="CVEE-group">
+              <label htmlFor="experiencename3">Experience</label>
+              <input
+                type="text"
+                id="experiencename3"
+                placeholder="Experience Name"
+              />
+              <input 
+              type="text" 
+              id="yearsandposition3" 
+              placeholder='Years and position'
+              />
+              <textarea 
+              id="descriptionofexperience3"
+              placeholder='Description of experience'
+              />
+            </div>
 
             <button type="button" className="btn-save-CVEE">
               Update CV
