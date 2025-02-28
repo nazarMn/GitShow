@@ -6,7 +6,7 @@
 
 .CV-Edit-Cont-Refs-Summary{
     width: 100%;
-    height: 90%;
+    height: 92%;
     display: flex;
     background-color: #101010;
     color: #fff;
@@ -71,4 +71,19 @@ textarea {
     padding: 20px;
     border-radius: 6px;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+.btn-save-CVECRS {
+    width: 98%;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    font-size: 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.btn-save-CVECRS:hover {
+    background-color: #0056b3;
 }

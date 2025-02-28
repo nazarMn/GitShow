@@ -80,6 +80,11 @@ export default function CVEditContRefsSummary() {
                 placeholder="Your references 3"
               />
             </div>
+
+
+            <button type="button" className="btn-save-CVECRS">
+              Update CV
+            </button>
           </form>
 
           
