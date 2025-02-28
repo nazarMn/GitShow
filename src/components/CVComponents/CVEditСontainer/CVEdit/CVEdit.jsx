@@ -3,6 +3,7 @@ import './CVEdit.css';
 import CVEditContRefsSummary from '../CVEditContRefsSummary/CVEditContRefsSummary';
 import SettingsSidebar from '../../../HomePage/Setting/SettingsSidebar/SettingsSidebar';
 import CVEditEduSkills from '../CVEditEduSkills/CVEditEduSkills';
+import CVEditExp from '../CVEditExp/CVEditExp';
 
 export default function CVEdit() {
   const [currentPage, setCurrentPage] = useState(1);
@@ -19,7 +20,8 @@ export default function CVEdit() {
       <SettingsSidebar />
       <div className="CV-Edit-Main">
         {/* <CVEditContRefsSummary /> */}
-        <CVEditEduSkills />
+        {/* <CVEditEduSkills /> */}
+        <CVEditExp />
 
         <div className="CV-Edit-Pagination">
           <button 

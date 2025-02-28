@@ -3,3 +3,75 @@
     padding: 0;
     box-sizing: border-box;
 }
+.CV-Edit-Exp{
+    width: 100%;
+    height: 92%;
+    display: flex;
+    background-color: #101010;
+    color: #fff;
+}
+
+.CVEE-Content{
+    display: flex;
+    flex: 1;
+    padding-top: 40px;
+    padding-left: 40px;
+    padding-right: 40px;
+    gap: 40px;
+}
+.CVEE-Main{
+    width: 100%;
+    background: #202020;
+    padding: 20px;
+    border: 1px solid #303030;
+    border-radius: 6px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+.CVEE-Main h1 {
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+
+.CVEE-group {
+    margin-bottom: 20px;
+}
+
+.CVEE-group label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: #fff;
+}
+
+.CVEE-group input,
+.CVEE-group textarea {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #404040;
+    border-radius: 6px;
+    background-color: #303030;
+    font-size: 14px;
+    color: #fff;
+    resize: none;
+}
+
+textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+.btn-save-CVEE {
+    width: 98%;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    font-size: 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.btn-save-CVEE:hover {
+    background-color: #0056b3;
+}
