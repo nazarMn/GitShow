@@ -165,6 +165,7 @@ app.get('/api/user', async (req, res) => {
     bio: req.user.bio,
     company: req.user.company,
     contributions: req.user.contributions, // Відправляємо contributions
+    YearsOfExperience: req.user.YearsOfExperience
   });
 });
 
