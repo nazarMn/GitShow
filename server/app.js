@@ -5,7 +5,6 @@ const GitHubStrategy = require('passport-github2').Strategy;
 const session = require('express-session');
 const helmet = require('helmet');
 const path = require('path');
-const fetch = require('node-fetch');
 const axios = require('axios');
 const fs = require('fs');
 const cors = require('cors');
@@ -123,9 +122,9 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // MongoDB Connection
 mongoose
-  .connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
+  .connect(process.env.MONGO_URI)
   .then(() => console.log('MongoDB Connected'))
-  .catch((err) => console.log(err));
+  .catch((err) => console.error('MongoDB Connection Error:', err));
 
 // Authentication Middleware
 const ensureAuthenticated = (req, res, next) => {
