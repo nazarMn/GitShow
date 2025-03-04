@@ -1,7 +1,7 @@
 import React from 'react'
 import './SettingsSidebar.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUser, faFileLines, faBrain } from '@fortawesome/free-solid-svg-icons';
+import { faUser, faFileLines, faBrain, faCog } from '@fortawesome/free-solid-svg-icons';
 
 export default function SettingsSidebar() {
   return (
@@ -28,6 +28,11 @@ export default function SettingsSidebar() {
                 <a href="CVSettings">
                 <li>
                   <FontAwesomeIcon icon={faBrain} /> CV 
+                </li>
+                </a>
+                <a href="GlobalSettings">
+                <li>
+                  <FontAwesomeIcon icon={faCog} /> Global
                 </li>
                 </a>
               </ul>

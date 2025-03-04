@@ -18,6 +18,7 @@ import CVModels from './components/CVComponents/CVModels/CVModels';
 import CVRevue from './components/CVComponents/CVRevue/CVRevue';
 import CVEdit from './components/CVComponents/CVEditСontainer/CVEdit/CVEdit';
 import BookmarksPage from './components/ProjectPage/BookmarksPage/BookmarksPage';
+import GlobalSettings from './components/HomePage/Setting/GlobalSettings/GlobalSettings';
 
 
 const App = () => {
@@ -122,6 +123,11 @@ const App = () => {
         <Route
           path="/CVModels"
           element={isAuthenticated ? <CVModels /> : <Navigate to="/" replace />}
+        />
+
+        <Route
+          path="/GlobalSettings"
+          element={isAuthenticated ? <GlobalSettings /> : <Navigate to="/" replace />}
         />
 
 
