@@ -13,6 +13,33 @@ export default function CVModels() {
     setSelectedCV(prevSelected => (prevSelected === id ? null : id));
   };
 
+  const handleSaveCV = async () => {
+    if (!selectedCV) {
+      alert('Please select a CV template');
+      return;
+    }
+  
+    try {
+      const response = await fetch('/api/cv', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ templateId: selectedCV })
+      });
+  
+      const data = await response.json();
+      if (response.ok) {
+        alert('CV saved successfully!');
+      } else {
+        alert(`Error: ${data.message}`);
+      }
+    } catch (error) {
+      console.error('Error saving CV:', error);
+      alert('Failed to save CV');
+    }
+  };
+
   return (
     <div className="CV-Models">
       <header className="CV-Models-header">Choose your CV design</header>
@@ -28,7 +55,7 @@ export default function CVModels() {
         ))}
       </div>
       <div className="CV-Models-Save">
-        <button>Continue</button>
+        {selectedCV && <button onClick={handleSaveCV}>Continue</button>}
       </div>
     </div>
   );

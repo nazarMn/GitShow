@@ -213,6 +213,28 @@ app.use(
 
 
 
+const CV = require('./models/CV'); // Підключаємо модель CV
+
+app.post('/api/cv', ensureAuthenticated, async (req, res) => {
+  try {
+    const { templateId } = req.body;
+
+    if (!templateId) {
+      return res.status(400).json({ message: 'Template ID is required' });
+    }
+
+    const newCV = new CV({
+      userId: req.user.id,
+      templateId
+    });
+
+    await newCV.save();
+    res.status(201).json({ message: 'CV saved successfully', cv: newCV });
+  } catch (error) {
+    console.error('Error saving CV:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
 
 
 
