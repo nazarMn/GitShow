@@ -1,9 +1,11 @@
 const mongoose = require('mongoose');
 
-const CVSchema = new mongoose.Schema({
-  userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+const cvSchema = new mongoose.Schema({
+  userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true, unique: true },
   templateId: { type: String, required: true },
   createdAt: { type: Date, default: Date.now }
 });
 
-module.exports = mongoose.model('CV', CVSchema);
+const CV = mongoose.model('CV', cvSchema);
+
+module.exports = CV;

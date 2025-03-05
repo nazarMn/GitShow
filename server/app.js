@@ -217,24 +217,37 @@ const CV = require('./models/CV');
 
 app.post('/api/cv', ensureAuthenticated, async (req, res) => {
   try {
-    const { templateId } = req.body;
+    // Перевіряємо, чи користувач вже має збережене CV
+    const existingCV = await CV.findOne({ userId: req.user.id });
 
-    if (!templateId) {
-      return res.status(400).json({ message: 'Template ID is required' });
+    if (existingCV) {
+      return res.status(400).json({ message: 'You already have a saved CV.' });
     }
 
+    // Створюємо нове CV
     const newCV = new CV({
       userId: req.user.id,
-      templateId
+      templateId: req.body.templateId,
     });
 
     await newCV.save();
-    res.status(201).json({ message: 'CV saved successfully', cv: newCV });
+    res.status(200).json({ message: 'CV saved successfully!' });
   } catch (error) {
     console.error('Error saving CV:', error);
-    res.status(500).json({ message: 'Internal server error' });
+    res.status(500).json({ message: 'Failed to save CV' });
   }
 });
+
+app.get('/api/cv/check', ensureAuthenticated, async (req, res) => {
+  try {
+    const existingCV = await CV.findOne({ userId: req.user.id });
+    res.status(200).json({ hasCV: !!existingCV });
+  } catch (error) {
+    console.error('Error checking CV:', error);
+    res.status(500).json({ message: 'Error checking CV' });
+  }
+});
+
 
 
 
