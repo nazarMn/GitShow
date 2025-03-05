@@ -212,8 +212,8 @@ app.use(
 
 
 
-
-const CV = require('./models/CV'); // Підключаємо модель CV
+// CV Creation
+const CV = require('./models/CV');
 
 app.post('/api/cv', ensureAuthenticated, async (req, res) => {
   try {
