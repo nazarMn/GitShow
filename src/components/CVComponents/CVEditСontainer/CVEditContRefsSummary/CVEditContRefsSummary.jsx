@@ -12,7 +12,7 @@ export default function CVEditContRefsSummary() {
     phoneNumber: '',
     location: '',
     email: '',
-    references: ['', '', ''] // Початково три пустих посилання
+    references: ['', '', ''] 
   });
 
   useEffect(() => {
@@ -127,7 +127,7 @@ export default function CVEditContRefsSummary() {
         </div>
       </div>
 
-      {/* Місце для відображення спливаючих повідомлень */}
+   
       <ToastContainer />
     </div>
   );
