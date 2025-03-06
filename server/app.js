@@ -273,6 +273,33 @@ app.get('/api/cv', ensureAuthenticated, async (req, res) => {
   }
 });
 
+// Оновлення CV
+app.put('/api/cv', ensureAuthenticated, async (req, res) => {
+  try {
+    const updatedCV = await CV.findOneAndUpdate(
+      { userId: req.user.id },
+      {
+        name: req.body.name,
+        specialty: req.body.specialty,
+        summary: req.body.summary,
+        phoneNumber: req.body.phoneNumber,
+        location: req.body.location,
+        email: req.body.email,
+        references: req.body.references || [] 
+      },
+      { new: true } // повертає оновлений документ
+    );
+
+    if (!updatedCV) {
+      return res.status(404).json({ message: 'CV not found' });
+    }
+
+    res.status(200).json(updatedCV);
+  } catch (error) {
+    console.error('Error updating CV:', error);
+    res.status(500).json({ message: 'Failed to update CV' });
+  }
+});
 
 
 
