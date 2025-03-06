@@ -44,25 +44,25 @@ export default function CVModels() {
       setMessage('Please select a CV template');
       return;
     }
-
+  
     if (hasCV) {
       setMessage('You already have a saved CV. You cannot create another one.');
       return;
     }
-
+  
     try {
       const response = await fetch('/api/cv', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ templateId: selectedCV })
+        body: JSON.stringify({ templateId: selectedCV })  // Мінімум інформації
       });
-
+  
       const data = await response.json();
       if (response.ok) {
         setMessage('CV saved successfully!');
-        setHasCV(true); // Оновлюємо стан, що CV збережено
+        setHasCV(true);
       } else {
         setMessage(`Error: ${data.message}`);
       }
@@ -71,6 +71,8 @@ export default function CVModels() {
       setMessage('Failed to save CV');
     }
   };
+  
+  
 
   const handleDeleteCV = async () => {
     try {
