@@ -217,27 +217,36 @@ const CV = require('./models/CV');
 
 app.post('/api/cv', ensureAuthenticated, async (req, res) => {
   try {
-    // Перевіряємо, чи користувач вже має збережене CV
     const existingCV = await CV.findOne({ userId: req.user.id });
 
     if (existingCV) {
       return res.status(400).json({ message: 'You already have a saved CV.' });
     }
 
-    // Створюємо нове CV
     const newCV = new CV({
       userId: req.user.id,
       templateId: req.body.templateId,
+      name: req.body.name,
+      specialty: req.body.specialty,
+      summary: req.body.summary,
+      phoneNumber: req.body.phoneNumber,
+      location: req.body.location,
+      email: req.body.email,
+      references: req.body.references || [],
+      skills: req.body.skills || [],
+      education: req.body.education || {},
+      experience: req.body.experience || [],
     });
 
     await newCV.save();
-    res.status(200).json({ message: 'CV saved successfully!' });
+    res.status(201).json({ message: 'CV saved successfully!', cv: newCV });
   } catch (error) {
     console.error('Error saving CV:', error);
     res.status(500).json({ message: 'Failed to save CV' });
   }
 });
 
+// Перевірка, чи є CV у користувача
 app.get('/api/cv/check', ensureAuthenticated, async (req, res) => {
   try {
     const existingCV = await CV.findOne({ userId: req.user.id });
@@ -245,6 +254,22 @@ app.get('/api/cv/check', ensureAuthenticated, async (req, res) => {
   } catch (error) {
     console.error('Error checking CV:', error);
     res.status(500).json({ message: 'Error checking CV' });
+  }
+});
+
+// Отримання CV користувача
+app.get('/api/cv', ensureAuthenticated, async (req, res) => {
+  try {
+    const cv = await CV.findOne({ userId: req.user.id });
+
+    if (!cv) {
+      return res.status(404).json({ message: 'CV not found' });
+    }
+
+    res.status(200).json(cv);
+  } catch (error) {
+    console.error('Error fetching CV:', error);
+    res.status(500).json({ message: 'Failed to fetch CV' });
   }
 });
 
