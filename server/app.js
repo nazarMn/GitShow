@@ -304,6 +304,27 @@ app.put('/api/cv', ensureAuthenticated, async (req, res) => {
   }
 });
 
+// Видалення досвіду з CV
+app.delete('/api/cv/experience/:expId', ensureAuthenticated, async (req, res) => {
+  try {
+    const cv = await CV.findOne({ userId: req.user.id });
+
+    if (!cv) {
+      return res.status(404).json({ message: 'CV not found' });
+    }
+
+    // Фільтруємо досвід, щоб видалити той, ID якого передано в запиті
+    cv.experience = cv.experience.filter(exp => exp._id.toString() !== req.params.expId);
+
+    await cv.save(); // Зберігаємо оновлене CV
+    res.status(200).json({ message: 'Experience deleted successfully' });
+  } catch (error) {
+    console.error('Error deleting experience:', error);
+    res.status(500).json({ message: 'Failed to delete experience' });
+  }
+});
+
+
 
 
 // Resume Schema and Routes
