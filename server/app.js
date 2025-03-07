@@ -285,7 +285,9 @@ app.put('/api/cv', ensureAuthenticated, async (req, res) => {
         phoneNumber: req.body.phoneNumber,
         location: req.body.location,
         email: req.body.email,
-        references: req.body.references || [] 
+        references: req.body.references || [], 
+        education: req.body.education || {},
+        skills: req.body.skills || [],
       },
       { new: true } // повертає оновлений документ
     );

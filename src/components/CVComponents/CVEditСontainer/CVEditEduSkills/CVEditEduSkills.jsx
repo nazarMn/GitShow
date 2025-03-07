@@ -1,114 +1,119 @@
-import React from 'react'
-
-import './CVEditEduSkills.css'
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import './CVEditEduSkills.css';
 
 export default function CVEditEduSkills() {
+  const [cvData, setCvData] = useState({
+    education: {
+      university: '',
+      specialty: '',
+      startYear: '',
+      endYear: ''
+    },
+    skills: ['', '', '', '', ''],
+  });
+
+  useEffect(() => {
+    axios.get('/api/cv')
+      .then(res => setCvData(res.data))
+      .catch(err => console.error('Error fetching CV:', err));
+  }, []);
+
+  const handleInputChange = (e) => {
+    const { id, value } = e.target;
+    if (id.startsWith('Skills')) {
+      const index = Number(id.replace('Skills', '')) - 1;
+      const newSkills = [...cvData.skills];
+      newSkills[index] = value;
+      setCvData({ ...cvData, skills: newSkills });
+    } else {
+      setCvData({
+        ...cvData,
+        education: { ...cvData.education, [id]: value }
+      });
+    }
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      await axios.put('/api/cv', cvData);
+      toast.success('CV updated successfully!', { position: 'top-right', autoClose: 3000 });
+    } catch (error) {
+      console.error('Error updating CV:', error);
+      toast.error('Failed to update CV!', { position: 'top-right', autoClose: 3000 });
+    }
+  };
+
   return (
     <div className="CV-Edit-Edu-Skills">
       <div className="CVEES-Content">
+        <div className="CVEES-Main">
+          <form onSubmit={handleSubmit}>
+            {[...Array(5)].map((_, i) => (
+              <div className="CVEES-group" key={i}>
+                <label htmlFor={`Skills${i + 1}`}>Skill {i + 1}</label>
+                <input
+                  type="text"
+                  id={`Skills${i + 1}`}
+                  placeholder={`Skill ${i + 1}`}
+                  value={cvData.skills[i]}
+                  onChange={handleInputChange}
+                />
+              </div>
+            ))}
 
-      <div className="CVEES-Main">
-
-
-        <form>
-        <div className="CVEES-group">
-              <label htmlFor="Skills1">Skills1</label>
-              <input
-                type="text"
-                id="Skills1"
-                placeholder="Skills1"
-              />
-            </div>
             <div className="CVEES-group">
-              <label htmlFor="Skills1">Skills2</label>
+              <label htmlFor="university">Education</label>
               <input
                 type="text"
-                id="Skills2"
-                placeholder="Skills2"
-              />
-            </div>
-            <div className="CVEES-group">
-              <label htmlFor="Skills3">Skills3</label>
-              <input
-                type="text"
-                id="Skills3"
-                placeholder="Skills3"
-              />
-            </div>
-            <div className="CVEES-group">
-              <label htmlFor="Skills4">Skills4</label>
-              <input
-                type="text"
-                id="Skills4"
-                placeholder="Skills4"
-              />
-            </div>
-            <div className="CVEES-group">
-              <label htmlFor="Skills5">Skills5</label>
-              <input
-                type="text"
-                id="Skills5"
-                placeholder="Skills5"
-              />
-            </div>
-           
-            <div className="CVEES-group">
-              <label htmlFor="Education">Education</label>
-              <input
-                type="text"
-                id="nameoftheuniversity"
+                id="university"
                 placeholder="Name of the university"
+                value={cvData.education.university}
+                onChange={handleInputChange}
               />
-              <input type="text" 
-              id="specialtyforwhichhestudied
-              " placeholder="Specialty for which he studied"
-              />
-              <label htmlFor="education-period">Education Period</label>
-   <input
-  type="text"
-  id="start-year"
-  placeholder="Start Year Education"
-  min="1900"
-  max="9999"
-  maxLength="4" 
-  onInput={(e) => {
-    // Залишаємо тільки цифри
-    e.target.value = e.target.value.replace(/[^0-9]/g, '');
-    // Якщо введено більше ніж 4 цифри, обмежуємо
-    if (e.target.value.length > 4) {
-      e.target.value = e.target.value.slice(0, 4);
-    }
-  }}
-/>
-<input
-  type="text" 
-  id="end-year"
-  placeholder="End Year Education"
-  min="1900"
-  max="9999"
-  maxLength="4"
-  onInput={(e) => {
-    // Залишаємо тільки цифри
-    e.target.value = e.target.value.replace(/[^0-9]/g, '');
-    // Якщо введено більше ніж 4 цифри, обмежуємо
-    if (e.target.value.length > 4) {
-      e.target.value = e.target.value.slice(0, 4);
-    }
-  }}
-/>
-
-
             </div>
-          
-            <button type="button" className="btn-save-CVEES">
-              Update CV
-            </button>
+            
+            <div className="CVEES-group">
+              <input
+                type="text"
+                id="specialty"
+                placeholder="Specialty for which you studied"
+                value={cvData.education.specialty}
+                onChange={handleInputChange}
+              />
+            </div>
+            
+            <div className="CVEES-group">
+              <label htmlFor="startYear">Education Period</label>
+              <input
+                type="text"
+                id="startYear"
+                placeholder="Start Year"
+                maxLength="4"
+                value={cvData.education.startYear}
+                onChange={handleInputChange}
+              />
+            </div>
+            
+            <div className="CVEES-group">
+              <input
+                type="text"
+                id="endYear"
+                placeholder="End Year"
+                maxLength="4"
+                value={cvData.education.endYear}
+                onChange={handleInputChange}
+              />
+            </div>
+
+            <button type="submit" className="btn-save-CVEES">Update CV</button>
           </form>
-
         </div>
-
       </div>
-
+      <ToastContainer />
     </div>
-  )
+  );
 }
