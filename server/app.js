@@ -288,6 +288,7 @@ app.put('/api/cv', ensureAuthenticated, async (req, res) => {
         references: req.body.references || [], 
         education: req.body.education || {},
         skills: req.body.skills || [],
+        experience: Array.isArray(req.body.experience) ? req.body.experience : existingCV.experience || [],
       },
       { new: true } // повертає оновлений документ
     );

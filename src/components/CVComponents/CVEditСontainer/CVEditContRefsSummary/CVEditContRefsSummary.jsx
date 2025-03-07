@@ -39,26 +39,10 @@ export default function CVEditContRefsSummary() {
     e.preventDefault();
     try {
       await axios.put('/api/cv', cvData);
-      toast.success('CV updated successfully!', {
-        position: "top-right",
-        autoClose: 3000,
-        hideProgressBar: true,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-      });
+      toast.success('CV updated successfully!', { position: 'top-right', autoClose: 3000 });
     } catch (error) {
       console.error('Error updating CV:', error);
-      toast.error('Failed to update CV!', {
-        position: "top-right",
-        autoClose: 3000,
-        hideProgressBar: true,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-      });
+      toast.error('Failed to update CV!', { position: 'top-right', autoClose: 3000 });
     }
   };
 
