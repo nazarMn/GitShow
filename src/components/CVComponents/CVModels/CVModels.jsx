@@ -1,8 +1,10 @@
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';  
 import React, { useState, useEffect } from 'react';
 import './CVModels.css';
 import CV1 from '/CV1.png';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTrashAlt } from '@fortawesome/free-solid-svg-icons'; // Іконка видалення
+import { faTrashAlt } from '@fortawesome/free-solid-svg-icons'; 
 
 const CV_IMAGES = [
   { id: 'CV1', src: CV1 },
@@ -10,11 +12,9 @@ const CV_IMAGES = [
 
 export default function CVModels() {
   const [selectedCV, setSelectedCV] = useState(null);
-  const [hasCV, setHasCV] = useState(false);  // Стан для збереженого CV
-  const [message, setMessage] = useState('');  // Стан для повідомлень
+  const [hasCV, setHasCV] = useState(false);  
 
   useEffect(() => {
-    // Перевіряємо, чи користувач вже має збережене CV при завантаженні компонента
     const checkIfUserHasCV = async () => {
       try {
         const response = await fetch('/api/cv/check', {
@@ -41,12 +41,12 @@ export default function CVModels() {
 
   const handleSaveCV = async () => {
     if (!selectedCV) {
-      setMessage('Please select a CV template');
+      toast.warn('Please select a CV template');
       return;
     }
   
     if (hasCV) {
-      setMessage('You already have a saved CV. You cannot create another one.');
+      toast.error('You already have a saved CV. You cannot create another one.');
       return;
     }
   
@@ -56,42 +56,52 @@ export default function CVModels() {
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ templateId: selectedCV })  // Мінімум інформації
+        body: JSON.stringify({ templateId: selectedCV })
       });
   
       const data = await response.json();
       if (response.ok) {
-        setMessage('CV saved successfully!');
+        toast.success('CV saved successfully!');
         setHasCV(true);
       } else {
-        setMessage(`Error: ${data.message}`);
+        toast.error(`Error: ${data.message}`);
       }
     } catch (error) {
       console.error('Error saving CV:', error);
-      setMessage('Failed to save CV');
+      toast.error('Failed to save CV');
     }
   };
   
-  
-
-  const handleDeleteCV = async () => {
+  const confirmDelete = async (toastId) => {
     try {
       const response = await fetch('/api/cv/delete', {
         method: 'DELETE',
         headers: { 'Content-Type': 'application/json' },
       });
-
+  
       const data = await response.json();
       if (response.ok) {
-        setMessage('CV deleted successfully!');
-        setHasCV(false); // Оновлюємо стан, що CV більше не збережене
+        toast.dismiss(toastId);
+        toast.success('CV deleted successfully!');
+        setHasCV(false);
       } else {
-        setMessage(`Error: ${data.message}`);
+        toast.error(`Error: ${data.message}`);
       }
     } catch (error) {
       console.error('Error deleting CV:', error);
-      setMessage('Failed to delete CV');
+      toast.error('Failed to delete CV');
     }
+  };
+
+  const handleDeleteCV = () => {
+    const toastId = toast.info(
+      <div>
+        <p>Are you sure you want to delete your CV?</p>
+        <button onClick={() => confirmDelete(toastId)} className="btn-confirm">Yes</button>
+        <button onClick={() => toast.dismiss(toastId)} className="btn-cancel">No</button>
+      </div>,
+      { position: 'top-center', autoClose: false, closeOnClick: false }
+    );
   };
 
   return (
@@ -109,7 +119,6 @@ export default function CVModels() {
         ))}
       </div>
 
-      {/* Повідомлення про збережене CV */}
       {hasCV && (
         <div className="CV-Models-Message success">
           You already have a saved CV.
@@ -120,19 +129,12 @@ export default function CVModels() {
         </div>
       )}
 
-      {/* Кнопка для збереження нового CV */}
       {!hasCV && selectedCV && (
         <div className="CV-Models-Save">
           <button onClick={handleSaveCV}>Continue</button>
         </div>
       )}
-
-      {/* Повідомлення про помилки або успіхи */}
-      {message && !hasCV && (
-        <div className={`CV-Models-Message ${message.includes('Error') ? 'error' : 'success'}`}>
-          {message}
-        </div>
-      )}
+      <ToastContainer />
     </div>
   );
 }

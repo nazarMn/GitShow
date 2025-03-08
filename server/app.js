@@ -326,6 +326,24 @@ app.delete('/api/cv/experience/:expId', ensureAuthenticated, async (req, res) =>
 
 
 
+app.delete('/api/cv/delete', ensureAuthenticated, async (req, res) => {
+  try {
+    const deletedCV = await CV.findOneAndDelete({ userId: req.user.id });
+
+    if (!deletedCV) {
+      return res.status(404).json({ message: 'CV not found' });
+    }
+
+    res.status(200).json({ message: 'CV deleted successfully!' });
+  } catch (error) {
+    console.error('Error deleting CV:', error);
+    res.status(500).json({ message: 'Failed to delete CV' });
+  }
+});
+
+
+
+
 
 // Resume Schema and Routes
 const resumeSchema = new mongoose.Schema({
