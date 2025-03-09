@@ -101,3 +101,44 @@ textarea {
     font-size: 16px;
   }
   
+
+  .CVECRS-picture-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    width: 20%;
+    padding: 20px;
+    border-radius: 6px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.CVECRS-picture {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+}
+
+.CVECRS-picture img {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    border: 2px solid #fff;
+    object-fit: cover;
+}
+
+.CVECRS-btn-edit-photo {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    font-size: 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.CVECRS-btn-edit-photo:hover {
+    background-color: #0056b3;
+}

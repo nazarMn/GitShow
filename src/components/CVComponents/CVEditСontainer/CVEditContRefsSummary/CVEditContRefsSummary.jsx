@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPencil } from '@fortawesome/free-solid-svg-icons';
 import './CVEditContRefsSummary.css';
 
 export default function CVEditContRefsSummary() {
@@ -109,6 +111,19 @@ export default function CVEditContRefsSummary() {
             <button type="submit" className="btn-save-CVECRS">Update CV</button>
           </form>
         </div>
+
+         <div className="CVECRS-picture-wrapper">
+                 
+                    <div className="CVECRS-picture">
+                      <img src="https://avatars.githubusercontent.com/u/69341802?v=4" alt="ProfileCVECRS" />
+                      <button className="CVECRS-btn-edit-photo">
+                        <FontAwesomeIcon icon={faPencil} /> Edit Photo
+                      </button>
+                    </div>
+                
+                   
+               
+                </div>
       </div>
 
    
