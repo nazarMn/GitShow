@@ -225,7 +225,7 @@ app.get('/api/cv/check', ensureAuthenticated, async (req, res) => {
   }
 });
 
-// Створення CV з ім'ям і фото користувача
+// Створення CV 
 app.post('/api/cv', ensureAuthenticated, async (req, res) => {
   try {
       const existingCV = await CV.findOne({ userId: req.user.id });
