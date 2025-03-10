@@ -3,7 +3,8 @@ const mongoose = require('mongoose');
 const cvSchema = new mongoose.Schema({
   userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true, unique: true },
   templateId: { type: String, required: true },
-  name: { type: String, default: '' },  // Не обов’язково
+  name: { type: String, required: true }, // Додаємо обов'язкове ім'я
+  avatarUrl: { type: String, required: true },
   specialty: { type: String, default: '' },  // Не обов’язково
   summary: { type: String, default: '' },
   phoneNumber: { type: String, default: '' },

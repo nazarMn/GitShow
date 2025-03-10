@@ -215,45 +215,43 @@ app.use(
 // CV Creation
 const CV = require('./models/CV');
 
-app.post('/api/cv', ensureAuthenticated, async (req, res) => {
+app.get('/api/cv/check', ensureAuthenticated, async (req, res) => {
   try {
-    const existingCV = await CV.findOne({ userId: req.user.id });
-
-    if (existingCV) {
-      return res.status(400).json({ message: 'You already have a saved CV.' });
-    }
-
-    const newCV = new CV({
-      userId: req.user.id,
-      templateId: req.body.templateId,
-      name: req.body.name,
-      specialty: req.body.specialty,
-      summary: req.body.summary,
-      phoneNumber: req.body.phoneNumber,
-      location: req.body.location,
-      email: req.body.email,
-      references: req.body.references || [],
-      skills: req.body.skills || [],
-      education: req.body.education || {},
-      experience: req.body.experience || [],
-    });
-
-    await newCV.save();
-    res.status(201).json({ message: 'CV saved successfully!', cv: newCV });
+      const existingCV = await CV.findOne({ userId: req.user.id });
+      res.json({ hasCV: !!existingCV });
   } catch (error) {
-    console.error('Error saving CV:', error);
-    res.status(500).json({ message: 'Failed to save CV' });
+      console.error('Error checking CV:', error);
+      res.status(500).json({ message: 'Failed to check CV' });
   }
 });
 
-// Перевірка, чи є CV у користувача
-app.get('/api/cv/check', ensureAuthenticated, async (req, res) => {
+// Створення CV з ім'ям і фото користувача
+app.post('/api/cv', ensureAuthenticated, async (req, res) => {
   try {
-    const existingCV = await CV.findOne({ userId: req.user.id });
-    res.status(200).json({ hasCV: !!existingCV });
+      const existingCV = await CV.findOne({ userId: req.user.id });
+      if (existingCV) {
+          return res.status(400).json({ message: 'You already have a saved CV.' });
+      }
+
+      const { templateId, name, avatarUrl, email, location } = req.body;
+      if (!name || !avatarUrl) {
+          return res.status(400).json({ message: 'Name and avatar are required.' });
+      }
+
+      const newCV = new CV({
+          userId: req.user.id,
+          templateId,
+          name,
+          avatarUrl,
+          email,
+          location
+      });
+
+      await newCV.save();
+      res.status(201).json({ message: 'CV saved successfully!', cv: newCV });
   } catch (error) {
-    console.error('Error checking CV:', error);
-    res.status(500).json({ message: 'Error checking CV' });
+      console.error('Error saving CV:', error);
+      res.status(500).json({ message: 'Failed to save CV' });
   }
 });
 

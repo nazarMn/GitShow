@@ -6,32 +6,39 @@ import CV1 from '/CV1.png';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrashAlt } from '@fortawesome/free-solid-svg-icons'; 
 
-const CV_IMAGES = [
-  { id: 'CV1', src: CV1 },
-];
+const CV_IMAGES = [{ id: 'CV1', src: CV1 }];
 
 export default function CVModels() {
   const [selectedCV, setSelectedCV] = useState(null);
-  const [hasCV, setHasCV] = useState(false);  
+  const [hasCV, setHasCV] = useState(false);
+  const [userData, setUserData] = useState(null);
 
   useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const response = await fetch('/api/user');
+        if (response.ok) {
+          const data = await response.json();
+          setUserData(data);
+        }
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+      }
+    };
+
     const checkIfUserHasCV = async () => {
       try {
-        const response = await fetch('/api/cv/check', {
-          method: 'GET',
-          headers: { 'Content-Type': 'application/json' },
-        });
+        const response = await fetch('/api/cv/check');
         if (response.ok) {
           const data = await response.json();
           setHasCV(data.hasCV);
-        } else {
-          setHasCV(false);
         }
       } catch (error) {
         console.error('Error checking CV:', error);
       }
     };
 
+    fetchUserData();
     checkIfUserHasCV();
   }, []);
 
@@ -44,21 +51,30 @@ export default function CVModels() {
       toast.warn('Please select a CV template');
       return;
     }
-  
+
     if (hasCV) {
-      toast.error('You already have a saved CV. You cannot create another one.');
+      toast.error('You already have a saved CV.');
       return;
     }
-  
+
+    if (!userData) {
+      toast.error('User data is missing.');
+      return;
+    }
+
     try {
       const response = await fetch('/api/cv', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ templateId: selectedCV })
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          templateId: selectedCV,
+          name: userData.name,
+          avatarUrl: userData.avatarUrl,
+          email: userData.email,
+          location: userData.location,
+        }),
       });
-  
+
       const data = await response.json();
       if (response.ok) {
         toast.success('CV saved successfully!');
@@ -71,7 +87,7 @@ export default function CVModels() {
       toast.error('Failed to save CV');
     }
   };
-  
+
   const confirmDelete = async (toastId) => {
     try {
       const response = await fetch('/api/cv/delete', {
@@ -119,7 +135,9 @@ export default function CVModels() {
         ))}
       </div>
 
-      {hasCV && (
+      
+
+{hasCV && (
         <div className="CV-Models-Message success">
           You already have a saved CV.
           <button onClick={handleDeleteCV} className="delete-btn">
@@ -134,6 +152,7 @@ export default function CVModels() {
           <button onClick={handleSaveCV}>Continue</button>
         </div>
       )}
+
       <ToastContainer />
     </div>
   );
