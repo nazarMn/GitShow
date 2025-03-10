@@ -14,13 +14,14 @@ export default function CVEditContRefsSummary() {
     phoneNumber: '',
     location: '',
     email: '',
-    references: ['', '', ''] 
+    references: ['', '', ''],
+    avatarUrl: '' // Add avatarUrl to the state
   });
 
   useEffect(() => {
     axios.get('/api/cv')
       .then(res => {
-        setCvData(res.data);
+        setCvData(res.data); // Fetch data and set it in state
       })
       .catch(err => console.error('Error fetching CV:', err));
   }, []);
@@ -112,21 +113,17 @@ export default function CVEditContRefsSummary() {
           </form>
         </div>
 
-         <div className="CVECRS-picture-wrapper">
-                 
-                    <div className="CVECRS-picture">
-                      <img src="https://avatars.githubusercontent.com/u/69341802?v=4" alt="ProfileCVECRS" />
-                      <button className="CVECRS-btn-edit-photo">
-                        <FontAwesomeIcon icon={faPencil} /> Edit Photo
-                      </button>
-                    </div>
-                
-                   
-               
-                </div>
+        <div className="CVECRS-picture-wrapper">
+          <div className="CVECRS-picture">
+            {/* Update img src to use the avatarUrl from state */}
+            <img src={cvData.avatarUrl} alt="ProfileCVECRS" />
+            <button className="CVECRS-btn-edit-photo">
+              <FontAwesomeIcon icon={faPencil} /> Edit Photo
+            </button>
+          </div>
+        </div>
       </div>
 
-   
       <ToastContainer />
     </div>
   );
