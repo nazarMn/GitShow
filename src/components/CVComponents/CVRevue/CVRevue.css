@@ -26,76 +26,93 @@
     height: 100%;
     background-color: #36383E;
 }
-.Contact-Сontainer{
-    padding-top: 55px;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    justify-content: center;
-    padding-left: 35px;
-    width: 100%;
-    height: 30%;
+/* Загальний контейнер */
+
+.CV-Revue-Container-Left{
+    width: 25%;
+    height: 100%;
+    padding-top: 100px;
+    padding-left: 40px;
+    padding-right: 40px;
+    padding-bottom: 40px;
+    background-color: #EEE7E1;
 }
-.Contact-Title{
-    font-size: 1.5rem;
+
+/* Заголовки секцій */
+.Section-Title {
+    font-size: 1.3rem;
     color: #36383E;
     text-transform: uppercase;
-    font-weight: 500;
+    font-weight: 600;
     margin-bottom: 20px;
-
+    border-bottom: 2px solid #36383E;
+    padding-bottom: 5px;
 }
-.Contact-Email, .Contact-Phone, .Contact-Adress{
+
+/* Контактна інформація */
+.Contact-Item {
     display: flex;
     align-items: center;
-    justify-content: flex-start;
-    width: 100%;
-    font-size: 1.1rem;
+    font-size: 1rem;
     color: #36383E;
-    text-transform: uppercase;
-    font-weight: 500;
-    margin-bottom: 20px;
-
-}
-.Contact-Email h2, .Contact-Phone h2, .Contact-Adress h2{
-    font-size: 1.1rem;
-    color: #36383E;
-    text-transform: uppercase;
-    font-weight: 500;
-    padding-left: 18px;
-}
-.Education-Container{
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    justify-content: flex-start;
-    padding-left: 35px;
-    width: 100%;
-    height: 35%;
-}
-.Education-Title{
-    font-size: 1.5rem;
-    color: #36383E;
-    text-transform: uppercase;
-    font-weight: 500;
-    margin-bottom: 20px;
+    margin-bottom: 15px;
+    word-wrap: break-word;
 }
 
-.Skills-Container{
+.Contact-Item svg {
+    font-size: 1.2rem;
+    margin-right: 10px;
+    flex-shrink: 0;
+}
+
+/* Освіта */
+.Education-Container {
+    margin-top: 30px;
+    position: relative;
+   
+}
+
+.Education-Content {
+    display: flex;
+    align-items: flex-start;
+    position: relative;
+}
+
+
+
+.Education-Degree {
+    font-size: 1rem;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.Education-University,
+.Education-Year {
+    font-size: 0.9rem;
+    color: #555;
+    margin-bottom: 2px;
+}
+
+/* Навички */
+.Skills-Container {
+    margin-top: 30px;
+}
+
+.Skills-List {
+    list-style: none;
+    padding: 0;
+    gap: 25px;
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
-    justify-content: flex-start;
-    padding-left: 35px;
-    width: 100%;
-    height: 35%;
 }
-.Skills-Title{
-    font-size: 1.5rem;
+
+.Skills-List li {
+    font-size: 18px;
     color: #36383E;
-    text-transform: uppercase;
-    font-weight: 500;
-    margin-bottom: 20px;
+    margin-bottom: 8px;
+    text-align: left;
 }
+
 
 .profile-img {
     width: 200px;
@@ -136,75 +153,67 @@
     width: 100%;
     height: 85%;
 }
-.CV-Revue-Container-Left{
-    width: 25%;
-    height: 100%;
-    background-color: #EEE7E1;
-}
-.CV-Revue-Container-Right{
+
+.CV-Revue-Container-Right {
     display: flex;
     align-items: flex-start;
-    justify-content: flex-start ;
+    justify-content: flex-start;
     flex-direction: column;
     width: 75%;
-    height: 100%;
+    height: auto;
     background-color: #ffffff;
-    padding-top: 18px;
+    padding: 20px;
 }
-.Summary-Container{
+
+.Summary-Container, .Experience-Container, .Reference-Container {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
     justify-content: flex-start;
-    padding-left: 35px;
+    padding-left: 40px;
+    padding-right: 40px;
     width: 100%;
-    height: 30%;
+    margin-bottom: 30px;
 }
-.Summary-Title{
-    width: 90%;
-    font-size: 1.5rem;
+.Summary-Container p{
+    font-size: 18px;
     color: #36383E;
-    text-transform: uppercase;
-    font-weight: 500;
-    margin-bottom: 20px;
-    border-bottom: #36383E 2px solid;
+    text-align: left;
 }
 .Experience-Container{
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
-    justify-content: flex-start;
-    padding-left: 35px;
-    width: 100%;
-    height: 50%;
+    gap: 25px;
 }
-.Experience-Title{
-    width: 90%;
-    font-size: 1.5rem;
+.Summary-Title, .Experience-Title, .Reference-Title {
+    width: 100%;
+    font-size: 1.8rem;
     color: #36383E;
     text-transform: uppercase;
-    font-weight: 500;
-    margin-bottom: 20px;
+    font-weight: 600;
+    margin-bottom: 15px;
+    padding-bottom: 5px;
     border-bottom: #36383E 2px solid;
 }
-.Reference-Container{
+.Experience-Item ul li {
+    font-size: 18px;
+    color: #36383E;
+    margin-bottom: 8px;
+    text-align: left;
+}
+.Experience-Item ul  {
+    padding-left: 58px;
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
-    justify-content: flex-start;
-    padding-left: 35px;
-    width: 100%;
-    height: 20%;
+    padding-top: 10px;
 }
-.Reference-Title{
-    width: 90%;
-    font-size: 1.5rem;
-    color: #36383E;
-    text-transform: uppercase;
-    font-weight: 500;
-    margin-bottom: 20px;
-    border-bottom: #36383E 2px solid;
+.Experience-Date{
+    font-size: 18px;
+    color: #7D7D7D;
+    margin-bottom: 8px;
+    text-align: left;
 }
+
 
 
 .triangle {
