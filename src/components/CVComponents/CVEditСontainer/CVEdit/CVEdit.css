@@ -3,26 +3,31 @@
     padding: 0;
     box-sizing: border-box;
 }
-.CV-Edit{
+
+.CV-Edit {
     width: 100%;
-    height: 120vh;
+    min-height: 100vh;  
     display: flex;
     background-color: #101010;
+    position: relative;
+    overflow: hidden;
 }
 
-.CV-Edit-Main{
-    width: 80%;
-    height: 100%;
+.CV-Edit-Main {
+    flex: 1;
     display: flex;
     flex-direction: column;
+    position: relative;
+    min-height:100vh;
 }
 .CV-Edit-Pagination {
-    width: 100%;
-    height: 8%;
+    padding: 15px 0;
     display: flex;
     justify-content: center;
-    align-items: center;
     gap: 10px;
+    width: 100%;
+    position: sticky;
+    bottom: 0;
 }
 
 .CV-Edit-Pagination button {
