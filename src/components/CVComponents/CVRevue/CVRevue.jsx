@@ -1,130 +1,200 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import './CVRevue.css';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEnvelope, faPhone,faLocationDot } from "@fortawesome/free-solid-svg-icons";
-<FontAwesomeIcon icon="fa-solid fa-envelope" />
+import { faEnvelope, faPhone, faLocationDot, faSpinner } from "@fortawesome/free-solid-svg-icons";
+
 export default function CVRevue() {
+  const [cvData, setCvData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    // Функція для отримання даних CV з MongoDB
+    const fetchCVData = async () => {
+      try {
+        setLoading(true);
+        const response = await axios.get('/api/cv');
+        setCvData(response.data);
+        setLoading(false);
+      } catch (err) {
+        console.error('Error fetching CV data:', err);
+        setError('Failed to load CV. Please try again later.');
+        setLoading(false);
+      }
+    };
+
+    fetchCVData();
+  }, []);
+
+  // Відображення завантаження
+  if (loading) {
+    return (
+      <div className="CV-Revue-Loading">
+        <FontAwesomeIcon icon={faSpinner} spin size="3x" />
+        <p>Loading CV data...</p>
+      </div>
+    );
+  }
+
+  // Відображення помилки
+  if (error) {
+    return (
+      <div className="CV-Revue-Error">
+        <p>{error}</p>
+        <button onClick={() => window.location.reload()}>Retry</button>
+      </div>
+    );
+  }
+
+  // Відображення інформації про відсутність CV
+  if (!cvData) {
+    return (
+      <div className="CV-Revue-Empty">
+        <p>No CV found. Please create your CV first.</p>
+      </div>
+    );
+  }
+
+  // Форматування років освіти
+  const formatEducationYears = () => {
+    const { startYear, endYear } = cvData.education || {};
+    if (startYear && endYear) {
+      return `${startYear} - ${endYear}`;
+    } else if (startYear) {
+      return `${startYear} - Present`;
+    } else if (endYear) {
+      return `Until ${endYear}`;
+    }
+    return '';
+  };
+
+  // Отримання описів для досвіду роботи
+  const getExperienceDescriptions = (experience) => {
+    // Перевіряємо, чи є масив descriptions
+    if (experience.descriptions && Array.isArray(experience.descriptions) && experience.descriptions.length > 0) {
+      return experience.descriptions;
+    }
+    // Якщо немає масиву, але є одиночне поле description
+    else if (experience.description) {
+      return [experience.description];
+    }
+    return [];
+  };
+
   return (
     <div className="CV-Revue"> 
       <header className="CV-Revue-header">
         <div className="CV-Revue-header-Left">
-          <img src="https://avatars.githubusercontent.com/u/69341802?v=4" alt="Profile" className="profile-img" />
+          <img 
+            src={cvData.avatarUrl || "https://via.placeholder.com/150"} 
+            alt="Profile" 
+            className="profile-img" 
+          />
         </div>
 
         <div className="CV-Revue-header-Right">
-          <h2>Name</h2>
-          <p>IT</p>
+          <h2>{cvData.name || "Name"}</h2>
+          <p>{cvData.specialty || "Profession"}</p>
         </div>
         <div className="triangle"></div>
       </header>
 
       <div className="CV-Revue-Container">
-   <div className="CV-Revue-Container-Left">
- 
-  <div className="Contact-Сontainer">
-    <h2 className="Section-Title">Contact Details</h2>
-    <div className="Contact-Item">
-      <FontAwesomeIcon icon={faEnvelope} />
-      <span>earnerayan@gmail.com</span>
-    </div>
-    <div className="Contact-Item">
-      <FontAwesomeIcon icon={faPhone} />
-      <span>(125) 229 0621</span>
-    </div>
-    <div className="Contact-Item">
-      <FontAwesomeIcon icon={faLocationDot} />
-      <span>North Bridie, 05269, New Hampshire</span>
-    </div>
-  </div>
+        <div className="CV-Revue-Container-Left">
+          <div className="Contact-Сontainer">
+            <h2 className="Section-Title">Contact Details</h2>
+            {cvData.email && (
+              <div className="Contact-Item">
+                <FontAwesomeIcon icon={faEnvelope} />
+                <span>{cvData.email}</span>
+              </div>
+            )}
+            {cvData.phoneNumber && (
+              <div className="Contact-Item">
+                <FontAwesomeIcon icon={faPhone} />
+                <span>{cvData.phoneNumber}</span>
+              </div>
+            )}
+            {cvData.location && (
+              <div className="Contact-Item">
+                <FontAwesomeIcon icon={faLocationDot} />
+                <span>{cvData.location}</span>
+              </div>
+            )}
+          </div>
 
-  
-  <div className="Education-Container">
-    <h2 className="Section-Title">Education</h2>
-    <div className="Education-Content">
-      <div className="Education-Details">
-        <h3 className="Education-Degree">Bachelor of Science in Computer Science</h3>
-        <p className="Education-University">University of California, Berkeley</p>
-        <p className="Education-Year">2017 - 2021</p>
-      </div>
-    </div>
-  </div>
+          <div className="Education-Container">
+            <h2 className="Section-Title">Education</h2>
+            {cvData.education && (cvData.education.university || cvData.education.specialty) ? (
+              <div className="Education-Content">
+                <div className="Education-Details">
+                  <h3 className="Education-Degree">{cvData.education.specialty || "Degree"}</h3>
+                  <p className="Education-University">{cvData.education.university || "University"}</p>
+                  <p className="Education-Year">{formatEducationYears()}</p>
+                </div>
+              </div>
+            ) : (
+              <p className="No-Content">No education information provided</p>
+            )}
+          </div>
 
- 
-  <div className="Skills-Container">
-    <h2 className="Section-Title">Skills</h2>
-    <ul className="Skills-List">
-      <li>Technical Skills - Expert</li>
-      <li>Troubleshooting - Expert</li>
-      <li>Networking - Expert</li>
-      <li>Systems Administration - Expert</li>
-      <li>Database Management - Expert</li>
-      <li>Security Protocols - Expert</li>
-    </ul>
-  </div>
-</div>
-
-
-<div className="CV-Revue-Container-Right">
-      <div className="Summary-Container">
-        <header className="Summary-Title">Summary</header>
-        <p>
-          IT Specialist with 6+ years of experience in troubleshooting and
-          maintaining computer systems. Skilled in implementing new technology
-          and providing technical support to end users.
-          IT Specialist with 6+ years of experience in troubleshooting and
-          maintaining computer systems. Skilled in implementing new technology
-          and providing technical support to end users.
-          IT Specialist with 6+ years of experience in troubleshooting and
-          maintaining computer systems. Skilled in implementing new technology
-          and providing technical support to end users.
-        </p>
-      </div>
-      <div className="Experience-Container">
-        <header className="Experience-Title">Work Experience</header>
-        <div className="Experience-Item">
-          <h3>IT Specialist, Google</h3>
-          <p className="Experience-Date">March 2023 - Present</p>
-          <ul>
-            <li>
-              Successfully designed and implemented a new database system for a
-              large international company, resulting in increased efficiency
-              and productivity.
-            </li>
-            <li>
-              Developed and maintained network infrastructure for a financial
-              services organization, resulting in improved security and
-              reliability.
-            </li>
-            <li>
-              Utilized advanced technologies such as Linux, Apache, Windows
-              Server, and MySQL to create complex web-based applications.
-            </li>
-          </ul>
+          <div className="Skills-Container">
+            <h2 className="Section-Title">Skills</h2>
+            {cvData.skills && cvData.skills.length > 0 ? (
+              <ul className="Skills-List">
+                {cvData.skills.map((skill, index) => (
+                  <li key={index}>{skill}</li>
+                ))}
+              </ul>
+            ) : (
+              <p className="No-Content">No skills provided</p>
+            )}
+          </div>
         </div>
-        <div className="Experience-Item">
-          <h3>IT Specialist, Google</h3>
-          <p className="Experience-Date">May 2021 - February 2023</p>
-          <ul>
-            <li>
-              Managed a team of IT professionals responsible for the
-              maintenance and development of corporate networks and systems.
-            </li>
-            <li>
-              Installed and configured hardware and software, including
-              servers, printers, routers, and switches.
-            </li>
-            <li>
-              Developed an innovative and secure system for data storage and
-              retrieval.
-            </li>
-          </ul>
+
+        <div className="CV-Revue-Container-Right">
+          <div className="Summary-Container">
+            <header className="Summary-Title">Summary</header>
+            {cvData.summary ? (
+              <p>{cvData.summary}</p>
+            ) : (
+              <p className="No-Content">No summary provided</p>
+            )}
+          </div>
+          
+          <div className="Experience-Container">
+            <header className="Experience-Title">Work Experience</header>
+            {cvData.experience && cvData.experience.length > 0 ? (
+              cvData.experience.map((exp, index) => (
+                <div className="Experience-Item" key={index}>
+                  <h3>{exp.name || "Job Title"}</h3>
+                  <p className="Experience-Date">{exp.yearsAndPosition || "Employment Period"}</p>
+                  <ul>
+                    {getExperienceDescriptions(exp).map((desc, descIndex) => (
+                      <li key={descIndex}>{desc}</li>
+                    ))}
+                  </ul>
+                </div>
+              ))
+            ) : (
+              <p className="No-Content">No work experience provided</p>
+            )}
+          </div>
+          
+          <div className="Reference-Container">
+            <header className="Reference-Title">References</header>
+            {cvData.references && cvData.references.length > 0 ? (
+              <ul className="Reference-List">
+                {cvData.references.map((reference, index) => (
+                  <li key={index}>{reference}</li>
+                ))}
+              </ul>
+            ) : (
+              <p>References available upon request</p>
+            )}
+          </div>
         </div>
-      </div>
-      <div className="Reference-Container">
-        <header className="Reference-Title">References</header>
-        <p>References available upon request</p>
-      </div>
-    </div>
       </div>     
     </div>
   );

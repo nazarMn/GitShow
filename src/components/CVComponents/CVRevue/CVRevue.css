@@ -226,3 +226,44 @@
     border-right: 238px solid transparent;
     border-top: 75px solid #36383E; 
 }
+
+
+.CV-Revue-Loading,
+.CV-Revue-Error,
+.CV-Revue-Empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 50vh;
+  padding: 20px;
+  text-align: center;
+}
+
+.CV-Revue-Loading svg {
+  margin-bottom: 15px;
+  color: #4a90e2;
+}
+
+.CV-Revue-Error {
+  color: #e74c3c;
+}
+
+.CV-Revue-Error button {
+  margin-top: 15px;
+  padding: 8px 16px;
+  background-color: #3498db;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.CV-Revue-Error button:hover {
+  background-color: #2980b9;
+}
+
+.No-Content {
+  font-style: italic;
+  color: #777;
+}
