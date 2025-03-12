@@ -1,15 +1,16 @@
 const mongoose = require('mongoose');
 
+// Оновлена схема для моделі CV
 const cvSchema = new mongoose.Schema({
   userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true, unique: true },
   templateId: { type: String, required: true },
   name: { type: String, required: false }, 
   avatarUrl: { type: String, required: true },
-  specialty: { type: String, default: '' },  // Не обов’язково
+  specialty: { type: String, default: '' },
   summary: { type: String, default: '' },
   phoneNumber: { type: String, default: '' },
   location: { type: String, default: '' },
-  email: { type: String, default: '' },  // Можливо, потрібно зробити не обов’язковим?
+  email: { type: String, default: '' },
   references: [{ type: String, default: [] }],
   skills: [{ type: String, default: [] }],
   education: {
@@ -22,7 +23,8 @@ const cvSchema = new mongoose.Schema({
     {
       name: { type: String, default: '' },
       yearsAndPosition: { type: String, default: '' },
-      description: { type: String, default: '' }
+      description: { type: String, default: '' },
+      descriptions: [{ type: String }]
     }
   ],
   createdAt: { type: Date, default: Date.now }

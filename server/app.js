@@ -270,30 +270,54 @@ app.get('/api/cv', ensureAuthenticated, async (req, res) => {
     res.status(500).json({ message: 'Failed to fetch CV' });
   }
 });
-
 // Оновлення CV
 app.put('/api/cv', ensureAuthenticated, async (req, res) => {
   try {
+    const existingCV = await CV.findOne({ userId: req.user.id });
+    
+    if (!existingCV) {
+      return res.status(404).json({ message: 'CV not found' });
+    }
+   
+    const experience = Array.isArray(req.body.experience) ? 
+      req.body.experience.map(exp => {
+      
+        if (exp.descriptions && Array.isArray(exp.descriptions)) {
+         
+          return {
+            ...exp,
+            description: exp.descriptions[0] || '',
+            descriptions: exp.descriptions
+          };
+        } 
+       
+        else if (exp.description && !exp.descriptions) {
+          return {
+            ...exp,
+            descriptions: [exp.description]
+          };
+        }
+        
+        return exp;
+      }) : 
+      existingCV.experience || [];
+    
     const updatedCV = await CV.findOneAndUpdate(
       { userId: req.user.id },
       {
-        name: req.body.name,
-        specialty: req.body.specialty,
-        summary: req.body.summary,
-        phoneNumber: req.body.phoneNumber,
-        location: req.body.location,
-        email: req.body.email,
-        references: req.body.references || [], 
-        education: req.body.education || {},
-        skills: req.body.skills || [],
-        experience: Array.isArray(req.body.experience) ? req.body.experience : existingCV.experience || [],
+        name: req.body.name || existingCV.name,
+        specialty: req.body.specialty || existingCV.specialty,
+        summary: req.body.summary || existingCV.summary,
+        phoneNumber: req.body.phoneNumber || existingCV.phoneNumber,
+        location: req.body.location || existingCV.location,
+        email: req.body.email || existingCV.email,
+        references: req.body.references || existingCV.references || [], 
+        education: req.body.education || existingCV.education || {},
+        skills: req.body.skills || existingCV.skills || [],
+        experience: experience
       },
-      { new: true } // повертає оновлений документ
+      { new: true } 
     );
-
-    if (!updatedCV) {
-      return res.status(404).json({ message: 'CV not found' });
-    }
 
     res.status(200).json(updatedCV);
   } catch (error) {
@@ -301,7 +325,6 @@ app.put('/api/cv', ensureAuthenticated, async (req, res) => {
     res.status(500).json({ message: 'Failed to update CV' });
   }
 });
-
 // Видалення досвіду з CV
 app.delete('/api/cv/experience/:expId', ensureAuthenticated, async (req, res) => {
   try {

@@ -11,7 +11,27 @@ export default function CVEditExp() {
   useEffect(() => {
     axios.get('/api/cv')
       .then(res => {
-        setCvData({ experience: Array.isArray(res.data.experience) ? res.data.experience : [] });
+        const experience = Array.isArray(res.data.experience) ? res.data.experience : [];
+        
+        const formattedExperience = experience.map(exp => {
+          if (exp.description && !Array.isArray(exp.description)) {
+            return {
+              ...exp,
+              descriptions: [exp.description]
+            };
+          } 
+          else if (exp.descriptions && Array.isArray(exp.descriptions)) {
+            return exp;
+          }
+          else {
+            return {
+              ...exp,
+              descriptions: ['']
+            };
+          }
+        });
+        
+        setCvData({ experience: formattedExperience });
       })
       .catch(err => console.error('Error fetching CV:', err));
   }, []);
@@ -26,14 +46,64 @@ export default function CVEditExp() {
   const handleInputChange = (e, index) => {
     const { name, value } = e.target;
     const updatedExperience = [...cvData.experience];
-    updatedExperience[index] = { ...updatedExperience[index], [name]: value };
+    
+    if (name.startsWith('description-')) {
+      const descIndex = parseInt(name.split('-')[1]);
+      const descriptions = [...(updatedExperience[index].descriptions || [''])];
+      descriptions[descIndex] = value;
+      updatedExperience[index] = { ...updatedExperience[index], descriptions };
+    } else {
+      updatedExperience[index] = { ...updatedExperience[index], [name]: value };
+    }
+    
     setCvData({ ...cvData, experience: updatedExperience });
   };
 
-  const handleBlur = (e, index) => {
+  const handleBlur = (e, expIndex, descIndex = null) => {
     const { name, value } = e.target;
+    let errorKey;
+    
+    if (descIndex !== null) {
+      errorKey = `${expIndex}-description-${descIndex}`;
+    } else {
+      errorKey = `${expIndex}-${name}`;
+    }
+    
     const error = validateField(name, value);
-    setErrors(prevErrors => ({ ...prevErrors, [`${index}-${name}`]: error }));
+    setErrors(prevErrors => ({ ...prevErrors, [errorKey]: error }));
+  };
+
+  const addDescription = (expIndex) => {
+    const updatedExperience = [...cvData.experience];
+    const exp = updatedExperience[expIndex];
+    
+    const descriptions = exp.descriptions || [''];
+    if (descriptions.length >= 3) {
+      toast.warn('Maximum 3 descriptions allowed per experience!', { position: 'top-right', autoClose: 2000 });
+      return;
+    }
+    
+    if (!descriptions[descriptions.length - 1].trim()) {
+      toast.warn('Please fill in the previous description first.', { position: 'top-right', autoClose: 2000 });
+      return;
+    }
+    
+    descriptions.push('');
+    updatedExperience[expIndex] = { ...exp, descriptions };
+    setCvData({ ...cvData, experience: updatedExperience });
+  };
+
+  const removeDescription = (expIndex, descIndex) => {
+    if (cvData.experience[expIndex].descriptions.length <= 1) {
+      toast.warn('At least one description is required!', { position: 'top-right', autoClose: 2000 });
+      return;
+    }
+    
+    const updatedExperience = [...cvData.experience];
+    const descriptions = [...updatedExperience[expIndex].descriptions];
+    descriptions.splice(descIndex, 1);
+    updatedExperience[expIndex] = { ...updatedExperience[expIndex], descriptions };
+    setCvData({ ...cvData, experience: updatedExperience });
   };
 
   const addExperience = () => {
@@ -43,7 +113,8 @@ export default function CVEditExp() {
     }
 
     const lastExp = cvData.experience[cvData.experience.length - 1];
-    if (lastExp && (!lastExp.name || !lastExp.yearsAndPosition || !lastExp.description)) {
+    if (lastExp && (!lastExp.name || !lastExp.yearsAndPosition || 
+        !lastExp.descriptions || !lastExp.descriptions[0])) {
       toast.warn('Please fill in the previous experience before adding a new one.', {
         position: 'top-right',
         autoClose: 2000
@@ -53,7 +124,11 @@ export default function CVEditExp() {
 
     setCvData(prevState => ({
       ...prevState,
-      experience: [...prevState.experience, { name: '', yearsAndPosition: '', description: '' }],
+      experience: [...prevState.experience, { 
+        name: '', 
+        yearsAndPosition: '', 
+        descriptions: [''] 
+      }],
     }));
   };
 
@@ -70,7 +145,9 @@ export default function CVEditExp() {
 
   const confirmDelete = async (index, expId) => {
     try {
-      await axios.delete(`/api/cv/experience/${expId}`);
+      if (expId) {
+        await axios.delete(`/api/cv/experience/${expId}`);
+      }
       
       const updatedExperience = [...cvData.experience];
       updatedExperience.splice(index, 1);
@@ -86,8 +163,17 @@ export default function CVEditExp() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    // Підготувати дані перед відправкою
+    const formattedExperience = cvData.experience.map(exp => {
+      return {
+        ...exp,
+        descriptions: exp.descriptions.filter(desc => desc.trim() !== '')
+      };
+    });
+    
     try {
-      await axios.put('/api/cv', { experience: cvData.experience });
+      await axios.put('/api/cv', { experience: formattedExperience });
       toast.success('CV updated successfully!', { position: 'top-right', autoClose: 3000 });
     } catch (error) {
       console.error('Error updating CV:', error);
@@ -104,44 +190,76 @@ export default function CVEditExp() {
             {cvData.experience.length === 0 ? (
               <p>No experience added. Click "Add Experience" to add.</p>
             ) : (
-              cvData.experience.map((exp, index) => (
-                <div className="CVEE-group" key={index}>
-                  <label>Experience {index + 1}</label>
+              cvData.experience.map((exp, expIndex) => (
+                <div className="CVEE-group" key={expIndex}>
+                  <label>Experience {expIndex + 1}</label>
                   <input
                     type="text"
                     name="name"
                     placeholder="Experience Name"
                     value={exp.name}
-                    onChange={(e) => handleInputChange(e, index)}
-                    onBlur={(e) => handleBlur(e, index)}
-                    className={errors[`${index}-name`] ? 'error-input' : ''}
+                    onChange={(e) => handleInputChange(e, expIndex)}
+                    onBlur={(e) => handleBlur(e, expIndex)}
+                    className={errors[`${expIndex}-name`] ? 'error-input' : ''}
                   />
-                  {errors[`${index}-name`] && <p className="error-text">{errors[`${index}-name`]}</p>}
+                  {errors[`${expIndex}-name`] && <p className="error-text">{errors[`${expIndex}-name`]}</p>}
+                  
                   <input
                     type="text"
                     name="yearsAndPosition"
                     placeholder="Years and Position"
                     value={exp.yearsAndPosition}
-                    onChange={(e) => handleInputChange(e, index)}
-                    onBlur={(e) => handleBlur(e, index)}
-                    className={errors[`${index}-yearsAndPosition`] ? 'error-input' : ''}
+                    onChange={(e) => handleInputChange(e, expIndex)}
+                    onBlur={(e) => handleBlur(e, expIndex)}
+                    className={errors[`${expIndex}-yearsAndPosition`] ? 'error-input' : ''}
                   />
-                  {errors[`${index}-yearsAndPosition`] && <p className="error-text">{errors[`${index}-yearsAndPosition`]}</p>}
-                  <textarea
-                    name="description"
-                    placeholder="Description of Experience"
-                    value={exp.description}
-                    onChange={(e) => handleInputChange(e, index)}
-                    onBlur={(e) => handleBlur(e, index)}
-                    className={errors[`${index}-description`] ? 'error-input' : ''}
-                  />
-                  {errors[`${index}-description`] && <p className="error-text">{errors[`${index}-description`]}</p>}
+                  {errors[`${expIndex}-yearsAndPosition`] && <p className="error-text">{errors[`${expIndex}-yearsAndPosition`]}</p>}
+                  
+                  <div className="descriptions-container">
+                    <label>Description{exp.descriptions?.length > 1 ? 's' : ''}</label>
+                    
+                    {(exp.descriptions || ['']).map((desc, descIndex) => (
+                      <div className="description-field" key={descIndex}>
+                        <textarea
+                          name={`description-${descIndex}`}
+                          placeholder={`Description ${descIndex + 1}`}
+                          value={desc}
+                          onChange={(e) => handleInputChange(e, expIndex)}
+                          onBlur={(e) => handleBlur(e, expIndex, descIndex)}
+                          className={errors[`${expIndex}-description-${descIndex}`] ? 'error-input' : ''}
+                        />
+                        {errors[`${expIndex}-description-${descIndex}`] && 
+                          <p className="error-text">{errors[`${expIndex}-description-${descIndex}`]}</p>}
+                        
+                        {descIndex > 0 && (
+                          <button
+                            type="button"
+                            className="btn-remove-desc"
+                            onClick={() => removeDescription(expIndex, descIndex)}
+                          >
+                            Remove Description
+                          </button>
+                        )}
+                      </div>
+                    ))}
+                    
+                    {exp.descriptions?.length < 3 && (
+                      <button
+                        type="button"
+                        className="btn-add-desc"
+                        onClick={() => addDescription(expIndex)}
+                      >
+                        Add Description ({exp.descriptions?.length || 0}/3)
+                      </button>
+                    )}
+                  </div>
+                  
                   <button
                     type="button"
                     className="btn-remove-exp"
-                    onClick={() => removeExperience(index, exp._id)}
+                    onClick={() => removeExperience(expIndex, exp._id)}
                   >
-                    Remove
+                    Remove Experience
                   </button>
                 </div>
               ))

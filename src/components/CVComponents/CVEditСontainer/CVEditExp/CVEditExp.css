@@ -133,4 +133,49 @@ textarea {
     border-radius: 5px;
     cursor: pointer;
   }
+
   
+
+.descriptions-container {
+  margin-bottom: 15px;
+}
+
+.description-field {
+  position: relative;
+  margin-bottom: 10px;
+}
+
+.btn-add-desc, .btn-remove-desc {
+  background-color: #4a90e2;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  margin-top: 5px;
+}
+
+.btn-add-desc {
+  background-color: #4CAF50;
+}
+
+.btn-remove-desc {
+  background-color: #e74c3c;
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+
+.btn-add-desc:hover {
+  background-color: #45a049;
+}
+
+.btn-remove-desc:hover {
+  background-color: #c0392b;
+}
+
+.btn-add-desc:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+}
