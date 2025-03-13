@@ -8,6 +8,8 @@ const path = require('path');
 const axios = require('axios');
 const fs = require('fs');
 const cors = require('cors');
+const crypto = require('crypto');
+const { v4: uuidv4 } = require('uuid')
 require('dotenv').config();
 
 const User = require('./models/User'); 
@@ -228,30 +230,38 @@ app.get('/api/cv/check', ensureAuthenticated, async (req, res) => {
 // Створення CV 
 app.post('/api/cv', ensureAuthenticated, async (req, res) => {
   try {
-      const existingCV = await CV.findOne({ userId: req.user.id });
-      if (existingCV) {
-          return res.status(400).json({ message: 'You already have a saved CV.' });
-      }
+    const existingCV = await CV.findOne({ userId: req.user.id });
+    if (existingCV) {
+      return res.status(400).json({ message: 'You already have a saved CV.' });
+    }
 
-      const { templateId, name, avatarUrl, email, location } = req.body;
-      if (!name || !avatarUrl) {
-          return res.status(400).json({ message: 'Name and avatar are required.' });
-      }
+    const { templateId, name, avatarUrl, email, location } = req.body;
+    if (!name || !avatarUrl) {
+      return res.status(400).json({ message: 'Name and avatar are required.' });
+    }
 
-      const newCV = new CV({
-          userId: req.user.id,
-          templateId,
-          name,
-          avatarUrl,
-          email,
-          location
-      });
+    // Генеруємо унікальне посилання для CV
+    const shareableLink = crypto.randomBytes(16).toString('hex');
 
-      await newCV.save();
-      res.status(201).json({ message: 'CV saved successfully!', cv: newCV });
+    const newCV = new CV({
+      userId: req.user.id,
+      templateId,
+      name,
+      avatarUrl,
+      email,
+      location,
+      shareableLink
+    });
+
+    await newCV.save();
+    res.status(201).json({ 
+      message: 'CV saved successfully!', 
+      cv: newCV,
+      shareableLink: newCV.shareableLink 
+    });
   } catch (error) {
-      console.error('Error saving CV:', error);
-      res.status(500).json({ message: 'Failed to save CV' });
+    console.error('Error saving CV:', error);
+    res.status(500).json({ message: 'Failed to save CV' });
   }
 });
 
@@ -363,6 +373,56 @@ app.delete('/api/cv/delete', ensureAuthenticated, async (req, res) => {
 });
 
 
+// Отримання CV за публічним посиланням (без автентифікації)
+app.get('/api/cv/share/:link', async (req, res) => {
+  try {
+    console.log("Received request for shared CV with link:", req.params.link);
+    const cv = await CV.findOne({ shareableLink: req.params.link });
+    
+    if (!cv) {
+      console.log("No CV found with shareableLink:", req.params.link);
+      return res.status(404).json({ message: 'CV not found' });
+    }
+    
+    console.log("Found CV:", cv._id);
+    
+    const publicCV = {
+      name: cv.name,
+      avatarUrl: cv.avatarUrl,
+      specialty: cv.specialty,
+      summary: cv.summary,
+      phoneNumber: cv.phoneNumber,
+      location: cv.location,
+      email: cv.email,
+      references: cv.references,
+      skills: cv.skills,
+      education: cv.education,
+      experience: cv.experience,
+      templateId: cv.templateId
+    };
+
+    res.status(200).json(publicCV);
+  } catch (error) {
+    console.error('Error fetching shared CV:', error);
+    res.status(500).json({ message: 'Failed to fetch CV' });
+  }
+});
+
+// Додамо також маршрут для отримання посилання для поточного користувача
+app.get('/api/cv/sharelink', ensureAuthenticated, async (req, res) => {
+  try {
+    const cv = await CV.findOne({ userId: req.user.id });
+
+    if (!cv) {
+      return res.status(404).json({ message: 'CV not found' });
+    }
+
+    res.status(200).json({ shareableLink: cv.shareableLink });
+  } catch (error) {
+    console.error('Error fetching CV share link:', error);
+    res.status(500).json({ message: 'Failed to fetch share link' });
+  }
+});
 
 
 

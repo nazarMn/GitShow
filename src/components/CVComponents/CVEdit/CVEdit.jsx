@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import './CVEdit.css';
-import CVEditContRefsSummary from '../CVEditContRefsSummary/CVEditContRefsSummary';
-import SettingsSidebar from '../../../HomePage/Setting/SettingsSidebar/SettingsSidebar';
-import CVEditEduSkills from '../CVEditEduSkills/CVEditEduSkills';
-import CVEditExp from '../CVEditExp/CVEditExp';
+import CVEditContRefsSummary from '.././CVEditСontainer/CVEditContRefsSummary/CVEditContRefsSummary';
+import SettingsSidebar from '../../HomePage/Setting/SettingsSidebar/SettingsSidebar';
+import CVEditEduSkills from '.././CVEditСontainer/CVEditEduSkills/CVEditEduSkills';
+import CVEditExp from '.././CVEditСontainer/CVEditExp/CVEditExp';
 
 export default function CVEdit() {
   const [currentPage, setCurrentPage] = useState(1);

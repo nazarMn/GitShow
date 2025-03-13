@@ -26,7 +26,8 @@
     "recharts": "^2.15.1",
     "slick-carousel": "^1.8.1",
     "swiper": "^11.2.1",
-    "typeit-react": "^2.7.7"
+    "typeit-react": "^2.7.7",
+    "wouter": "^3.6.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.17.0",

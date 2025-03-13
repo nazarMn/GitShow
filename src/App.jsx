@@ -16,9 +16,10 @@ import Project from './components/ProjectPage/Project/Project';
 import CVSettings from './components/HomePage/Setting/CVSettings/CVSettings';
 import CVModels from './components/CVComponents/CVModels/CVModels';
 import CVRevue from './components/CVComponents/CVRevue/CVRevue';
-import CVEdit from './components/CVComponents/CVEditСontainer/CVEdit/CVEdit';
+import CVEdit from './components/CVComponents/CVEdit/CVEdit';
 import BookmarksPage from './components/ProjectPage/BookmarksPage/BookmarksPage';
 import GlobalSettings from './components/HomePage/Setting/GlobalSettings/GlobalSettings';
+import SharedCVRevue from './components/CVComponents/CVRevue/SharedCVRevue';
 
 
 const App = () => {
@@ -58,6 +59,12 @@ const App = () => {
           }
         />
 
+        {/* Новий маршрут для публічного перегляду CV по посиланню - доступний без авторизації */}
+        <Route
+          path="/shared-cv/:shareLink"
+          element={<SharedCVRevue />}
+        />
+       
         <Route
           path="/settings-projects"
           element={

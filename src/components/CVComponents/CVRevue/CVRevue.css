@@ -267,3 +267,98 @@
   font-style: italic;
   color: #777;
 }
+
+
+
+/* CVRevue.css - додайте ці стилі в кінець файлу */
+
+/* Стилі для блоку поширення */
+.CV-Share-Container {
+    margin-top: 30px;
+    padding: 15px;
+    background-color: #f5f5f5;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+  }
+  
+  .Share-Link-Box, .Share-Link-Container {
+    display: flex;
+    margin: 10px 0;
+    width: 100%;
+  }
+  
+  .Share-Link-Input {
+    flex: 1;
+    padding: 8px 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px 0 0 4px;
+    font-size: 14px;
+  }
+  
+  .Copy-Link-Button {
+    background-color: #4a90e2;
+    color: white;
+    border: none;
+    border-radius: 0 4px 4px 0;
+    padding: 8px 15px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .Copy-Link-Button:hover {
+    background-color: #357ac7;
+  }
+  
+  .Share-Link-Info {
+    font-size: 12px;
+    color: #666;
+    margin-top: 5px;
+  }
+  
+  /* Стилі для спільної версії CV */
+  .shared-view .shared-banner {
+    background-color: #4a90e2;
+    color: white;
+    text-align: center;
+    padding: 8px;
+    margin-bottom: 15px;
+    border-radius: 4px;
+  }
+  
+  .CV-Share-Box {
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px solid #ddd;
+  }
+  
+  /* Стилі для CVModels */
+  .CV-Models .CV-Share-Box {
+    margin-top: 15px;
+  }
+  
+  .CV-Models .Share-Link-Container {
+    display: flex;
+    margin: 10px 0;
+  }
+  
+  .CV-Models .Share-Link-Input {
+    flex-grow: 1;
+    padding: 8px 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px 0 0 4px;
+    font-size: 14px;
+  }
+  
+  .CV-Models .Copy-Link-Button {
+    background-color: #4a90e2;
+    color: white;
+    border: none;
+    border-radius: 0 4px 4px 0;
+    padding: 8px 15px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .CV-Models .Copy-Link-Button:hover {
+    background-color: #357ac7;
+  }

@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import './CVModels.css';
 import CV1 from '/CV1.png';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTrashAlt } from '@fortawesome/free-solid-svg-icons'; 
+import { faTrashAlt, faCopy } from '@fortawesome/free-solid-svg-icons'; 
 
 const CV_IMAGES = [{ id: 'CV1', src: CV1 }];
 
@@ -12,6 +12,8 @@ export default function CVModels() {
   const [selectedCV, setSelectedCV] = useState(null);
   const [hasCV, setHasCV] = useState(false);
   const [userData, setUserData] = useState(null);
+  const [shareLink, setShareLink] = useState('');
+  const [linkCopied, setLinkCopied] = useState(false);
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -32,15 +34,42 @@ export default function CVModels() {
         if (response.ok) {
           const data = await response.json();
           setHasCV(data.hasCV);
+          
+          // Якщо у користувача вже є CV, отримуємо посилання для поширення
+          if (data.hasCV) {
+            fetchShareLink();
+          }
         }
       } catch (error) {
         console.error('Error checking CV:', error);
+      }
+    };
+    
+    const fetchShareLink = async () => {
+      try {
+        const response = await fetch('/api/cv/sharelink');
+        if (response.ok) {
+          const data = await response.json();
+          const baseUrl = window.location.origin;
+          setShareLink(`${baseUrl}/shared-cv/${data.shareableLink}`);
+        }
+      } catch (error) {
+        console.error('Error fetching share link:', error);
       }
     };
 
     fetchUserData();
     checkIfUserHasCV();
   }, []);
+  
+  const copyShareLink = () => {
+    navigator.clipboard.writeText(shareLink)
+      .then(() => {
+        setLinkCopied(true);
+        setTimeout(() => setLinkCopied(false), 2000);
+      })
+      .catch(err => console.error('Failed to copy: ', err));
+  };
 
   const handleSelect = (id) => {
     setSelectedCV(prevSelected => (prevSelected === id ? null : id));
@@ -79,6 +108,12 @@ export default function CVModels() {
       if (response.ok) {
         toast.success('CV saved successfully!');
         setHasCV(true);
+        
+        // Встановлюємо посилання для поширення з відповіді сервера
+        if (data.shareableLink) {
+          const baseUrl = window.location.origin;
+          setShareLink(`${baseUrl}/shared-cv/${data.shareableLink}`);
+        }
       } else {
         toast.error(`Error: ${data.message}`);
       }
@@ -100,6 +135,7 @@ export default function CVModels() {
         toast.dismiss(toastId);
         toast.success('CV deleted successfully!');
         setHasCV(false);
+        setShareLink('');
       } else {
         toast.error(`Error: ${data.message}`);
       }
@@ -135,15 +171,35 @@ export default function CVModels() {
         ))}
       </div>
 
-      
-
-{hasCV && (
+      {hasCV && (
         <div className="CV-Models-Message success">
-          You already have a saved CV.
+          <p>You already have a saved CV.</p>
           <button onClick={handleDeleteCV} className="delete-btn">
             <FontAwesomeIcon icon={faTrashAlt} />
             Delete CV
           </button>
+          
+          {shareLink && (
+            <div className="CV-Share-Box">
+              <p>Share your CV with this link:</p>
+              <div className="Share-Link-Container">
+                <input 
+                  type="text" 
+                  value={shareLink} 
+                  readOnly 
+                  className="Share-Link-Input"
+                />
+                <button 
+                  onClick={copyShareLink} 
+                  className="Copy-Link-Button"
+                  title="Copy to clipboard"
+                >
+                  <FontAwesomeIcon icon={faCopy} />
+                  {linkCopied ? ' Copied!' : ' Copy'}
+                </button>
+              </div>
+            </div>
+          )}
         </div>
       )}
 

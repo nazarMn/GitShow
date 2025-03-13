@@ -2,53 +2,40 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './CVRevue.css';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEnvelope, faPhone, faLocationDot, faSpinner, faCopy } from "@fortawesome/free-solid-svg-icons";
+import { faEnvelope, faPhone, faLocationDot, faSpinner } from "@fortawesome/free-solid-svg-icons";
+import { useParams } from 'react-router-dom'; 
 
-export default function CVRevue() {
+export default function SharedCVRevue() {
   const [cvData, setCvData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [shareLink, setShareLink] = useState('');
-  const [linkCopied, setLinkCopied] = useState(false);
+  const { shareLink } = useParams(); 
 
   useEffect(() => {
-    // Функція для отримання даних CV з MongoDB
-    const fetchCVData = async () => {
+    
+    // Функція для отримання даних CV з MongoDB за посиланням
+    const fetchSharedCVData = async () => {
       try {
         setLoading(true);
-        const response = await axios.get('/api/cv');
+        console.log("Fetching shared CV data with link:", shareLink);
+        const response = await axios.get(`/api/cv/share/${shareLink}`);
+        console.log("Response data:", response.data);
         setCvData(response.data);
         setLoading(false);
       } catch (err) {
-        console.error('Error fetching CV data:', err);
-        setError('Failed to load CV. Please try again later.');
+        console.error('Error fetching shared CV data:', err);
+        setError('Failed to load CV. The link may be invalid or expired.');
         setLoading(false);
       }
     };
 
-    fetchCVData();
-  }, []);
-
-  // Отримуємо посилання для поширення, якщо є CV
-  useEffect(() => {
-    if (cvData && cvData._id) {
-      axios.get('/api/cv/sharelink')
-        .then(response => {
-          const baseUrl = window.location.origin;
-          setShareLink(`${baseUrl}/shared-cv/${response.data.shareableLink}`);
-        })
-        .catch(err => console.error('Error fetching share link:', err));
+    if (shareLink) {
+      fetchSharedCVData();
+    } else {
+      setError('Invalid link. No share ID provided.');
+      setLoading(false);
     }
-  }, [cvData]);
-
-  const copyShareLink = () => {
-    navigator.clipboard.writeText(shareLink)
-      .then(() => {
-        setLinkCopied(true);
-        setTimeout(() => setLinkCopied(false), 2000);
-      })
-      .catch(err => console.error('Failed to copy: ', err));
-  };
+  }, [shareLink]);
 
   // Відображення завантаження
   if (loading) {
@@ -74,7 +61,7 @@ export default function CVRevue() {
   if (!cvData) {
     return (
       <div className="CV-Revue-Empty">
-        <p>No CV found. Please create your CV first.</p>
+        <p>CV not found. The link may be invalid or expired.</p>
       </div>
     );
   }
@@ -106,7 +93,8 @@ export default function CVRevue() {
   };
 
   return (
-    <div className="CV-Revue"> 
+    <div className="CV-Revue shared-view"> 
+      
       <header className="CV-Revue-header">
         <div className="CV-Revue-header-Left">
           <img 
@@ -218,32 +206,7 @@ export default function CVRevue() {
             )}
           </div>
         </div>
-      </div>
-      
-      {shareLink && (
-        <div className="CV-Share-Container">
-          <h3>Share your CV</h3>
-          <div className="Share-Link-Box">
-            <input 
-              type="text" 
-              value={shareLink} 
-              readOnly 
-              className="Share-Link-Input"
-            />
-            <button 
-              onClick={copyShareLink} 
-              className="Copy-Link-Button"
-              title="Copy to clipboard"
-            >
-              <FontAwesomeIcon icon={faCopy} />
-              {linkCopied ? ' Copied!' : ' Copy'}
-            </button>
-          </div>
-          <p className="Share-Link-Info">
-            Anyone with this link can view your CV (without editing rights).
-          </p>
-        </div>
-      )}
+      </div>     
     </div>
   );
 }

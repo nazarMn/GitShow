@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const crypto = require('crypto');
 
 // Оновлена схема для моделі CV
 const cvSchema = new mongoose.Schema({
@@ -27,8 +28,22 @@ const cvSchema = new mongoose.Schema({
       descriptions: [{ type: String }]
     }
   ],
+  shareableLink: { type: String, unique: true, default: () => crypto.randomBytes(16).toString('hex') },
   createdAt: { type: Date, default: Date.now }
 });
+
+async function updateExistingCVs() {
+  const cvs = await CV.find({ shareableLink: { $exists: false } });
+  console.log(`Found ${cvs.length} CVs without shareableLink, updating...`);
+  
+  for (const cv of cvs) {
+    cv.shareableLink = crypto.randomBytes(16).toString('hex');
+    await cv.save();
+  }
+  
+  console.log('Update completed');
+}
+
 
 const CV = mongoose.model('CV', cvSchema);
 module.exports = CV;
