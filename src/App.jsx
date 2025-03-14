@@ -13,10 +13,7 @@ import SkillsSettings from './components/HomePage/Setting/SkillsSettings/SkillsS
 import Reviews from './components/HomePage/ReviewsPage/Reviews/Reviews';
 import Navigation from './components/NavigationСomponent/NavigationСomponent';
 import Project from './components/ProjectPage/Project/Project';
-import CVSettings from './components/HomePage/Setting/CVSettings/CVSettings';
 import CVModels from './components/CVComponents/CVModels/CVModels';
-import CVRevue from './components/CVComponents/CVRevue/CVRevue';
-import CVEdit from './components/CVComponents/CVEdit/CVEdit';
 import BookmarksPage from './components/ProjectPage/BookmarksPage/BookmarksPage';
 import GlobalSettings from './components/HomePage/Setting/GlobalSettings/GlobalSettings';
 import SharedCVRevue from './components/CVComponents/CVRevue/SharedCVRevue';
@@ -84,9 +81,6 @@ const App = () => {
                 <Skills />
                 <Resume />
                 <Reviews />
-                <CVRevue />
-                <CVEdit />
-            
               </>
             ) : (
               <Navigate to="/" replace />
@@ -123,10 +117,6 @@ const App = () => {
           element={isAuthenticated ? <SkillsSettings /> : <Navigate to="/" replace />}
         />
 
-        {/* <Route
-          path="/CVSettings"
-          element={isAuthenticated ? <CVSettings /> : <Navigate to="/" replace />}
-        /> */}
         <Route
           path="/CVModels"
           element={isAuthenticated ? <CVModels /> : <Navigate to="/" replace />}
