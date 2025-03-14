@@ -5,6 +5,7 @@ import './CVModels.css';
 import CV1 from '/CV1.png';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrashAlt, faCopy } from '@fortawesome/free-solid-svg-icons'; 
+import SettingsSidebar from '../../HomePage/Setting/SettingsSidebar/SettingsSidebar';
 
 const CV_IMAGES = [{ id: 'CV1', src: CV1 }];
 
@@ -157,7 +158,12 @@ export default function CVModels() {
   };
 
   return (
+
     <div className="CV-Models">
+      <SettingsSidebar />
+      
+<div className="CV-Models-Content">
+
       <header className="CV-Models-header">Choose your CV design</header>
       <div className="CV-Models-Container">
         {CV_IMAGES.map((image) => (
@@ -210,6 +216,7 @@ export default function CVModels() {
       )}
 
       <ToastContainer />
+      </div>
     </div>
   );
 }

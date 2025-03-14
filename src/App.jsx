@@ -123,10 +123,10 @@ const App = () => {
           element={isAuthenticated ? <SkillsSettings /> : <Navigate to="/" replace />}
         />
 
-        <Route
+        {/* <Route
           path="/CVSettings"
           element={isAuthenticated ? <CVSettings /> : <Navigate to="/" replace />}
-        />
+        /> */}
         <Route
           path="/CVModels"
           element={isAuthenticated ? <CVModels /> : <Navigate to="/" replace />}
