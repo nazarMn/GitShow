@@ -17,6 +17,7 @@ import CVModels from './components/CVComponents/CVModels/CVModels';
 import BookmarksPage from './components/ProjectPage/BookmarksPage/BookmarksPage';
 import GlobalSettings from './components/HomePage/Setting/GlobalSettings/GlobalSettings';
 import SharedCVRevue from './components/CVComponents/CVRevue/SharedCVRevue';
+import CVEdit from './components/CVComponents/CVEdit/CVEdit';
 
 
 const App = () => {
@@ -120,6 +121,10 @@ const App = () => {
         <Route
           path="/CVModels"
           element={isAuthenticated ? <CVModels /> : <Navigate to="/" replace />}
+        />
+          <Route
+          path="/CVEdit"
+          element={isAuthenticated ? <CVEdit /> : <Navigate to="/" replace />}
         />
 
         <Route

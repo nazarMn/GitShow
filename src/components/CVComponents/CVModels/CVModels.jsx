@@ -150,13 +150,23 @@ export default function CVModels() {
     const toastId = toast.info(
       <div>
         <p>Are you sure you want to delete your CV?</p>
-        <button onClick={() => confirmDelete(toastId)} className="btn-confirm">Yes</button>
+        <button
+      onClick={() => {
+        confirmDelete(toastId);
+        setTimeout(() => {
+          window.location.reload();
+        }, 1000);
+      }}
+      className="btn-confirm"
+    >
+      Yes
+    </button>
         <button onClick={() => toast.dismiss(toastId)} className="btn-cancel">No</button>
       </div>,
       { position: 'top-center', autoClose: false, closeOnClick: false }
     );
   };
-
+  
   return (
 
     <div className="CV-Models">
@@ -211,7 +221,12 @@ export default function CVModels() {
 
       {!hasCV && selectedCV && (
         <div className="CV-Models-Save">
-          <button onClick={handleSaveCV}>Continue</button>
+          <button onClick={() => {
+        handleSaveCV();
+        setTimeout(() => {
+          window.location.reload();
+        }, 1000);
+      }} >Continue</button>
         </div>
       )}
 
