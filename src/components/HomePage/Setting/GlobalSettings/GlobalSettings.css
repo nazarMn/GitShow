@@ -4,3 +4,34 @@
     box-sizing: border-box;
     font-family:  'Montserrat', sans-serif;
 }
+.GlobalSettings{
+    display: flex;
+    width: 100%;
+    height: 100vh;
+    background-color: #101010;
+    color: #fff;
+}
+
+.GlobalSettings-Content {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex: 1;
+    padding-top: 40px;
+    padding-left: 40px;
+    padding-right: 40px;
+    gap: 40px;
+}
+.GlobalSettings-Main {
+    width: 90%;
+    background: #202020;
+    padding: 20px;
+    border: 1px solid #303030;
+    border-radius: 6px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.GlobalSettings-Main h1 {
+    font-size: 24px;
+    margin-bottom: 20px;
+}
