@@ -376,15 +376,15 @@ app.delete('/api/cv/delete', ensureAuthenticated, async (req, res) => {
 // Отримання CV за публічним посиланням (без автентифікації)
 app.get('/api/cv/share/:link', async (req, res) => {
   try {
-    console.log("Received request for shared CV with link:", req.params.link);
+    // console.log("Received request for shared CV with link:", req.params.link);
     const cv = await CV.findOne({ shareableLink: req.params.link });
     
     if (!cv) {
-      console.log("No CV found with shareableLink:", req.params.link);
+      // console.log("No CV found with shareableLink:", req.params.link);
       return res.status(404).json({ message: 'CV not found' });
     }
     
-    console.log("Found CV:", cv._id);
+    // console.log("Found CV:", cv._id);
     
     const publicCV = {
       name: cv.name,
