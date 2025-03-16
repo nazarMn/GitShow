@@ -27,7 +27,10 @@ app.use(
     saveUninitialized: false,
   })
 );
-app.use(cors());
+app.use(cors({
+  origin: 'https://gitshow-production.up.railway.app',  // або інший домен твого фронтенда
+  credentials: true,
+}));
 
 passport.use(
   new GitHubStrategy(
