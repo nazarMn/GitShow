@@ -27,7 +27,12 @@ app.use(
     saveUninitialized: false,
   })
 );
-app.use(cors());
+app.use(
+  cors({
+    origin: ["https://git-show.vercel.app"], // Дозволяємо запити з фронтенду
+    credentials: true, // Дозволяє передавати куки, якщо використовуєш JWT у куках
+  })
+);
 
 passport.use(
   new GitHubStrategy(
@@ -817,5 +822,5 @@ app.get('*', (req, res) => {
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
+  console.log(`Server running on port ${PORT}`);
 });
