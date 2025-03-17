@@ -10,13 +10,12 @@ export default function Resume() {
 
   const itemsPerPage = 5;
 
-  // Fetch resumes from the API
   useEffect(() => {
     const fetchResumes = async () => {
       try {
         setLoading(true);
         const response = await fetch('http://localhost:3000/api/resumes', {
-          credentials: 'include', // Include cookies for authentication
+          credentials: 'include',
         });
         if (!response.ok) {
           throw new Error('Failed to fetch resumes');
@@ -33,18 +32,17 @@ export default function Resume() {
     fetchResumes();
   }, []);
 
-  // Fetch user data to get YearsOfExperience
   useEffect(() => {
     const fetchUserData = async () => {
       try {
         const response = await fetch('http://localhost:3000/api/user', {
-          credentials: 'include', // Include cookies for authentication
+          credentials: 'include',
         });
         if (!response.ok) {
           throw new Error('Failed to fetch user data');
         }
         const userData = await response.json();
-        setYearsOfExperience(userData.YearsOfExperience || 0); // Default to 0 if not set
+        setYearsOfExperience(userData.YearsOfExperience || 0);
       } catch (err) {
         console.error(err);
       }
@@ -53,13 +51,11 @@ export default function Resume() {
     fetchUserData();
   }, []);
 
-  // Calculate the items to display on the current page
-  const startIndex = (currentPage - 1) * itemsPerPage;
+  const totalPages = Math.ceil(items.length / itemsPerPage);
+  const currentPageSafe = Math.min(currentPage, totalPages || 1);
+  const startIndex = (currentPageSafe - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   const currentItems = items.slice(startIndex, endIndex);
-
-  // Calculate total pages
-  const totalPages = Math.ceil(items.length / itemsPerPage);
 
   return (
     <div className="resume-container">
@@ -83,9 +79,7 @@ export default function Resume() {
                 key={index}
               >
                 <div
-                  className={`resume-branch ${
-                    index % 2 === 0 ? 'branch-left' : 'branch-right'
-                  }`}
+                  className={`resume-branch ${index % 2 === 0 ? 'branch-left' : 'branch-right'}`}
                 >
                   <div className="resume-dot"></div>
                 </div>
@@ -100,22 +94,23 @@ export default function Resume() {
         )}
       </div>
 
-      {/* Pagination controls */}
-      <div className="pagination">
-        <button
-          onClick={() => setCurrentPage(currentPage - 1)}
-          disabled={currentPage === 1}
-        >
-          Previous
-        </button>
-        <span>{currentPage} / {totalPages}</span>
-        <button
-          onClick={() => setCurrentPage(currentPage + 1)}
-          disabled={currentPage === totalPages}
-        >
-          Next
-        </button>
-      </div>
+      {totalPages > 1 && (
+        <div className="pagination">
+          <button
+            onClick={() => setCurrentPage(currentPageSafe - 1)}
+            disabled={currentPageSafe === 1}
+          >
+            Previous
+          </button>
+          <span>{currentPageSafe} / {totalPages}</span>
+          <button
+            onClick={() => setCurrentPage(currentPageSafe + 1)}
+            disabled={currentPageSafe === totalPages}
+          >
+            Next
+          </button>
+        </div>
+      )}
     </div>
   );
 }
