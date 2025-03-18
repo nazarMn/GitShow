@@ -27,9 +27,7 @@ app.use(
     saveUninitialized: false,
   })
 );
-app.use(cors(
-  { origin: 'https://gitshow-production.up.railway.app', credentials: true }
-));
+app.use(cors());
 
 passport.use(
   new GitHubStrategy(
@@ -430,10 +428,10 @@ app.get('/api/cv/sharelink', ensureAuthenticated, async (req, res) => {
 
 // Resume Schema and Routes
 const resumeSchema = new mongoose.Schema({
-  title: { type: [String], default: [] },
-  university: { type: [String], default: [] },
-  description: { type: [String], default: [] },
-  user: { type: [mongoose.Schema.Types.ObjectId], ref: "User", required: true, default: [] }
+  title: String,
+  university: String,
+  description: String,
+  user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
 });
 
 const Resume = mongoose.model('Resume', resumeSchema);
@@ -819,5 +817,5 @@ app.get('*', (req, res) => {
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-  console.log(`Server running on ${PORT}`);
+  console.log(`Server running on http://localhost:${PORT}`);
 });
