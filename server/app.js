@@ -27,7 +27,9 @@ app.use(
     saveUninitialized: false,
   })
 );
-app.use(cors());
+app.use(cors(
+  { origin: 'https://gitshow-production.up.railway.app', credentials: true }
+));
 
 passport.use(
   new GitHubStrategy(
@@ -817,5 +819,5 @@ app.get('*', (req, res) => {
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
+  console.log(`Server running on ${PORT}`);
 });
