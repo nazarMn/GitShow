@@ -17,14 +17,14 @@ export default function ProjectCard({ title, description, imageUrl, link, websit
         console.error('Помилка при отриманні закладок:', error);
       }
     };
-  
+
     fetchBookmarks();
   }, [title]);
-  
+
   const toggleSave = async () => {
     try {
       const project = { title, description, imageUrl, link, websiteUrl, userAvatar };
-  
+
       if (isSaved) {
         await fetch('/api/bookmark', {
           method: 'DELETE',
@@ -38,19 +38,33 @@ export default function ProjectCard({ title, description, imageUrl, link, websit
           body: JSON.stringify(project)
         });
       }
-  
+
       setIsSaved(!isSaved);
     } catch (error) {
       console.error('Помилка при оновленні закладок:', error);
     }
   };
-  
+
+  const renderImage = () => {
+    if (imageUrl && imageUrl.trim()) {
+      return <img src={imageUrl} alt="Project Thumbnail" />;
+    }
+
+    const firstLetter = title ? title[0].toUpperCase() : 'P';
+    const letterCode = firstLetter.charCodeAt(0);
+    const color1 = `hsl(${(letterCode * 30) % 360}, 70%, 50%)`;
+    const color2 = `hsl(${(letterCode * 70) % 360}, 70%, 50%)`;
+
+    return (
+      <div className="defaultImage" style={{ background: `linear-gradient(135deg, ${color1}, ${color2})` }}>
+        <span>{firstLetter}</span>
+      </div>
+    );
+  };
 
   return (
     <div className="projectCard">
-      <div className="cardImage">
-        <img src={imageUrl || './img/project.jpg'} alt="Project Thumbnail" />
-      </div>
+      <div className="cardImage">{renderImage()}</div>
       <div className="cardOverlay">
         <h2>{title}</h2>
         <p>{description}</p>
