@@ -11,8 +11,16 @@ export default function PortfolioCard({ title, description, imageUrl, link, webs
     }
 
     const firstLetter = title ? title[0].toUpperCase() : 'P';
+
+    // Генерація унікального кольору градієнта на основі першої букви
+    const letterCode = firstLetter.charCodeAt(0);
+
+
+    const color1 = `hsl(${(letterCode * 30) % 360}, 70%, 50%)`; 
+    const color2 = `hsl(${(letterCode * 70) % 360}, 70%, 50%)`; 
+
     return (
-      <div className="defaultImage">
+      <div className="defaultImage" style={{ background: `linear-gradient(135deg, ${color1}, ${color2})` }}>
         <span>{firstLetter}</span>
       </div>
     );
