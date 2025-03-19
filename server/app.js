@@ -27,7 +27,10 @@ app.use(
     saveUninitialized: false,
   })
 );
-app.use(cors());
+app.use(cors({
+  origin: "https://67dae24953244a1945674bc7--glittering-cannoli-bc84ac.netlify.app",
+  credentials: true
+}));
 
 passport.use(
   new GitHubStrategy(
