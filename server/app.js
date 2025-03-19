@@ -28,7 +28,7 @@ app.use(
   })
 );
 app.use(cors({
-  origin: "https://67dae24953244a1945674bc7--glittering-cannoli-bc84ac.netlify.app",
+  origin: "https://glittering-cannoli-bc84ac.netlify.app",
   credentials: true
 }));
 
