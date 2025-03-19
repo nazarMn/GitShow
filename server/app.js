@@ -431,10 +431,10 @@ app.get('/api/cv/sharelink', ensureAuthenticated, async (req, res) => {
 
 // Resume Schema and Routes
 const resumeSchema = new mongoose.Schema({
-  title: String,
-  university: String,
-  description: String,
-  user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+  title: { type: [String], default: [] },
+  university: { type: [String], default: [] },
+  description: { type: [String], default: [] },
+  user: { type: [mongoose.Schema.Types.ObjectId], ref: "User", required: true, default: [] }
 });
 
 const Resume = mongoose.model('Resume', resumeSchema);
