@@ -29,7 +29,7 @@ app.use(
 );
 const corsOptions = {
   origin: (origin, callback) => {
-    const allowedOrigins = ['http://localhost:4173', 'http://localhost:3000'];
+    const allowedOrigins = ['http://localhost:4173', 'http://localhost:3000', 'https://glittering-cannoli-bc84ac.netlify.app'];
     if (allowedOrigins.includes(origin) || !origin) { // Дозволяє запити без origin (для локальних запитів без CORS)
       callback(null, true); // Якщо origin дозволено, запит проходить
     } else {
@@ -828,7 +828,7 @@ app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, '../dist/index.html'));
 });
 
-const PORT = process.env.PORT || 4173;
+const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
 });

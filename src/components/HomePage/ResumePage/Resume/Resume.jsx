@@ -7,6 +7,7 @@ export default function Resume() {
   const [currentPage, setCurrentPage] = useState(1);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const API_URL = import.meta.env.VITE_API_URL;
 
   const itemsPerPage = 5;
 
@@ -14,7 +15,7 @@ export default function Resume() {
     const fetchResumes = async () => {
       try {
         setLoading(true);
-        const response = await fetch('http://localhost:4173/api/resumes', {
+        const response = await fetch(`${API_URL}/api/resumes`, {
           credentials: 'include',
         });
         if (!response.ok) throw new Error('Failed to fetch resumes');
@@ -34,7 +35,7 @@ export default function Resume() {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const response = await fetch('http://localhost:4173/api/user', {
+          const response = await fetch(`${API_URL}/api/user`, {
           credentials: 'include',
         });
         if (!response.ok) throw new Error('Failed to fetch user data');
