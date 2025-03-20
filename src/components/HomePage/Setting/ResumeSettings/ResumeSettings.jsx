@@ -12,7 +12,6 @@ export default function ResumeSettings() {
   const [editing, setEditing] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [items, setItems] = useState([]);
-  const API_URL = import.meta.env.VITE_API_URL; 
 
   const handleInputChange = (e) => {
     const { id, value } = e.target;
@@ -30,7 +29,7 @@ export default function ResumeSettings() {
     }
 
     try {
-    const response = await fetch(`${API_URL}/api/resumes`, {
+      const response = await fetch('https://gitshow.onrender.com/api/resumes', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
@@ -65,7 +64,7 @@ export default function ResumeSettings() {
     }
   
     try {
-      const response = await fetch(`${API_URL}/api/resumes/${formData.id}`, {
+      const response = await fetch(`https://gitshow.onrender.com/api/resumes/${formData.id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -90,7 +89,7 @@ export default function ResumeSettings() {
   
   const handleDelete = async (id) => {
     try {
-      const response = await fetch(`${API_URL}/api/resumes/${id}`, {
+      const response = await fetch(`https://gitshow.onrender.com/api/resumes/${id}`, {
         method: 'DELETE',
       });
   
@@ -109,7 +108,7 @@ export default function ResumeSettings() {
 
   const handleExperienceUpdate = async () => {
     try {
-      const response = await fetch(`${API_URL}/api/user`, {
+      const response = await fetch('https://gitshow.onrender.com/api/user', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
@@ -142,7 +141,7 @@ export default function ResumeSettings() {
   useEffect(() => {
     const fetchResumes = async () => {
       try {
-        const response = await fetch(`${API_URL}/api/resumes`, {
+        const response = await fetch('https://gitshow.onrender.com/api/resumes', {
           credentials: 'include', // Це дозволяє передавати сесію з браузера
         });
         if (response.ok) {
@@ -169,7 +168,7 @@ export default function ResumeSettings() {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const response = await fetch(`${API_URL}/api/user`, {
+        const response = await fetch('https://gitshow.onrender.com/api/user', {
           credentials: 'include',
         });
         if (response.ok) {
