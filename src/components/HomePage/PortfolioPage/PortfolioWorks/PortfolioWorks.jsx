@@ -15,9 +15,16 @@ export default function PortfolioWorks() {
     try {
       const response = await fetch('/api/github/projects');
       const data = await response.json();
-      setProjects(data);
+      
+      // Переконуємось, що `data` - це масив
+      if (Array.isArray(data)) {
+        setProjects(data);
+      } else {
+        setProjects([]); // Якщо бекенд повернув не масив, скидаємо проєкти
+      }
     } catch (error) {
       console.error('Error fetching GitHub projects:', error);
+      setProjects([]); // У разі помилки також скидаємо список
     } finally {
       setIsLoading(false);
     }
@@ -54,15 +61,17 @@ export default function PortfolioWorks() {
             <h3>Your GitHub Projects</h3>
             {isLoading ? (
               <p>Loading projects...</p>
-            ) : (
+            ) : projects.length > 0 ? (
               <ul className="projectsList">
                 {projects.map((project) => (
-                  <li key={project.id} className="projectItem">
+                  <li key={project.id || project.name} className="projectItem">
                     <span>{project.name}</span>
                     <button onClick={() => handleAddProject(project)}>Add</button>
                   </li>
                 ))}
               </ul>
+            ) : (
+              <p>No projects found.</p>
             )}
           </div>
         </div>

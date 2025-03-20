@@ -4,7 +4,7 @@ import './ProjectInput.css';
 export default function ProjectInput() {
   const [searchQuery, setSearchQuery] = useState('');
   const [users, setUsers] = useState([]);
-  
+
   useEffect(() => {
     const timer = setTimeout(() => {
       if (searchQuery) {
@@ -14,16 +14,23 @@ export default function ProjectInput() {
       }
     }, 500); 
 
-    return () => clearTimeout(timer); 
+    return () => clearTimeout(timer);
   }, [searchQuery]);
 
   const fetchUsers = async (query) => {
     try {
       const response = await fetch(`/api/users?username=${query}`);
       const data = await response.json();
-      setUsers(data);
+
+      // Переконуємося, що data - це масив
+      if (Array.isArray(data)) {
+        setUsers(data);
+      } else {
+        setUsers([]); // Якщо data не масив, скидаємо users у порожній масив
+      }
     } catch (error) {
       console.error('Error fetching users:', error);
+      setUsers([]); // У разі помилки очищаємо список користувачів
     }
   };
 
@@ -39,7 +46,7 @@ export default function ProjectInput() {
         value={searchQuery}
         onChange={handleChange}
       />
-      {users.length > 0 && (
+      {Array.isArray(users) && users.length > 0 && (
         <div className="search-results">
           {users.map((user) => (
             <div key={user.githubId} className="user-card">

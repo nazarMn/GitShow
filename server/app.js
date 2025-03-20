@@ -27,7 +27,20 @@ app.use(
     saveUninitialized: false,
   })
 );
-app.use(cors());
+const corsOptions = {
+  origin: (origin, callback) => {
+    const allowedOrigins = ['http://localhost:4173', 'http://localhost:3000'];
+    if (allowedOrigins.includes(origin) || !origin) { // Дозволяє запити без origin (для локальних запитів без CORS)
+      callback(null, true); // Якщо origin дозволено, запит проходить
+    } else {
+      callback(new Error('CORS policy error: Origin not allowed'), false); // Якщо origin не дозволено
+    }
+  },
+  methods: ['GET', 'POST', 'PUT', 'DELETE'], // Дозволяє вказані методи
+  credentials: true, // Якщо ви використовуєте авторизацію або куки
+};
+
+app.use(cors(corsOptions));  // Використовуємо ці налаштування на сервері
 
 passport.use(
   new GitHubStrategy(
@@ -815,7 +828,7 @@ app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, '../dist/index.html'));
 });
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 4173;
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
 });

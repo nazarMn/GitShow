@@ -3,7 +3,7 @@ import './Resume.css';
 
 export default function Resume() {
   const [items, setItems] = useState([]);
-  const [yearsOfExperience, setYearsOfExperience] = useState(null);
+  const [yearsOfExperience, setYearsOfExperience] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -14,12 +14,11 @@ export default function Resume() {
     const fetchResumes = async () => {
       try {
         setLoading(true);
-        const response = await fetch('http://localhost:3000/api/resumes', {
+        const response = await fetch('http://localhost:4173/api/resumes', {
           credentials: 'include',
         });
-        if (!response.ok) {
-          throw new Error('Failed to fetch resumes');
-        }
+        if (!response.ok) throw new Error('Failed to fetch resumes');
+
         const data = await response.json();
         setItems(data);
       } catch (err) {
@@ -35,12 +34,11 @@ export default function Resume() {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const response = await fetch('http://localhost:3000/api/user', {
+        const response = await fetch('http://localhost:4173/api/user', {
           credentials: 'include',
         });
-        if (!response.ok) {
-          throw new Error('Failed to fetch user data');
-        }
+        if (!response.ok) throw new Error('Failed to fetch user data');
+
         const userData = await response.json();
         setYearsOfExperience(userData.YearsOfExperience || 0);
       } catch (err) {
@@ -51,8 +49,8 @@ export default function Resume() {
     fetchUserData();
   }, []);
 
-  const totalPages = Math.ceil(items.length / itemsPerPage);
-  const currentPageSafe = Math.min(currentPage, totalPages || 1);
+  const totalPages = Math.max(Math.ceil(items.length / itemsPerPage), 1);
+  const currentPageSafe = Math.min(currentPage, totalPages);
   const startIndex = (currentPageSafe - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   const currentItems = items.slice(startIndex, endIndex);
@@ -68,18 +66,18 @@ export default function Resume() {
           <p>Loading...</p>
         ) : error ? (
           <p>Error: {error}</p>
-        ) : currentItems.length === 0 ? (
+        ) : items.length === 0 ? (
           <p>No resumes available.</p>
         ) : (
           <>
             <div className="resume-line"></div>
-            {currentItems.map((item, index) => (
+            {currentItems.map((item) => (
               <div
-                className={`resume-card ${index % 2 === 0 ? 'left' : 'right'}`}
-                key={index}
+                className={`resume-card ${item._id % 2 === 0 ? 'left' : 'right'}`}
+                key={item._id}
               >
                 <div
-                  className={`resume-branch ${index % 2 === 0 ? 'branch-left' : 'branch-right'}`}
+                  className={`resume-branch ${item._id % 2 === 0 ? 'branch-left' : 'branch-right'}`}
                 >
                   <div className="resume-dot"></div>
                 </div>

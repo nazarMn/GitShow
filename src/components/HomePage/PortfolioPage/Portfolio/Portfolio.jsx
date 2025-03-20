@@ -16,7 +16,12 @@ export default function Portfolio() {
     const fetchProjects = async () => {
       try {
         const response = await axios.get('/api/projects/home');
-        setProjects(response.data);
+        // Перевірка на масив
+        if (Array.isArray(response.data)) {
+          setProjects(response.data);
+        } else {
+          console.error('Received data is not an array');
+        }
       } catch (error) {
         console.error('Error fetching projects:', error);
       }
@@ -124,18 +129,22 @@ export default function Portfolio() {
         )}
         
         <div className="portfolioGrid">
-          {currentProjects.map((project) => (
-            <PortfolioCard
-              key={project._id}
-              title={project.name}
-              description={project.description}
-              imageUrl={project.imageUrl}
-              link={project.link}
-              websiteUrl={project.websiteUrl}
-              onDelete={() => deleteProject(project._id)}
-              onEdit={() => openEditModal(project)} 
-            />
-          ))}
+          {Array.isArray(currentProjects) && currentProjects.length > 0 ? (
+            currentProjects.map((project) => (
+              <PortfolioCard
+                key={project._id}
+                title={project.name}
+                description={project.description}
+                imageUrl={project.imageUrl}
+                link={project.link}
+                websiteUrl={project.websiteUrl}
+                onDelete={() => deleteProject(project._id)}
+                onEdit={() => openEditModal(project)} 
+              />
+            ))
+          ) : (
+            <p>No projects available to display.</p>
+          )}
         </div>
       </div>
 

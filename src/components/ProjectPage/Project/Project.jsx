@@ -11,9 +11,16 @@ export default function Project() {
     const fetchProjects = async () => {
       try {
         const response = await axios.get('/api/projects');
-        setProjects(response.data);
+
+        // Переконуємося, що отримані дані є масивом
+        if (Array.isArray(response.data)) {
+          setProjects(response.data);
+        } else {
+          setProjects([]); // У разі невірного формату повертаємо порожній масив
+        }
       } catch (error) {
         console.error('Error fetching projects:', error);
+        setProjects([]); // У разі помилки очищаємо список
       }
     };
     fetchProjects();
@@ -25,20 +32,22 @@ export default function Project() {
 
       <ProjectInput />
 
-    
-
       <div className="project-grid">
-        {projects.map((project) => (
-          <ProjectCard
-            key={project._id}
-            title={project.name}
-            description={project.description}
-            imageUrl={project.imageUrl}
-            link={project.link}
-            websiteUrl={project.websiteUrl}
-            userAvatar={project.userAvatar}
-          />
-        ))}
+        {Array.isArray(projects) && projects.length > 0 ? (
+          projects.map((project) => (
+            <ProjectCard
+              key={project._id}
+              title={project.name}
+              description={project.description}
+              imageUrl={project.imageUrl}
+              link={project.link}
+              websiteUrl={project.websiteUrl}
+              userAvatar={project.userAvatar}
+            />
+          ))
+        ) : (
+          <p className="no-projects">No projects found</p> // Додаємо повідомлення, якщо немає проектів
+        )}
       </div>
     </div>
   );

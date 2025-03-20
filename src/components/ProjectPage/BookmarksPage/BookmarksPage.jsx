@@ -10,9 +10,16 @@ export default function BookmarksPage() {
     const fetchBookmarks = async () => {
       try {
         const response = await axios.get('/api/bookmarks');
-        setBookmarkedProjects(response.data);
+        
+        // Перевіряємо, чи `response.data` є масивом, щоб уникнути помилок .map()
+        if (Array.isArray(response.data)) {
+          setBookmarkedProjects(response.data);
+        } else {
+          setBookmarkedProjects([]); // Якщо формат невірний, встановлюємо порожній масив
+        }
       } catch (error) {
         console.error('Помилка при отриманні закладок:', error);
+        setBookmarkedProjects([]); // У разі помилки очищаємо список
       }
     };
 
@@ -22,11 +29,12 @@ export default function BookmarksPage() {
   return (
     <div className="bookmarks-container">
       <header className="bookmarks-header">Your Bookmarked Projects</header>
+      
       <div className="bookmarks-grid">
-        {bookmarkedProjects.length > 0 ? (
-          bookmarkedProjects.map((project, index) => (
+        {Array.isArray(bookmarkedProjects) && bookmarkedProjects.length > 0 ? (
+          bookmarkedProjects.map((project) => (
             <ProjectCard
-              key={index}
+              key={project._id} // Використовуємо `project._id` замість `index`
               title={project.title}
               description={project.description}
               imageUrl={project.imageUrl}
@@ -36,7 +44,7 @@ export default function BookmarksPage() {
             />
           ))
         ) : (
-          <p>No bookmarked projects yet.</p>
+          <p className="no-bookmarks">No bookmarked projects yet.</p> 
         )}
       </div>
     </div>
