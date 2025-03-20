@@ -14,7 +14,7 @@ export default function Resume() {
     const fetchResumes = async () => {
       try {
         setLoading(true);
-        const response = await fetch('https://gitshow.onrender.com/api/resumes', {
+        const response = await fetch('https://glittering-cannoli-bc84ac.netlify.app/api/resumes', {
           credentials: 'include',
         });
         if (!response.ok) throw new Error('Failed to fetch resumes');
@@ -34,7 +34,7 @@ export default function Resume() {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const response = await fetch('https://gitshow.onrender.com/api/user', {
+        const response = await fetch('https://glittering-cannoli-bc84ac.netlify.app/api/user', {
           credentials: 'include',
         });
         if (!response.ok) throw new Error('Failed to fetch user data');
