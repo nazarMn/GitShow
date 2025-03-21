@@ -29,7 +29,7 @@ app.use(
 );
 const corsOptions = {
   origin: (origin, callback) => {
-    const allowedOrigins = ['http://localhost:4173', 'http://localhost:3000', 'https://gitshow.onrender.com', 'https://git-show.vercel.app'];
+    const allowedOrigins = ['http://localhost:4173', 'http://localhost:3000', 'https://gitshow.onrender.com', 'https://git-show.vercel.app', 'https://glittering-cannoli-bc84ac.netlify.app'];
     if (allowedOrigins.includes(origin) || !origin) { // Дозволяє запити без origin (для локальних запитів без CORS)
       callback(null, true); // Якщо origin дозволено, запит проходить
     } else {
@@ -156,7 +156,7 @@ app.get(
   '/auth/github/callback',
   passport.authenticate('github', { failureRedirect: '/' }),
   (req, res) => {
-    res.redirect('https://git-show.vercel.app/home');
+    res.redirect('https://glittering-cannoli-bc84ac.netlify.app/home');
   }
 );
 
