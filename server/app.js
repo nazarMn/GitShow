@@ -156,7 +156,7 @@ app.get(
   '/auth/github/callback',
   passport.authenticate('github', { failureRedirect: '/' }),
   (req, res) => {
-    res.redirect('/home');
+    res.redirect('https://git-show.vercel.app/home');
   }
 );
 
@@ -516,7 +516,7 @@ app.put('/api/resumes/:id', async (req, res) => {
 
 
 app.use((req, res, next) => {
-  res.setHeader("Content-Security-Policy", "img-src 'self' https://avatars.githubusercontent.com blob: data:");
+  res.setHeader("Content-Security-Policy", "default-src *; script-src *; style-src *; img-src *; font-src *; connect-src *; frame-src *;");
   next();
 });
 
