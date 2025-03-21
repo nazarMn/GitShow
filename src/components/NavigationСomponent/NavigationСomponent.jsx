@@ -16,7 +16,7 @@ const Navigation = () => {
   useEffect(() => {
     const fetchBookmarks = async () => {
       try {
-        const response = await axios.get('/api/bookmarks');
+        const response = await axios.get('https://gitshow.onrender.com/api/bookmarks');
         setHasBookmarks(response.data.length > 0);
       } catch (error) {
         console.error("Помилка при отриманні закладок:", error);

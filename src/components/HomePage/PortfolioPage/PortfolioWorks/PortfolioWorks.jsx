@@ -13,7 +13,7 @@ export default function PortfolioWorks() {
   const fetchGitHubProjects = async () => {
     setIsLoading(true);
     try {
-      const response = await fetch('/api/github/projects');
+      const response = await fetch('https://gitshow.onrender.com/api/github/projects');
       const data = await response.json();
       
       // Переконуємось, що `data` - це масив

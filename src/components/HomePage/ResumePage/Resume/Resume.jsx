@@ -14,7 +14,7 @@ export default function Resume() {
     const fetchResumes = async () => {
       try {
         setLoading(true);
-        const response = await fetch('http://localhost:4173/api/resumes', {
+        const response = await fetch('https://gitshow.onrender.com/api/resumes', {
           credentials: 'include',
         });
         if (!response.ok) {
@@ -35,7 +35,7 @@ export default function Resume() {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const response = await fetch('http://localhost:4173/api/user', {
+        const response = await fetch('https://gitshow.onrender.com/api/user', {
           credentials: 'include',
         });
         if (!response.ok) {

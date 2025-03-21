@@ -9,7 +9,7 @@ export default function CVEditExp() {
   const [errors, setErrors] = useState({});
 
   useEffect(() => {
-    axios.get('/api/cv')
+    axios.get('https://gitshow.onrender.com/api/cv')
       .then(res => {
         const experience = Array.isArray(res.data.experience) ? res.data.experience : [];
         
@@ -146,7 +146,7 @@ export default function CVEditExp() {
   const confirmDelete = async (index, expId) => {
     try {
       if (expId) {
-        await axios.delete(`/api/cv/experience/${expId}`);
+        await axios.delete(`https://gitshow.onrender.com/api/cv/experience/${expId}`);
       }
       
       const updatedExperience = [...cvData.experience];
@@ -173,7 +173,7 @@ export default function CVEditExp() {
     });
     
     try {
-      await axios.put('/api/cv', { experience: formattedExperience });
+      await axios.put('https://gitshow.onrender.com/api/cv', { experience: formattedExperience });
       toast.success('CV updated successfully!', { position: 'top-right', autoClose: 3000 });
     } catch (error) {
       console.error('Error updating CV:', error);

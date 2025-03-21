@@ -18,7 +18,7 @@ export default function SharedCVRevue() {
       try {
         setLoading(true);
         console.log("Fetching shared CV data with link:", shareLink);
-        const response = await axios.get(`/api/cv/share/${shareLink}`);
+        const response = await axios.get(`https://gitshow.onrender.com/api/cv/share/${shareLink}`);
         console.log("Response data:", response.data);
         setCvData(response.data);
         setLoading(false);

@@ -16,7 +16,7 @@ export default function CVEditEduSkills() {
   });
 
   useEffect(() => {
-    axios.get('/api/cv')
+    axios.get('https://gitshow.onrender.com/api/cv')
       .then(res => {
         // Make sure we have at least one skill field to start with
         const skills = res.data.skills && res.data.skills.length > 0 ? 
@@ -63,7 +63,7 @@ export default function CVEditEduSkills() {
     const filteredSkills = cvData.skills.filter(skill => skill.trim() !== '');
     
     try {
-      await axios.put('/api/cv', {
+      await axios.put('https://gitshow.onrender.com/api/cv', {
         ...cvData,
         skills: filteredSkills
       });
