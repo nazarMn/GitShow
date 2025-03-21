@@ -29,7 +29,7 @@ export default function ResumeSettings() {
     }
 
     try {
-      const response = await fetch('http://localhost:4173/api/resumes', {
+      const response = await fetch('/api/resumes', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
@@ -64,7 +64,7 @@ export default function ResumeSettings() {
     }
   
     try {
-      const response = await fetch(`http://localhost:4173/api/resumes/${formData.id}`, {
+      const response = await fetch(`/api/resumes/${formData.id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -89,7 +89,7 @@ export default function ResumeSettings() {
   
   const handleDelete = async (id) => {
     try {
-      const response = await fetch(`http://localhost:4173/api/resumes/${id}`, {
+      const response = await fetch(`/api/resumes/${id}`, {
         method: 'DELETE',
       });
   
@@ -108,7 +108,7 @@ export default function ResumeSettings() {
 
   const handleExperienceUpdate = async () => {
     try {
-      const response = await fetch('http://localhost:4173/api/user', {
+      const response = await fetch('/api/user', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
@@ -141,7 +141,7 @@ export default function ResumeSettings() {
   useEffect(() => {
     const fetchResumes = async () => {
       try {
-        const response = await fetch('http://localhost:4173/api/resumes', {
+        const response = await fetch('/api/resumes', {
           credentials: 'include', // Це дозволяє передавати сесію з браузера
         });
         if (response.ok) {
@@ -168,7 +168,7 @@ export default function ResumeSettings() {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const response = await fetch('http://localhost:4173/api/user', {
+        const response = await fetch('/api/user', {
           credentials: 'include',
         });
         if (response.ok) {
