@@ -32,7 +32,7 @@ export default function CVRevue() {
   // Отримуємо посилання для поширення, якщо є CV
   useEffect(() => {
     if (cvData && cvData._id) {
-      axios.get('https://gitshow.onrender.com/api/cv/sharelink')
+      axios.get('/api/cv/sharelink')
         .then(response => {
           const baseUrl = window.location.origin;
           setShareLink(`${baseUrl}/shared-cv/${response.data.shareableLink}`);

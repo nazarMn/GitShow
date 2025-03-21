@@ -19,7 +19,7 @@ export default function AccountSettings() {
   const [errors, setErrors] = useState({});
 
   useEffect(() => {
-    fetch('https://gitshow.onrender.com/api/user')
+    fetch('/api/user')
       .then((res) => res.json())
       .then((data) => {
         setUser(data);
@@ -85,7 +85,7 @@ export default function AccountSettings() {
       return;
     }
 
-    fetch('https://gitshow.onrender.com/api/user', {
+    fetch('/api/user', {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',

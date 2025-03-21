@@ -10,7 +10,7 @@ export default function Project() {
   useEffect(() => {
     const fetchProjects = async () => {
       try {
-        const response = await axios.get('https://gitshow.onrender.com/api/projects');
+        const response = await axios.get('/api/projects');
 
         // Переконуємося, що отримані дані є масивом
         if (Array.isArray(response.data)) {

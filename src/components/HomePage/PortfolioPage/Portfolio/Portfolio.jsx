@@ -15,7 +15,7 @@ export default function Portfolio() {
   useEffect(() => {
     const fetchProjects = async () => {
       try {
-        const response = await axios.get('https://gitshow.onrender.com/api/projects/home');
+        const response = await axios.get('/api/projects/home');
         // Перевірка на масив
         if (Array.isArray(response.data)) {
           setProjects(response.data);
@@ -61,7 +61,7 @@ export default function Portfolio() {
 
   const deleteProject = async (projectId) => {
     try {
-      await axios.delete(`https://gitshow.onrender.com/api/projects/${projectId}`);
+      await axios.delete(`/api/projects/${projectId}`);
       setProjects(projects.filter((project) => project._id !== projectId));
     } catch (error) {
       console.error('Error deleting project:', error);
@@ -88,7 +88,7 @@ export default function Portfolio() {
         formData.append('image', currentProject.image);
       }
   
-      const response = await axios.put(`https://gitshow.onrender.com/api/projects/${currentProject._id}`, formData, {
+      const response = await axios.put(`/api/projects/${currentProject._id}`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },

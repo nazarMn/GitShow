@@ -24,7 +24,7 @@ const App = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(null);
 
   useEffect(() => {
-    fetch('https://gitshow.onrender.com/api/user')
+    fetch('/api/user')
       .then((res) => {
         if (res.status === 401) {
           setIsAuthenticated(false);

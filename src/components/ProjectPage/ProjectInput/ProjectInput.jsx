@@ -19,7 +19,7 @@ export default function ProjectInput() {
 
   const fetchUsers = async (query) => {
     try {
-      const response = await fetch(`https://gitshow.onrender.com/api/users?username=${query}`);
+      const response = await fetch(`/api/users?username=${query}`);
       const data = await response.json();
 
       // Переконуємося, що data - це масив

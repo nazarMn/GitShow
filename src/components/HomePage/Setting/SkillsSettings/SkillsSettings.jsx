@@ -24,7 +24,7 @@ export default function SkillsSettings() {
     }
 
     try {
-      const response = await fetch('https://gitshow.onrender.com/api/skills', {
+      const response = await fetch('http://localhost:4173/api/skills', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formDataSkill),
@@ -59,7 +59,7 @@ export default function SkillsSettings() {
     }
   
     try {
-      const response = await fetch(`https://gitshow.onrender.com/api/skills/${formDataSkill.idSkill}`, {
+      const response = await fetch(`http://localhost:4173/api/skills/${formDataSkill.idSkill}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -85,7 +85,7 @@ export default function SkillsSettings() {
 
   const handleDeleteSkill = async (id) => {
     try {
-      const response = await fetch(`https://gitshow.onrender.com/api/skills/${id}`, {
+      const response = await fetch(`http://localhost:4173/api/skills/${id}`, {
         method: 'DELETE',
       });
 
@@ -114,7 +114,7 @@ export default function SkillsSettings() {
   useEffect(() => {
     const fetchSkillsSkill = async () => {
       try {
-        const response = await fetch('https://gitshow.onrender.com/api/skills', {
+        const response = await fetch('http://localhost:4173/api/skills', {
           credentials: 'include',
         });
         if (response.ok) {

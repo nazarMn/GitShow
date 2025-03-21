@@ -9,7 +9,7 @@ export default function BookmarksPage() {
   useEffect(() => {
     const fetchBookmarks = async () => {
       try {
-        const response = await axios.get('https://gitshow.onrender.com/api/bookmarks');
+        const response = await axios.get('/api/bookmarks');
         
         // Перевіряємо, чи `response.data` є масивом, щоб уникнути помилок .map()
         if (Array.isArray(response.data)) {

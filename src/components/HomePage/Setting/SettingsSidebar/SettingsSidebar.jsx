@@ -14,7 +14,7 @@ export default function SettingsSidebar() {
   useEffect(() => {
     const checkIfUserHasCV = async () => {
       try {
-        const response = await axios.get('https://gitshow.onrender.com/api/cv/check');
+        const response = await axios.get('/api/cv/check');
         if (response.data && response.data.hasCV) {
           setHasCV(true);
         }

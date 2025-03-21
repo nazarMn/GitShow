@@ -19,7 +19,7 @@ export default function CVEditContRefsSummary() {
   });
 
   useEffect(() => {
-    axios.get('https://gitshow.onrender.com/api/cv')
+    axios.get('/api/cv')
       .then(res => {
         setCvData(res.data); // Fetch data and set it in state
       })
@@ -41,7 +41,7 @@ export default function CVEditContRefsSummary() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.put('https://gitshow.onrender.com/api/cv', cvData);
+      await axios.put('/api/cv', cvData);
       toast.success('CV updated successfully!', { position: 'top-right', autoClose: 3000 });
     } catch (error) {
       console.error('Error updating CV:', error);

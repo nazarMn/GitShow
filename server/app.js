@@ -29,7 +29,7 @@ app.use(
 );
 const corsOptions = {
   origin: (origin, callback) => {
-    const allowedOrigins = ['http://localhost:4173', 'http://localhost:3000', 'https://gitshow.onrender.com', 'https://git-show.vercel.app', 'https://glittering-cannoli-bc84ac.netlify.app'];
+    const allowedOrigins = ['http://localhost:4173', 'http://localhost:3000',];
     if (allowedOrigins.includes(origin) || !origin) { // Дозволяє запити без origin (для локальних запитів без CORS)
       callback(null, true); // Якщо origin дозволено, запит проходить
     } else {
@@ -47,7 +47,7 @@ passport.use(
     {
       clientID: process.env.GITHUB_CLIENT_ID,
       clientSecret: process.env.GITHUB_CLIENT_SECRET,
-      callbackURL: 'https://gitshow.onrender.com/auth/github/callback',
+      callbackURL: '/auth/github/callback',
     },
     async (accessToken, refreshToken, profile, done) => {
       try {
@@ -156,7 +156,7 @@ app.get(
   '/auth/github/callback',
   passport.authenticate('github', { failureRedirect: '/' }),
   (req, res) => {
-    res.redirect('https://glittering-cannoli-bc84ac.netlify.app/home');
+    res.redirect('/home');
   }
 );
 
@@ -516,7 +516,7 @@ app.put('/api/resumes/:id', async (req, res) => {
 
 
 app.use((req, res, next) => {
-  res.setHeader("Content-Security-Policy", "default-src *; script-src *; style-src *; img-src *; font-src *; connect-src *; frame-src *;");
+  res.setHeader("Content-Security-Policy", "img-src 'self' https://avatars.githubusercontent.com blob: data:");
   next();
 });
 

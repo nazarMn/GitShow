@@ -10,7 +10,7 @@ export default function Skills() {
   useEffect(() => {
     const fetchSkills = async () => {
       try {
-        const response = await axios.get('https://gitshow.onrender.com/api/skills'); 
+        const response = await axios.get('/api/skills'); 
         
         // Перевіряємо, чи відповідь є масивом, щоб уникнути помилок
         if (Array.isArray(response.data)) {

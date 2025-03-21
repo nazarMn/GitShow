@@ -10,7 +10,7 @@ export default function ProjectCard({ title, description, imageUrl, link, websit
   useEffect(() => {
     const fetchBookmarks = async () => {
       try {
-        const response = await fetch('https://gitshow.onrender.com/api/bookmarks');
+        const response = await fetch('/api/bookmarks');
         const bookmarks = await response.json();
         setIsSaved(bookmarks.some(proj => proj.title === title));
       } catch (error) {
@@ -26,13 +26,13 @@ export default function ProjectCard({ title, description, imageUrl, link, websit
       const project = { title, description, imageUrl, link, websiteUrl, userAvatar };
 
       if (isSaved) {
-        await fetch('https://gitshow.onrender.com/api/bookmark', {
+        await fetch('/api/bookmark', {
           method: 'DELETE',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ title })
         });
       } else {
-        await fetch('https://gitshow.onrender.com/api/bookmark', {
+        await fetch('/api/bookmark', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(project)

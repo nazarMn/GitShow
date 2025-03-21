@@ -32,7 +32,7 @@ export default function SettingsProjects() {
     if (image) formData.append('image', image);
 
     try {
-      const response = await fetch('https://gitshow.onrender.com/api/projects', { method: 'POST', body: formData });
+      const response = await fetch('/api/projects', { method: 'POST', body: formData });
       if (response.ok) {
         console.log('Project saved');
         navigate('/home');

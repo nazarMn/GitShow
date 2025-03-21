@@ -19,7 +19,7 @@ export default function CVModels() {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const response = await fetch('https://gitshow.onrender.com/api/user');
+        const response = await fetch('/api/user');
         if (response.ok) {
           const data = await response.json();
           setUserData(data);
@@ -31,7 +31,7 @@ export default function CVModels() {
 
     const checkIfUserHasCV = async () => {
       try {
-        const response = await fetch('https://gitshow.onrender.com/api/cv/check');
+        const response = await fetch('/api/cv/check');
         if (response.ok) {
           const data = await response.json();
           setHasCV(data.hasCV);
@@ -48,7 +48,7 @@ export default function CVModels() {
     
     const fetchShareLink = async () => {
       try {
-        const response = await fetch('https://gitshow.onrender.com/api/cv/sharelink');
+        const response = await fetch('/api/cv/sharelink');
         if (response.ok) {
           const data = await response.json();
           const baseUrl = window.location.origin;
@@ -93,7 +93,7 @@ export default function CVModels() {
     }
 
     try {
-      const response = await fetch('https://gitshow.onrender.com/api/cv', {
+      const response = await fetch('/api/cv', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -126,7 +126,7 @@ export default function CVModels() {
 
   const confirmDelete = async (toastId) => {
     try {
-      const response = await fetch('https://gitshow.onrender.com/api/cv/delete', {
+      const response = await fetch('/api/cv/delete', {
         method: 'DELETE',
         headers: { 'Content-Type': 'application/json' },
       });

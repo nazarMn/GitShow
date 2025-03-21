@@ -13,7 +13,7 @@ export default function Home() {
   const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
-    fetch('https://gitshow.onrender.com/api/user')
+    fetch('/api/user')
       .then((res) => res.json())
       .then((data) => {
         console.log('User data:', data);
