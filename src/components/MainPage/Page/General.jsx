@@ -35,7 +35,7 @@ export default function General() {
           </h2>
         </div>
         <div className="generalBottomButton">
-        <a href="https://gitshow.onrender.com/auth/github">
+          <a href="/auth/github">
             <button>Get Started</button>
           </a>
         </div>
