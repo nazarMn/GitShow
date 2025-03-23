@@ -7,10 +7,7 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
-    "preview": "vite preview",
-    "server": "node server/app.js", 
-    "client": "vite", 
-    "start": "npm run build && npm run server" 
+    "preview": "vite preview"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^6.7.2",
