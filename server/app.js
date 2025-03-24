@@ -47,7 +47,7 @@ passport.use(
     {
       clientID: process.env.GITHUB_CLIENT_ID,
       clientSecret: process.env.GITHUB_CLIENT_SECRET,
-      callbackURL: 'https://gitshow.onrender.com/auth/github/callback',
+      callbackURL: '/auth/github/callback',
 
     },
     async (accessToken, refreshToken, profile, done) => {
@@ -181,7 +181,12 @@ app.get('/api/user', async (req, res) => {
     bio: req.user.bio,
     company: req.user.company,
     contributions: req.user.contributions, // Відправляємо contributions
-    YearsOfExperience: req.user.YearsOfExperience
+    YearsOfExperience: req.user.YearsOfExperience,
+    instagram: req.user.instagram,
+    facebook: req.user.facebook,
+    twitter: req.user.twitter,
+    profileUrl: req.user.profileUrl,
+    email: req.user.email,
   });
 });
 
