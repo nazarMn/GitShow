@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './AccountSettings.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUser, faPencil, faLink, faFileLines, faBrain } from '@fortawesome/free-solid-svg-icons';
+import { faUser, faPencil, faLink, faTimes ,faFileLines, faBrain } from '@fortawesome/free-solid-svg-icons';
 import SettingsSidebar from '../SettingsSidebar/SettingsSidebar';
 
 export default function AccountSettings() {
@@ -98,6 +98,12 @@ export default function AccountSettings() {
         alert('Profile updated successfully!');
       })
       .catch((err) => alert('Error updating profile'));
+  };
+
+
+
+  const handleGoHome = () => {
+    window.location.href = '/home'; // Перенаправлення на сторінку home
   };
 
   return (
@@ -202,6 +208,10 @@ export default function AccountSettings() {
               Save Changes
             </button>
           </form>
+
+         
+           <FontAwesomeIcon icon={faTimes} className="btn-go-home" onClick={handleGoHome}/> 
+        
         </div>
         <div className="profile-picture-wrapper">
           {user && user.avatarUrl ? (

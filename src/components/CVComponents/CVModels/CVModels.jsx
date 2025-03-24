@@ -5,6 +5,7 @@ import './CVModels.css';
 import CV1 from '/CV1.png';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrashAlt, faCopy } from '@fortawesome/free-solid-svg-icons'; 
+import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import SettingsSidebar from '../../HomePage/Setting/SettingsSidebar/SettingsSidebar';
 
 const CV_IMAGES = [{ id: 'CV1', src: CV1 }];
@@ -166,6 +167,11 @@ export default function CVModels() {
       { position: 'top-center', autoClose: false, closeOnClick: false }
     );
   };
+
+
+  const handleGoHome = () => {
+    window.location.href = '/home'; // Перенаправлення на сторінку home
+  };
   
   return (
 
@@ -231,6 +237,8 @@ export default function CVModels() {
       )}
 
       <ToastContainer />
+
+         <FontAwesomeIcon icon={faTimes} className="btn-go-home" onClick={handleGoHome}/> 
       </div>
     </div>
   );

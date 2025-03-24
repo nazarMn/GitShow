@@ -65,3 +65,22 @@
     border-color: #ff9800;
     color: #000;
 }
+
+.btn-go-home {
+    position: absolute;
+    right: 0;
+    top: 0;
+    margin-right: 18px;
+    color: #28a745;
+    color: #fff;
+    border: none;
+    font-size: 28px;
+    cursor: pointer;
+    margin-top: 20px;
+    transition: background 0.2s ease;
+  }
+  
+  .btn-go-home:hover {
+    color: #218838;
+  }
+  

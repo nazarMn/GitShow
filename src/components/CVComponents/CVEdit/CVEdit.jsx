@@ -4,6 +4,8 @@ import CVEditContRefsSummary from '.././CVEditСontainer/CVEditContRefsSummary/C
 import SettingsSidebar from '../../HomePage/Setting/SettingsSidebar/SettingsSidebar';
 import CVEditEduSkills from '.././CVEditСontainer/CVEditEduSkills/CVEditEduSkills';
 import CVEditExp from '.././CVEditСontainer/CVEditExp/CVEditExp';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTimes } from '@fortawesome/free-solid-svg-icons';
 
 export default function CVEdit() {
   const [currentPage, setCurrentPage] = useState(1);
@@ -28,6 +30,11 @@ export default function CVEdit() {
     }
   };
 
+
+  const handleGoHome = () => {
+    window.location.href = '/home'; // Перенаправлення на сторінку home
+  };
+  
   return (
     <div className="CV-Edit">
       <SettingsSidebar />
@@ -62,6 +69,8 @@ export default function CVEdit() {
             ❯
           </button>
         </div>
+
+         <FontAwesomeIcon icon={faTimes} className="btn-go-home" onClick={handleGoHome}/> 
       </div>
     </div>
   );

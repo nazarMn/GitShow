@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './ResumeSettings.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlus, faEdit, faTrash, faUser, faFileLines, faBrain } from '@fortawesome/free-solid-svg-icons';
+import { faPlus, faEdit, faTrash, faTimes ,faUser, faFileLines, faBrain } from '@fortawesome/free-solid-svg-icons';
 import SettingsSidebar from '../SettingsSidebar/SettingsSidebar';
 
 const ITEMS_PER_PAGE = 6;
@@ -186,7 +186,10 @@ export default function ResumeSettings() {
   }, []);
   
   
-
+  const handleGoHome = () => {
+    window.location.href = '/home'; // Перенаправлення на сторінку home
+  };
+  
   return (
     <div className="resume-settings-container">
 
@@ -270,6 +273,8 @@ export default function ResumeSettings() {
             </button>
           ))}
         </div>
+
+           <FontAwesomeIcon icon={faTimes} className="btn-go-home" onClick={handleGoHome}/> 
       </div>
     </div>
   );

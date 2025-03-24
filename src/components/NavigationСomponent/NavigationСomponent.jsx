@@ -47,9 +47,9 @@ const Navigation = () => {
         <Link to="/home">
           <FontAwesomeIcon icon={faUser} size="2x" color="#fff" />
         </Link>
-        <Link to="/portfolio">
+        {/* <Link to="/portfolio">
           <FontAwesomeIcon icon={faBriefcase} size="2x" color="#fff" />
-        </Link>
+        </Link> */}
         {hasBookmarks && (
           <Link to="/bookmarks">
             <FontAwesomeIcon icon={faBookmark} size="2x" color="#fff" />
