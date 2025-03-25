@@ -3,6 +3,8 @@ import "./SkillsSettings.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus, faEdit, faTrash, faTimes ,faUser, faFileLines, faBrain } from "@fortawesome/free-solid-svg-icons";
 import SettingsSidebar from "../SettingsSidebar/SettingsSidebar";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';  
 
 const ITEMS_PER_PAGE = 6;
 
@@ -83,22 +85,45 @@ export default function SkillsSettings() {
   };
   
 
-  const handleDeleteSkill = async (id) => {
-    try {
-      const response = await fetch(`/api/skills/${id}`, {
-        method: 'DELETE',
-      });
+const handleDeleteSkill = (id) => {
+  const toastId = toast.info(
+    <div>
+      <p>Are you sure you want to delete this skill?</p>
+      <button
+        onClick={() => {
+          confirmDelete(id, toastId);
+        }}
+        className="btn-confirm"
+      >
+        Yes
+      </button>
+      <button onClick={() => toast.dismiss(toastId)} className="btn-cancel">
+        No
+      </button>
+    </div>,
+    { position: "top-center", autoClose: false, closeOnClick: false }
+  );
+};
 
-      if (response.ok) {
-        setItemsSkill((prevItems) => prevItems.filter((item) => item._id !== id));
-      } else {
-        alert('Failed to delete skills.');
-      }
-    } catch (err) {
-      console.error(err);
-      alert('An error occurred while deleting the skills.');
+const confirmDelete = async (id, toastId) => {
+  toast.dismiss(toastId); // Закриваємо toast перед видаленням
+
+  try {
+    const response = await fetch(`/api/skills/${id}`, { method: "DELETE" });
+
+    if (response.ok) {
+      setItemsSkill((prevItems) => prevItems.filter((item) => item._id !== id));
+      toast.success("Skill deleted successfully!", { position: "top-right" });
+    } else {
+      toast.error("Failed to delete skill.", { position: "top-right" });
     }
-  };
+  } catch (err) {
+    console.error(err);
+    toast.error("An error occurred while deleting the skill.", { position: "top-right" });
+  }
+};
+
+  
 
   const totalPagesSkill = Math.ceil(itemsSkill.length / ITEMS_PER_PAGE);
 
@@ -202,7 +227,7 @@ export default function SkillsSettings() {
             </button>
           ))}
         </div>
-
+        <ToastContainer />
         <FontAwesomeIcon icon={faTimes} className="btn-go-home" onClick={handleGoHome}/>
       </div>
     </div>

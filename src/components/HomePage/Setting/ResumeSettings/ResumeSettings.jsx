@@ -3,6 +3,8 @@ import './ResumeSettings.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus, faEdit, faTrash, faTimes ,faUser, faFileLines, faBrain } from '@fortawesome/free-solid-svg-icons';
 import SettingsSidebar from '../SettingsSidebar/SettingsSidebar';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';  
 
 const ITEMS_PER_PAGE = 6;
 
@@ -87,7 +89,29 @@ export default function ResumeSettings() {
     }
   };
   
-  const handleDelete = async (id) => {
+  const handleDelete = (id) => {
+    const toastId = toast.info(
+      <div>
+        <p>Are you sure you want to delete this resume?</p>
+        <button
+          onClick={() => {
+            confirmDelete(id, toastId);
+          }}
+          className="btn-confirm"
+        >
+          Yes
+        </button>
+        <button onClick={() => toast.dismiss(toastId)} className="btn-cancel">
+          No
+        </button>
+      </div>,
+      { position: "top-center", autoClose: false, closeOnClick: false }
+    );
+  };
+  
+  const confirmDelete = async (id, toastId) => {
+    toast.dismiss(toastId); // Закриваємо toast перед видаленням
+  
     try {
       const response = await fetch(`/api/resumes/${id}`, {
         method: 'DELETE',
@@ -96,14 +120,16 @@ export default function ResumeSettings() {
       if (response.ok) {
         // Видаляємо об'єкт з локального стану
         setItems((prevItems) => prevItems.filter((item) => item._id !== id));
+        toast.success("Resume deleted successfully!", { position: "top-right" });
       } else {
-        alert('Failed to delete resume.');
+        toast.error("Failed to delete resume.", { position: "top-right" });
       }
     } catch (err) {
       console.error(err);
-      alert('An error occurred while deleting the resume.');
+      toast.error("An error occurred while deleting the resume.", { position: "top-right" });
     }
   };
+  
   
 
   const handleExperienceUpdate = async () => {
@@ -273,7 +299,7 @@ export default function ResumeSettings() {
             </button>
           ))}
         </div>
-
+   <ToastContainer />
            <FontAwesomeIcon icon={faTimes} className="btn-go-home" onClick={handleGoHome}/> 
       </div>
     </div>

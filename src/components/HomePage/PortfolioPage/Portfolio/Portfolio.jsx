@@ -1,3 +1,5 @@
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';  
 import React, { useEffect, useState } from 'react';
 import './Portfolio.css';
 import PortfolioWorks from '../PortfolioWorks/PortfolioWorks';
@@ -59,14 +61,45 @@ export default function Portfolio() {
     }
   };
 
-  const deleteProject = async (projectId) => {
+  const handleDelete = (id) => {
+    const toastId = toast.info(
+      <div>
+        <p>Are you sure you want to delete this project?</p>
+        <button
+          onClick={() => {
+            confirmDelete(id, toastId); // Підтвердити видалення
+          }}
+          className="btn-confirm"
+        >
+          Yes
+        </button>
+        <button onClick={() => toast.dismiss(toastId)} className="btn-cancel">
+          No
+        </button>
+      </div>,
+      { position: "top-center", autoClose: false, closeOnClick: false }
+    );
+  };
+
+  // Функція для підтвердження видалення
+  const confirmDelete = async (id, toastId) => {
+    toast.dismiss(toastId); // Закриваємо попереднє toast
+
     try {
-      await axios.delete(`/api/projects/${projectId}`);
-      setProjects(projects.filter((project) => project._id !== projectId));
-    } catch (error) {
-      console.error('Error deleting project:', error);
+      const response = await axios.delete(`/api/projects/${id}`);
+  
+      if (response.status === 200) {
+        setProjects((prevProjects) => prevProjects.filter((project) => project._id !== id));
+        toast.success("Project deleted successfully!", { position: "top-right" });
+      } else {
+        toast.error("Failed to delete project.", { position: "top-right" });
+      }
+    } catch (err) {
+      console.error(err);
+      toast.error("An error occurred while deleting the project.", { position: "top-right" });
     }
   };
+
 
   const openEditModal = (project) => {
     setCurrentProject(project); 
@@ -138,7 +171,7 @@ export default function Portfolio() {
                 imageUrl={project.imageUrl}
                 link={project.link}
                 websiteUrl={project.websiteUrl}
-                onDelete={() => deleteProject(project._id)}
+                onDelete={() => handleDelete(project._id)}
                 onEdit={() => openEditModal(project)} 
               />
             ))
@@ -207,6 +240,8 @@ export default function Portfolio() {
           Next
         </button>
       </div>
+
+      <ToastContainer /> {/* Add ToastContainer for toast notifications */}
     </div>
   );
 }
