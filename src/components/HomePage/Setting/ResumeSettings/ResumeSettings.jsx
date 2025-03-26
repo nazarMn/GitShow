@@ -26,7 +26,7 @@ export default function ResumeSettings() {
 
   const handleAdd = async () => {
     if (!formData.title.trim() || !formData.university.trim() || !formData.description.trim()) {
-      alert('All fields must be filled out before adding.');
+      toast.error('All fields must be filled out before adding.');
       return;
     }
 
@@ -41,11 +41,13 @@ export default function ResumeSettings() {
         const newResume = await response.json();
         setItems((prev) => [...prev, newResume]);
         setFormData({ id: null, title: '', university: '', description: '' });
+        toast.success('Resume added successfully!');
       } else {
-        alert('Failed to add resume.');
+        toast.error('Failed to add resume.');
       }
     } catch (err) {
       console.error(err);
+      toast.error('An error occurred while adding the resume.');
     }
   };
 
@@ -53,18 +55,18 @@ export default function ResumeSettings() {
     setFormData({ id: item._id, title: item.title, university: item.university, description: item.description });
     setEditing(true);
   };
-  
+
   const handleUpdate = async () => {
     if (!formData.id) {
-      alert('Resume ID is missing.');
+      toast.error('Resume ID is missing.');
       return;
     }
-  
+
     if (!formData.title.trim() || !formData.university.trim() || !formData.description.trim()) {
-      alert('All fields must be filled out before updating.');
+      toast.error('All fields must be filled out before updating.');
       return;
     }
-  
+
     try {
       const response = await fetch(`/api/resumes/${formData.id}`, {
         method: 'PUT',
@@ -75,20 +77,22 @@ export default function ResumeSettings() {
           description: formData.description,
         }),
       });
-  
+
       if (response.ok) {
         const updatedResume = await response.json();
         setItems((prev) => prev.map((item) => (item._id === updatedResume._id ? updatedResume : item)));
         setFormData({ id: null, title: '', university: '', description: '' });
         setEditing(false);
+        toast.success('Resume updated successfully!');
       } else {
-        alert('Failed to update resume.');
+        toast.error('Failed to update resume.');
       }
     } catch (err) {
       console.error(err);
+      toast.error('An error occurred while updating the resume.');
     }
   };
-  
+
   const handleDelete = (id) => {
     const toastId = toast.info(
       <div>
@@ -108,29 +112,26 @@ export default function ResumeSettings() {
       { position: "top-center", autoClose: false, closeOnClick: false }
     );
   };
-  
+
   const confirmDelete = async (id, toastId) => {
     toast.dismiss(toastId); // Закриваємо toast перед видаленням
-  
+
     try {
       const response = await fetch(`/api/resumes/${id}`, {
         method: 'DELETE',
       });
-  
+
       if (response.ok) {
-        // Видаляємо об'єкт з локального стану
         setItems((prevItems) => prevItems.filter((item) => item._id !== id));
-        toast.success("Resume deleted successfully!", { position: "top-right" });
+        toast.success('Resume deleted successfully!', { position: "top-right" });
       } else {
-        toast.error("Failed to delete resume.", { position: "top-right" });
+        toast.error('Failed to delete resume.', { position: "top-right" });
       }
     } catch (err) {
       console.error(err);
-      toast.error("An error occurred while deleting the resume.", { position: "top-right" });
+      toast.error('An error occurred while deleting the resume.', { position: "top-right" });
     }
   };
-  
-  
 
   const handleExperienceUpdate = async () => {
     try {
@@ -140,18 +141,18 @@ export default function ResumeSettings() {
         credentials: 'include',
         body: JSON.stringify({ YearsOfExperience: parseInt(yearsOfExperience, 10) }),
       });
-  
+
       if (response.ok) {
         const updatedUser = await response.json();
-        console.log('Years of Experience Updated:', updatedUser.YearsOfExperience);
+        toast.success('Years of Experience updated successfully!');
       } else {
-        alert('Failed to update Years of Experience.');
+        toast.error('Failed to update Years of Experience.');
       }
     } catch (err) {
       console.error(err);
+      toast.error('An error occurred while updating the Years of Experience.');
     }
   };
-  
 
   const totalPages = Math.ceil(items.length / ITEMS_PER_PAGE);
 
@@ -168,28 +169,22 @@ export default function ResumeSettings() {
     const fetchResumes = async () => {
       try {
         const response = await fetch('/api/resumes', {
-          credentials: 'include', // Це дозволяє передавати сесію з браузера
+          credentials: 'include',
         });
         if (response.ok) {
           const data = await response.json();
-          console.log('Fetched resumes:', data); // Перевіряємо отримані дані
           setItems(data);
         } else {
-          console.error('Failed to fetch resumes.');
+          toast.error('Failed to fetch resumes.');
         }
       } catch (err) {
         console.error(err);
+        toast.error('An error occurred while fetching resumes.');
       }
     };
-  
+
     fetchResumes();
   }, []);
-
-
-
-
-
-
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -199,28 +194,26 @@ export default function ResumeSettings() {
         });
         if (response.ok) {
           const userData = await response.json();
-          setYearsOfExperience(userData.YearsOfExperience || ''); // Set YearsOfExperience
+          setYearsOfExperience(userData.YearsOfExperience || '');
         } else {
-          console.error('Failed to fetch user data.');
+          toast.error('Failed to fetch user data.');
         }
       } catch (err) {
         console.error(err);
+        toast.error('An error occurred while fetching user data.');
       }
     };
-  
+
     fetchUserData();
   }, []);
-  
-  
+
   const handleGoHome = () => {
-    window.location.href = '/home'; // Перенаправлення на сторінку home
+    window.location.href = '/home';
   };
-  
+
   return (
     <div className="resume-settings-container">
-
       <SettingsSidebar />
-   
       <div className="resume-settings">
         <h1>Resume</h1>
         <div className="resume-form">
@@ -267,27 +260,26 @@ export default function ResumeSettings() {
           </button>
         </div>
         <div className="resume-list">
-  {paginatedItems.length > 0 ? (
-    paginatedItems.map((item) => (
-      <div key={item._id} className="resume-card">
-        <h3>{item.title}</h3>
-        <p className="university">{item.university}</p>
-        <p className="description">{item.description}</p>
-        <div className="card-actions">
-          <button className="btn-edit" onClick={() => handleEdit(item)}>
-            <FontAwesomeIcon icon={faEdit} /> Edit
-          </button>
-          <button className="btn-delete" onClick={() => handleDelete(item._id)}>
-            <FontAwesomeIcon icon={faTrash} /> Delete
-          </button>
+          {paginatedItems.length > 0 ? (
+            paginatedItems.map((item) => (
+              <div key={item._id} className="resume-card">
+                <h3>{item.title}</h3>
+                <p className="university">{item.university}</p>
+                <p className="description">{item.description}</p>
+                <div className="card-actions">
+                  <button className="btn-edit" onClick={() => handleEdit(item)}>
+                    <FontAwesomeIcon icon={faEdit} /> Edit
+                  </button>
+                  <button className="btn-delete" onClick={() => handleDelete(item._id)}>
+                    <FontAwesomeIcon icon={faTrash} /> Delete
+                  </button>
+                </div>
+              </div>
+            ))
+          ) : (
+            <p>No resumes found.</p>
+          )}
         </div>
-      </div>
-    ))
-  ) : (
-    <p>No resumes found.</p>
-  )}
-</div>
-
         <div className="pagination">
           {Array.from({ length: totalPages }, (_, index) => (
             <button
@@ -299,8 +291,8 @@ export default function ResumeSettings() {
             </button>
           ))}
         </div>
-   <ToastContainer />
-           <FontAwesomeIcon icon={faTimes} className="btn-go-home" onClick={handleGoHome}/> 
+        <ToastContainer />
+        <FontAwesomeIcon icon={faTimes} className="btn-go-home" onClick={handleGoHome} /> 
       </div>
     </div>
   );

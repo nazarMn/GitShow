@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./SkillsSettings.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlus, faEdit, faTrash, faTimes ,faUser, faFileLines, faBrain } from "@fortawesome/free-solid-svg-icons";
+import { faPlus, faEdit, faTrash, faTimes } from "@fortawesome/free-solid-svg-icons";
 import SettingsSidebar from "../SettingsSidebar/SettingsSidebar";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';  
@@ -21,7 +21,7 @@ export default function SkillsSettings() {
 
   const handleAddSkill = async () => {
     if (!formDataSkill.titleSkill.trim() || !formDataSkill.descriptionSkill.trim()) {
-      alert('All fields must be filled out before adding.');
+      toast.error('All fields must be filled out before adding.');
       return;
     }
 
@@ -36,11 +36,13 @@ export default function SkillsSettings() {
         const newSkills = await response.json();
         setItemsSkill((prev) => [...prev, newSkills]);
         setFormDataSkill({ idSkill: null, titleSkill: '', descriptionSkill: '' });
+        toast.success("Skill added successfully!");
       } else {
-        alert('Failed to add skills.');
+        toast.error('Failed to add skill.');
       }
     } catch (err) {
       console.error(err);
+      toast.error('An error occurred while adding the skill.');
     }
   };
 
@@ -51,12 +53,12 @@ export default function SkillsSettings() {
 
   const handleUpdateSkill = async () => {
     if (!formDataSkill.idSkill) {
-      alert('Skills ID is missing.');
+      toast.error('Skills ID is missing.');
       return;
     }
   
     if (!formDataSkill.titleSkill.trim() || !formDataSkill.descriptionSkill.trim()) {
-      alert('All fields must be filled out before updating.');
+      toast.error('All fields must be filled out before updating.');
       return;
     }
   
@@ -70,60 +72,59 @@ export default function SkillsSettings() {
         }),
       });
       
-  
       if (response.ok) {
         const updatedSkills = await response.json();
         setItemsSkill((prev) => prev.map((item) => (item._id === updatedSkills._id ? updatedSkills : item)));
         setFormDataSkill({ idSkill: null, titleSkill: '', descriptionSkill: '' });
         setEditingSkill(false);
+        toast.success("Skill updated successfully!");
       } else {
-        alert('Failed to update skills.');
+        toast.error('Failed to update skill.');
       }
     } catch (err) {
       console.error(err);
+      toast.error('An error occurred while updating the skill.');
     }
   };
   
 
-const handleDeleteSkill = (id) => {
-  const toastId = toast.info(
-    <div>
-      <p>Are you sure you want to delete this skill?</p>
-      <button
-        onClick={() => {
-          confirmDelete(id, toastId);
-        }}
-        className="btn-confirm"
-      >
-        Yes
-      </button>
-      <button onClick={() => toast.dismiss(toastId)} className="btn-cancel">
-        No
-      </button>
-    </div>,
-    { position: "top-center", autoClose: false, closeOnClick: false }
-  );
-};
+  const handleDeleteSkill = (id) => {
+    const toastId = toast.info(
+      <div>
+        <p>Are you sure you want to delete this skill?</p>
+        <button
+          onClick={() => {
+            confirmDelete(id, toastId);
+          }}
+          className="btn-confirm"
+        >
+          Yes
+        </button>
+        <button onClick={() => toast.dismiss(toastId)} className="btn-cancel">
+          No
+        </button>
+      </div>,
+      { position: "top-center", autoClose: false, closeOnClick: false }
+    );
+  };
 
-const confirmDelete = async (id, toastId) => {
-  toast.dismiss(toastId); // Закриваємо toast перед видаленням
+  const confirmDelete = async (id, toastId) => {
+    toast.dismiss(toastId); // Close the confirmation toast before deleting
 
-  try {
-    const response = await fetch(`/api/skills/${id}`, { method: "DELETE" });
+    try {
+      const response = await fetch(`/api/skills/${id}`, { method: "DELETE" });
 
-    if (response.ok) {
-      setItemsSkill((prevItems) => prevItems.filter((item) => item._id !== id));
-      toast.success("Skill deleted successfully!", { position: "top-right" });
-    } else {
-      toast.error("Failed to delete skill.", { position: "top-right" });
+      if (response.ok) {
+        setItemsSkill((prevItems) => prevItems.filter((item) => item._id !== id));
+        toast.success("Skill deleted successfully!", { position: "top-right" });
+      } else {
+        toast.error("Failed to delete skill.", { position: "top-right" });
+      }
+    } catch (err) {
+      console.error(err);
+      toast.error("An error occurred while deleting the skill.", { position: "top-right" });
     }
-  } catch (err) {
-    console.error(err);
-    toast.error("An error occurred while deleting the skill.", { position: "top-right" });
-  }
-};
-
-  
+  };
 
   const totalPagesSkill = Math.ceil(itemsSkill.length / ITEMS_PER_PAGE);
 
