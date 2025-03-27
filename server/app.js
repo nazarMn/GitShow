@@ -647,6 +647,27 @@ app.post('/api/projects', upload.single('image'), async (req, res) => {
   }
 });
 
+
+app.post('/api/upload-avatar', ensureAuthenticated, upload.single('avatar'), async (req, res) => {
+  try {
+    if (!req.file || !req.file.path) {
+      return res.status(400).json({ message: 'No file uploaded' });
+    }
+
+    const user = await User.findByIdAndUpdate(
+      req.user.id,
+      { avatarUrl: req.file.path },
+      { new: true }
+    );
+
+    res.json({ avatarUrl: user.avatarUrl });
+  } catch (error) {
+    res.status(500).json({ message: 'Error uploading avatar' });
+  }
+});
+
+
+
 // GET route to fetch GitHub projects
 app.get('/api/github/projects', ensureAuthenticated, async (req, res) => {
   try {

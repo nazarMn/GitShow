@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import './AccountSettings.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUser, faPencil, faLink, faTimes ,faFileLines, faBrain } from '@fortawesome/free-solid-svg-icons';
+import { faUser, faPencil, faLink, faTimes, faFileLines, faBrain } from '@fortawesome/free-solid-svg-icons';
 import SettingsSidebar from '../SettingsSidebar/SettingsSidebar';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function AccountSettings() {
   const [user, setUser] = useState(null);
+  const [selectedFile, setSelectedFile] = useState(null); // Додано useState
   const [formData, setFormData] = useState({
     name: '',
     bio: '',
@@ -81,7 +84,7 @@ export default function AccountSettings() {
 
     const hasErrors = Object.values(errors).some((error) => error);
     if (hasErrors) {
-      alert('Please fix the errors before submitting.');
+      toast.error('Please fix the errors before submitting.');
       return;
     }
 
@@ -95,12 +98,37 @@ export default function AccountSettings() {
       .then((res) => res.json())
       .then((updatedUser) => {
         setUser(updatedUser);
-        alert('Profile updated successfully!');
+        toast.success('Profile updated successfully!');
       })
-      .catch((err) => alert('Error updating profile'));
+      .catch((err) => toast.error('Error updating profile'));
   };
 
+  const handleFileChange = (e) => {
+    setSelectedFile(e.target.files[0]);
+  };
 
+  const handleUpload = async () => {
+    if (!selectedFile) {
+      toast.error('Please select a file first.');
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append('avatar', selectedFile);
+
+    fetch('/api/upload-avatar', {
+      method: 'POST',
+      body: formData,
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.avatarUrl) {
+          setUser((prevUser) => ({ ...prevUser, avatarUrl: data.avatarUrl }));
+          toast.success('Avatar uploaded successfully!');
+        }
+      })
+      .catch(() => toast.error('Error uploading avatar'));
+  };
 
   const handleGoHome = () => {
     window.location.href = '/home'; // Перенаправлення на сторінку home
@@ -214,18 +242,18 @@ export default function AccountSettings() {
         
         </div>
         <div className="profile-picture-wrapper">
-          {user && user.avatarUrl ? (
-            <div className="profile-picture">
-              <img src={user.avatarUrl} alt="Profile" />
-              <button className="btn-edit-photo">
-                <FontAwesomeIcon icon={faPencil} /> Edit Photo
-              </button>
-            </div>
-          ) : (
-            <p>Loading...</p>
-          )}
-        </div>
+            {user && (
+              <div className="profile-picture">
+                <img src={user.avatarUrl} alt="Profile" />
+                <input type="file" accept="image/*" onChange={handleFileChange} />
+                <button className="btn-edit-photo" onClick={handleUpload}>
+                  <FontAwesomeIcon icon={faPencil} /> UpdatePhoto
+                </button>
+              </div>
+            )}
+          </div>
       </div>
+      <ToastContainer />
     </div>
   );
 }
