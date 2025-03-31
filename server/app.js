@@ -832,14 +832,26 @@ if (!fs.existsSync(uploadDir)) {
 // search users
 app.get('/api/users', async (req, res) => {
   const { username } = req.query;
+  const currentUserId = req.user.id; // Припускаємо, що user.id є в req через middleware аутентифікації
+
   try {
     const users = await User.find({
-      username: { $regex: username, $options: 'i' } 
-    }).select('githubId username avatarUrl'); 
+      username: { $regex: username, $options: 'i' },
+      githubId: { $ne: currentUserId }, // Виключаємо поточного користувача
+    }).select('githubId username avatarUrl');
 
     res.json(users);
   } catch (error) {
     res.status(500).json({ message: 'Error fetching users' });
+  }
+});
+
+app.get('/api/current-user', async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id).select('githubId'); // Отримуємо поточного користувача
+    res.json({ id: user.githubId });
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching current user' });
   }
 });
 

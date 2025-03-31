@@ -4,15 +4,24 @@ import './ProjectInput.css';
 export default function ProjectInput() {
   const [searchQuery, setSearchQuery] = useState('');
   const [users, setUsers] = useState([]);
+  const [currentUserId, setCurrentUserId] = useState(null);
+
+  useEffect(() => {
+    // Отримуємо поточного користувача при завантаженні
+    fetch('/api/current-user')
+      .then(res => res.json())
+      .then(data => setCurrentUserId(data.id))
+      .catch(err => console.error('Error fetching current user:', err));
+  }, []);
 
   useEffect(() => {
     const timer = setTimeout(() => {
       if (searchQuery) {
         fetchUsers(searchQuery);
       } else {
-        setUsers([]); 
+        setUsers([]);
       }
-    }, 500); 
+    }, 500);
 
     return () => clearTimeout(timer);
   }, [searchQuery]);
@@ -22,15 +31,15 @@ export default function ProjectInput() {
       const response = await fetch(`/api/users?username=${query}`);
       const data = await response.json();
 
-      // Переконуємося, що data - це масив
       if (Array.isArray(data)) {
-        setUsers(data);
+        // Фільтруємо, щоб виключити поточного користувача
+        setUsers(data.filter(user => user.githubId !== currentUserId));
       } else {
-        setUsers([]); // Якщо data не масив, скидаємо users у порожній масив
+        setUsers([]);
       }
     } catch (error) {
       console.error('Error fetching users:', error);
-      setUsers([]); // У разі помилки очищаємо список користувачів
+      setUsers([]);
     }
   };
 
@@ -46,7 +55,7 @@ export default function ProjectInput() {
         value={searchQuery}
         onChange={handleChange}
       />
-      {Array.isArray(users) && users.length > 0 && (
+      {users.length > 0 && (
         <div className="search-results">
           {users.map((user) => (
             <div key={user.githubId} className="user-card">
