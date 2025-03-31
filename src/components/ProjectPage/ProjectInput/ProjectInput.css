@@ -7,11 +7,13 @@
   .project-input {
     width: 100%;
     height: auto;
+    position: fixed;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
     align-items: flex-end;
     margin-bottom: 20px;
+    padding-right: 20px;
   }
   
   .project-input input {
