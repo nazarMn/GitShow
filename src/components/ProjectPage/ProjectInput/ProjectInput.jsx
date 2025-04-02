@@ -33,7 +33,7 @@ export default function ProjectInput() {
       const data = await response.json();
 
       if (Array.isArray(data)) {
-        setUsers(data.filter(user => user.githubId !== currentUserId));
+        setUsers(data.filter(user => user._id !== currentUserId));
       } else {
         setUsers([]);
       }
@@ -63,9 +63,9 @@ export default function ProjectInput() {
         <div className="search-results">
           {users.map((user) => (
             <div 
-              key={user.githubId} 
+              key={user._id} 
               className="user-card" 
-              onClick={() => handleUserClick(user.githubId)}
+              onClick={() => handleUserClick(user._id)}
             >
               <img src={user.avatarUrl} alt={user.username} />
               <div>{user.username}</div>

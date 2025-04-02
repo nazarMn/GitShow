@@ -764,10 +764,6 @@ app.get('/api/projects/home', async (req, res) => {
 
 
 
-
-
-
-
 // DELETE route to delete a project
 app.delete('/api/projects/:id', ensureAuthenticated, async (req, res) => {
   try {
@@ -837,8 +833,8 @@ app.get('/api/users', async (req, res) => {
   try {
     const users = await User.find({
       username: { $regex: username, $options: 'i' },
-      githubId: { $ne: currentUserId }, // Виключаємо поточного користувача
-    }).select('githubId username avatarUrl');
+      _id: { $ne: currentUserId }, // Виключаємо поточного користувача
+    }).select('_id username avatarUrl');
 
     res.json(users);
   } catch (error) {
@@ -848,18 +844,17 @@ app.get('/api/users', async (req, res) => {
 
 app.get('/api/current-user', async (req, res) => {
   try {
-    const user = await User.findById(req.user.id).select('githubId'); // Отримуємо поточного користувача
-    res.json({ id: user.githubId });
+    const user = await User.findById(req.user.id).select('_id'); // Отримуємо поточного користувача
+    res.json({ id: user._id });
   } catch (error) {
     res.status(500).json({ message: 'Error fetching current user' });
   }
 });
 
 
-
 app.get('/api/user/:userId', async (req, res) => {
   try {
-    const user = await User.findOne({ githubId: req.params.userId }).select('-password'); // Виключаємо пароль
+    const user = await User.findById(req.params.userId).select('-password'); // Виключаємо пароль
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
@@ -868,8 +863,6 @@ app.get('/api/user/:userId', async (req, res) => {
     res.status(500).json({ message: 'Error fetching user profile' });
   }
 });
-
-
 
 
 
