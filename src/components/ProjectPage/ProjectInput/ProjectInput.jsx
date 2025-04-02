@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './ProjectInput.css';
 
 export default function ProjectInput() {
   const [searchQuery, setSearchQuery] = useState('');
   const [users, setUsers] = useState([]);
   const [currentUserId, setCurrentUserId] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    // Отримуємо поточного користувача при завантаженні
     fetch('/api/current-user')
       .then(res => res.json())
       .then(data => setCurrentUserId(data.id))
@@ -32,7 +33,6 @@ export default function ProjectInput() {
       const data = await response.json();
 
       if (Array.isArray(data)) {
-        // Фільтруємо, щоб виключити поточного користувача
         setUsers(data.filter(user => user.githubId !== currentUserId));
       } else {
         setUsers([]);
@@ -47,6 +47,10 @@ export default function ProjectInput() {
     setSearchQuery(e.target.value);
   };
 
+  const handleUserClick = (userId) => {
+    navigate(`/public-profile/${userId}`);
+  };
+
   return (
     <div className="project-input">
       <input
@@ -58,7 +62,11 @@ export default function ProjectInput() {
       {users.length > 0 && (
         <div className="search-results">
           {users.map((user) => (
-            <div key={user.githubId} className="user-card">
+            <div 
+              key={user.githubId} 
+              className="user-card" 
+              onClick={() => handleUserClick(user.githubId)}
+            >
               <img src={user.avatarUrl} alt={user.username} />
               <div>{user.username}</div>
             </div>

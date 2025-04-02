@@ -47,7 +47,7 @@ passport.use(
     {
       clientID: process.env.GITHUB_CLIENT_ID,
       clientSecret: process.env.GITHUB_CLIENT_SECRET,
-      callbackURL: 'https://gitshow.onrender.com/auth/github/callback',
+      callbackURL: '/auth/github/callback',
 
     },
     async (accessToken, refreshToken, profile, done) => {
@@ -854,6 +854,24 @@ app.get('/api/current-user', async (req, res) => {
     res.status(500).json({ message: 'Error fetching current user' });
   }
 });
+
+
+
+app.get('/api/user/:userId', async (req, res) => {
+  try {
+    const user = await User.findOne({ githubId: req.params.userId }).select('-password'); // Виключаємо пароль
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    res.json(user);
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching user profile' });
+  }
+});
+
+
+
+
 
 
 // Error handling middleware
