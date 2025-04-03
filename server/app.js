@@ -47,7 +47,7 @@ passport.use(
     {
       clientID: process.env.GITHUB_CLIENT_ID,
       clientSecret: process.env.GITHUB_CLIENT_SECRET,
-      callbackURL: 'https://gitshow.onrender.com/auth/github/callback',
+      callbackURL: '/auth/github/callback',
 
     },
     async (accessToken, refreshToken, profile, done) => {
@@ -861,6 +861,16 @@ app.get('/api/user/:userId', async (req, res) => {
     res.json(user);
   } catch (error) {
     res.status(500).json({ message: 'Error fetching user profile' });
+  }
+});
+
+
+app.get('/api/user/:userId/projects', async (req, res) => {
+  try {
+    const projects = await Project.find({ userId: req.params.userId });
+    res.json(projects);
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching user projects' });
   }
 });
 

@@ -20,7 +20,8 @@ import SharedCVRevue from './components/CVComponents/CVRevue/SharedCVRevue';
 import CVEdit from './components/CVComponents/CVEdit/CVEdit';
 import Offline from './components/Offline/Offline.jsx';
 import PublicHome from './components/ProfilePublicContainer/ProfilePublicHome/PublicHome';
-import PublicPortfolioCard from './components/ProfilePublicContainer/PublicPortfolioPage/PublicPortfolioCard/PublicPortfolioCard';
+
+import PublicPortfolio from './components/ProfilePublicContainer/PublicPortfolioPage/PublicPortfolio/PublicPortfolio';
 
 const App = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(null);
@@ -85,7 +86,7 @@ const App = () => {
         <Route path="/CVEdit" element={isAuthenticated ? <CVEdit /> : <Navigate to="/" replace />} />
         <Route path="/GlobalSettings" element={isAuthenticated ? <GlobalSettings /> : <Navigate to="/" replace />} />
         <Route path="/bookmarks" element={isAuthenticated ? (<><Navigation /><BookmarksPage /></>) : (<Navigate to="/home" replace />)} />
-        <Route path="/public-profile/:userId" element={<><PublicHome /> <PublicPortfolioCard /> </>} />
+        <Route path="/public-profile/:userId" element={<><PublicHome /> <PublicPortfolio /> </>} />
       </Routes>
     </Router>
   );
