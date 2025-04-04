@@ -874,6 +874,15 @@ app.get('/api/user/:userId/projects', async (req, res) => {
   }
 });
 
+app.get('/api/user/:userId/skills', async (req, res) => {
+  try {
+    const skills = await Skills.find({ user: req.params.userId });
+    res.json(skills);
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching user skills' });
+  }
+});
+
 
 
 
