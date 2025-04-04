@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import "./PublicResume.css";
 
 export default function PublicResume() {
   const { userId } = useParams(); // Отримуємо userId з URL
