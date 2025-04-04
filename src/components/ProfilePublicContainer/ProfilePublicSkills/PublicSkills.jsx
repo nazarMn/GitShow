@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useParams } from 'react-router-dom'; // <-- для отримання userId з URL
 
+import './PublicSkills.css';
+
 export default function PublicSkills() {
   const { userId } = useParams(); // <-- витягуємо ID з URL
   const [skills, setSkills] = useState([]);
