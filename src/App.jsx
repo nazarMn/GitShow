@@ -22,6 +22,7 @@ import Offline from './components/Offline/Offline.jsx';
 import PublicHome from './components/ProfilePublicContainer/ProfilePublicHome/PublicHome';
 import PublicPortfolio from './components/ProfilePublicContainer/PublicPortfolioPage/PublicPortfolio/PublicPortfolio';
 import PublicSkills from './components/ProfilePublicContainer/ProfilePublicSkills/PublicSkills.jsx';
+import PublicResume from './components/ProfilePublicContainer/ProfilePublicResume/PublicResume.jsx';
 
 const App = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(null);
@@ -86,7 +87,7 @@ const App = () => {
         <Route path="/CVEdit" element={isAuthenticated ? <CVEdit /> : <Navigate to="/" replace />} />
         <Route path="/GlobalSettings" element={isAuthenticated ? <GlobalSettings /> : <Navigate to="/" replace />} />
         <Route path="/bookmarks" element={isAuthenticated ? (<><Navigation /><BookmarksPage /></>) : (<Navigate to="/home" replace />)} />
-        <Route path="/public-profile/:userId" element={<><PublicHome /> <PublicPortfolio /> <PublicSkills /> </>} />
+        <Route path="/public-profile/:userId" element={<><PublicHome /> <PublicPortfolio /> <PublicSkills /> <PublicResume /> </>} />
       </Routes>
     </Router>
   );

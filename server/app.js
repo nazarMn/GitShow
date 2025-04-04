@@ -883,6 +883,15 @@ app.get('/api/user/:userId/skills', async (req, res) => {
   }
 });
 
+app.get('/api/user/:userId/resume', async (req, res) => {
+  try {
+    const resume = await Resume.find({ user: req.params.userId });
+    res.json(resume);
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching user resume' });
+  }
+});
+
 
 
 
