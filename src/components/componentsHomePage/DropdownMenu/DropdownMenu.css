@@ -1,0 +1,30 @@
+
+.dropdownMenu {
+    position: absolute;
+    top: 40px; /* Відступ, щоб меню було під іконкою */
+    right: 0;
+    background-color: #fff;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    z-index: 100;
+    overflow: hidden;
+  }
+  
+  .menuItem {
+    padding: 10px 15px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    color: #000;
+    font-size: 14px;
+    transition: background 0.3s ease;
+  }
+  
+  .menuItem:hover {
+    background-color: #f1f1f1;
+  }
+  
+  .menuItem svg {
+    margin-right: 10px;
+  }
+  

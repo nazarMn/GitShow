@@ -5,6 +5,7 @@ import UserInfo from '../../../componentsHomePage/UserInfo/UserInfo';
 import SocialIcons from '../../../componentsHomePage/SocialIcons/SocialIcons';
 import ContributionsChart from '../../../componentsHomePage/ContributionChart/ContributionChart';
 import FollowsCard from '../../../componentsHomePage/FollowsCard/FollowsCard';
+import DropdownMenu from '../../../componentsHomePage/DropdownMenu/DropdownMenu';
 
 import './Home.css';
 
@@ -31,12 +32,12 @@ export default function Home() {
     <div className="home">
       <SocialIcons user={user} />
 
-      {/* <div className="homeTop">
+      <div className="homeTop">
         <div className="menuWrapper">
           <FontAwesomeIcon icon={faBars} size="2xl" color="#fff" cursor="pointer" onClick={toggleMenu} />
           {menuOpen && <DropdownMenu handleLogout={handleLogout} />}
         </div>
-      </div> */}
+      </div>
 
       <div className="homeBottom">
         <UserInfo user={user} />
