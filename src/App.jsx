@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import General from './components/MainPage/Page/General';
 import Header from './components/MainPage/Header/Header';
-import Home from './components/HomePage/Home/Home';
+import Home from './components/pages/PrivateProfile/Home/Home';
 import Portfolio from './components/HomePage/PortfolioPage/Portfolio/Portfolio';
 import AccountSettings from './components/HomePage/Setting/AccountSettings/AccountSettings';
 import SettingsProjects from './components/HomePage/Setting/SettingsProjects/SettingsProjects';
