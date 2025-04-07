@@ -2,12 +2,15 @@ import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faLocationDot, faBuilding, faEnvelope } from '@fortawesome/free-solid-svg-icons';
 import './UserInfo.css';
+import FollowMessage from '../FollowMessage/FollowMessage';
 
 export default function UserInfo({ user }) {
   return (
     <div className="homeBottomRight">
       <img src={user.avatarUrl} alt="avatar" />
       <h2>{user.username}</h2>
+
+      <FollowMessage user={user} />
       <p>{user.bio}</p>
       {user.location && (
         <div className="infoGroup">

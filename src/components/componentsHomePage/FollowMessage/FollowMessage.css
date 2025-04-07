@@ -1,0 +1,38 @@
+.follow-message {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .follow-btn {
+    padding: 8px 16px;
+    background-color: #1da1f2;
+    color: white;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+  }
+  
+  .button-group {
+    display: flex;
+    gap: 10px;
+  }
+  
+  .unfollow-btn {
+    padding: 8px 16px;
+    background-color: #ff4d4f;
+    color: white;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+  }
+  
+  .message-btn {
+    padding: 8px 16px;
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+  }
+  
