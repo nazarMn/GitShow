@@ -3,6 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBars } from '@fortawesome/free-solid-svg-icons';
 import UserInfo from '../../../componentsHomePage/UserInfo/UserInfo';
 import SocialIcons from '../../../componentsHomePage/SocialIcons/SocialIcons';
+import ContributionsChart from '../../../componentsHomePage/ContributionChart/ContributionChart';
 
 import './Home.css';
 
@@ -38,11 +39,11 @@ export default function Home() {
 
       <div className="homeBottom">
         <UserInfo user={user} />
-        {/* <div className="homeBottomLeft">
+        <div className="homeBottomLeft">
           <h2>{user.name}</h2>
           <ContributionsChart contributions={user.contributions} />
-          <FollowsStats />
-        </div> */}
+          {/* <FollowsStats /> */}
+        </div>
       </div>
     </div>
   );
