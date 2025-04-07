@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBars } from '@fortawesome/free-solid-svg-icons';
 import UserInfo from '../../../componentsHomePage/UserInfo/UserInfo';
+import SocialIcons from '../../../componentsHomePage/SocialIcons/SocialIcons';
 
 import './Home.css';
 
@@ -26,7 +27,7 @@ export default function Home() {
 
   return (
     <div className="home">
-      {/* <SocialIcons user={user} /> */}
+      <SocialIcons user={user} />
 
       {/* <div className="homeTop">
         <div className="menuWrapper">

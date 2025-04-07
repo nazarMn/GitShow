@@ -87,26 +87,6 @@
     line-height: 45px;
 }
 
-.socialIcons {
-    position: fixed;
-    top: 50%;
-    left: 20px;
-    transform: translateY(-50%);
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-  }
-  
-  .socialIcons a {
-    color: #fff;
-    text-decoration: none;
-    transition: transform 0.3s ease, color 0.3s ease;
-  }
-  
-  .socialIcons a:hover {
-    transform: scale(1.2);
-    color: #1da1f2;
-  }
   .contributionsChart {
     width: 100%;
     border-radius: 15px;
