@@ -1,6 +1,8 @@
 import React from 'react';
 import { ResponsiveContainer, AreaChart, XAxis, YAxis, Tooltip, Area } from 'recharts';
 
+import './ContributionChart.css';
+
 export default function ContributionsChart({ contributions }) {
   return (
     <div className="contributionsChart">

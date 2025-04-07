@@ -1,0 +1,32 @@
+.contributionsChart {
+    width: 100%;
+    border-radius: 15px;
+    padding: 20px;
+    backdrop-filter: blur(12px);
+    overflow: hidden;
+  }
+  
+  .contributionsChart h3 {
+    color: #fff;
+    font-size: 20px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-align: center;
+    margin-bottom: 15px;
+  }
+  
+  .recharts-cartesian-axis-tick text {
+    fill: #ccc;
+    font-size: 12px;
+  }
+  
+  .recharts-tooltip-wrapper {
+    background: rgba(0, 0, 0, 0.7);
+    border-radius: 8px;
+    padding: 10px;
+    color: #fff;
+  }
+  
+  .recharts-tooltip-label {
+    font-weight: bold;
+  }

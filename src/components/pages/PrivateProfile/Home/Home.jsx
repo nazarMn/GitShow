@@ -4,6 +4,7 @@ import { faBars } from '@fortawesome/free-solid-svg-icons';
 import UserInfo from '../../../componentsHomePage/UserInfo/UserInfo';
 import SocialIcons from '../../../componentsHomePage/SocialIcons/SocialIcons';
 import ContributionsChart from '../../../componentsHomePage/ContributionChart/ContributionChart';
+import FollowsCard from '../../../componentsHomePage/FollowsCard/FollowsCard';
 
 import './Home.css';
 
@@ -42,7 +43,7 @@ export default function Home() {
         <div className="homeBottomLeft">
           <h2>{user.name}</h2>
           <ContributionsChart contributions={user.contributions} />
-          {/* <FollowsStats /> */}
+          <FollowsCard />
         </div>
       </div>
     </div>
