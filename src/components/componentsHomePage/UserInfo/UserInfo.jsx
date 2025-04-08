@@ -4,14 +4,16 @@ import { faLocationDot, faBuilding, faEnvelope } from '@fortawesome/free-solid-s
 import './UserInfo.css';
 import FollowMessage from '../FollowMessage/FollowMessage';
 
-export default function UserInfo({ user }) {
+export default function UserInfo({ user, showFollowMessage = false }) {
   return (
     <div className="homeBottomRight">
       <img src={user.avatarUrl} alt="avatar" />
       <h2>{user.username}</h2>
 
-      <FollowMessage user={user} />
+      {showFollowMessage && <FollowMessage user={user} />}
+      
       <p>{user.bio}</p>
+
       {user.location && (
         <div className="infoGroup">
           <FontAwesomeIcon icon={faLocationDot} size="lg" color="#fff" />
