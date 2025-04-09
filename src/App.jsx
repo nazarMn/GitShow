@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-d
 import General from './components/MainPage/Page/General';
 import Header from './components/MainPage/Header/Header';
 import Home from './components/pages/PrivateProfile/Home/Home';
-import Portfolio from './components/HomePage/PortfolioPage/Portfolio/Portfolio';
+import Portfolio from './components/pages/PrivateProfile/PortfolioPage/PortfolioPage';
 import AccountSettings from './components/HomePage/Setting/AccountSettings/AccountSettings';
 import SettingsProjects from './components/HomePage/Setting/SettingsProjects/SettingsProjects';
 import Resume from './components/HomePage/ResumePage/Resume/Resume';

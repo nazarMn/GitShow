@@ -1,0 +1,13 @@
+.portfolioGrid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    gap: 20px; 
+    width: 100%;
+ 
+    margin: 0 auto;
+}
+.portfolioGrid > div {
+    flex: 0 1 calc(48%);
+    max-width: calc(48%); 
+}

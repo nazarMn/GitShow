@@ -1,0 +1,51 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family:  'Montserrat', sans-serif;
+}
+.portfolioWorks{
+  width: 650px;
+  height: 340px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    padding-top: 38px;
+    background-color: #141318;
+   
+}
+.AddWorksBox {
+  width: 600px;
+  height: 300px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #2c2c33; 
+  border: solid 1px #3a3a3a; 
+  border-radius: 16px; 
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease; 
+}
+
+.AddWorksBox:hover {
+  transform: translateY(-5px); 
+}
+
+.AddWorks {
+  width: 100px;
+  height: 100px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  background-color: #1e1e22; 
+  cursor: pointer;
+  font-size: 32px; 
+  transition: all 0.2s ease; 
+}
+
+.AddWorks:hover {
+  background-color: #333340; 
+  transform: rotate(45deg) scale(1.1); 
+}

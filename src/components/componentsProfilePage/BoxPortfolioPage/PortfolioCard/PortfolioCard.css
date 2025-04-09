@@ -1,0 +1,85 @@
+.portfolioCard {
+    position: relative;
+    width: 400px;
+    height: 250px;
+    overflow: hidden;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    background: #1a1a1a;
+    color: white;
+    transition: transform 0.3s ease;
+  }
+  
+  .portfolioCard:hover {
+    transform: scale(1.05);
+  }
+  
+  .cardImage {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .cardImage img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0.9;
+    transition: opacity 0.3s ease;
+  }
+  
+  .defaultImage {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 4rem;
+    font-weight: bold;
+    text-transform: uppercase;
+  }
+  
+  .cardOverlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 20px;
+    transform: translateY(100%);
+    transition: transform 0.3s ease;
+    text-align: center;
+  }
+  
+  .portfolioCard:hover .cardOverlay {
+    transform: translateY(0);
+  }
+  
+  .cardIcons {
+    position: absolute;
+    top: -50px;
+    right: 10px;
+    display: flex;
+    gap: 15px;
+    transition: top 0.3s ease;
+  }
+  
+  .portfolioCard:hover .cardIcons {
+    top: 10px;
+  }
+  
+  .deleteIcon {
+    color: red;
+    cursor: pointer;
+    margin-left: 10px;
+    transition: transform 0.2s;
+  }
+  
+  .deleteIcon:hover {
+    transform: scale(1.2);
+  }
+  
