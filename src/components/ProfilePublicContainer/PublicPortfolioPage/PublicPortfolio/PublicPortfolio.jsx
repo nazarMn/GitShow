@@ -11,7 +11,7 @@ export default function PublicPortfolio() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const projectsPerPage = 4; // Встановлено 4 проекти на сторінку
+  const projectsPerPage = 4;
 
   useEffect(() => {
     const fetchProjects = async () => {
