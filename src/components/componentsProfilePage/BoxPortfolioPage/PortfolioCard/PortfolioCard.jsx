@@ -5,9 +5,11 @@ import { useLocation } from 'react-router-dom'
 import { faGithub } from '@fortawesome/free-brands-svg-icons';
 import { faPaperclip, faTrash, faEdit } from '@fortawesome/free-solid-svg-icons';
 
-export default function PortfolioCard({ title, description, imageUrl, link, websiteUrl, onDelete, onEdit,  }) {
+export default function PortfolioCard({ title, description, imageUrl, link, websiteUrl, onDelete, onEdit, showDelEdit }) {
 
+    const location = useLocation(); 
 
+    const shouldShowDelEdit = location.pathname === '/home' || showDelEdit; 
 
   const renderImage = () => {
     if (imageUrl && imageUrl.trim()) {
@@ -47,10 +49,12 @@ export default function PortfolioCard({ title, description, imageUrl, link, webs
           </a>
         )}
 
-       
+        {shouldShowDelEdit  && (
+            <>
         <FontAwesomeIcon icon={faTrash} size="2x" className="deleteIcon" onClick={onDelete} />
         <FontAwesomeIcon icon={faEdit} size="2x" className="editIcon" onClick={onEdit} />
-      
+        </>
+        )}
       </div>
     </div>
   );
