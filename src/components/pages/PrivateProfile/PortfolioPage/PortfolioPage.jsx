@@ -101,6 +101,7 @@ export default function Portfolio() {
     setCurrentProject(prev => ({ ...prev, [name]: value }));
   };
 
+  
   return (
     <div className="portfolio">
       <div className="portfolioTop">
@@ -130,12 +131,12 @@ export default function Portfolio() {
         />
       )}
 
-      <Pagination
-        currentPage={currentPage}
-        totalPages={totalPages}
-        onNext={() => setCurrentPage(p => p + 1)}
-        onPrev={() => setCurrentPage(p => p - 1)}
-      />
+<Pagination
+  currentPage={currentPage}
+  totalPages={totalPages}
+  onPageChange={(page) => setCurrentPage(page)}
+/>
+
 
       <ToastContainer />
     </div>
