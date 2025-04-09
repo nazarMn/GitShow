@@ -15,6 +15,7 @@ export default function Portfolio() {
   const [currentPage, setCurrentPage] = useState(1);
   const [showModal, setShowModal] = useState(false);
   const [currentProject, setCurrentProject] = useState(null);
+   
 
   const projectsPerPageFirst = 2;
   const projectsPerPageOther = 4;

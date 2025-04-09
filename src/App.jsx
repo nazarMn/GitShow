@@ -20,7 +20,7 @@ import SharedCVRevue from './components/CVComponents/CVRevue/SharedCVRevue';
 import CVEdit from './components/CVComponents/CVEdit/CVEdit';
 import Offline from './components/Offline/Offline.jsx';
 import PublicHome from './components/pages/PublicProfile/PublicHome/PublicHome';
-import PublicPortfolio from './components/ProfilePublicContainer/PublicPortfolioPage/PublicPortfolio/PublicPortfolio';
+import PublicPortfolio from './components/pages/PublicProfile/PublicPortfolioPage/PublicPortfolioPage';
 import PublicSkills from './components/ProfilePublicContainer/ProfilePublicSkills/PublicSkills.jsx';
 import PublicResume from './components/ProfilePublicContainer/ProfilePublicResume/PublicResume.jsx';
 
