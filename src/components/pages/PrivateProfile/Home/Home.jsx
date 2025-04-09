@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBars } from '@fortawesome/free-solid-svg-icons';
-import UserInfo from '../../../componentsHomePage/UserInfo/UserInfo';
-import SocialIcons from '../../../componentsHomePage/SocialIcons/SocialIcons';
-import ContributionsChart from '../../../componentsHomePage/ContributionChart/ContributionChart';
-import FollowsCard from '../../../componentsHomePage/FollowsCard/FollowsCard';
-import DropdownMenu from '../../../componentsHomePage/DropdownMenu/DropdownMenu';
+import UserInfo from '../../../componentsProfilePage/BoxHomePage/UserInfo/UserInfo';
+import SocialIcons from '../../../componentsProfilePage/BoxHomePage/SocialIcons/SocialIcons';
+import ContributionsChart from '../../../componentsProfilePage/BoxHomePage/ContributionChart/ContributionChart';
+import FollowsCard from '../../../componentsProfilePage/BoxHomePage/FollowsCard/FollowsCard';
+import DropdownMenu from '../../../componentsProfilePage/BoxHomePage/DropdownMenu/DropdownMenu';
 
 import './Home.css';
 
