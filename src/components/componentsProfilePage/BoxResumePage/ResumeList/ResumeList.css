@@ -1,0 +1,19 @@
+
+.resume-containerBottom{
+    width: 100%;
+    height: 80%;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .resume-line {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: 4px;
+    height: 100%;
+    background-color: #4caf50;
+    z-index: 0;
+  }
+  

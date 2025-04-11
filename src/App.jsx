@@ -6,7 +6,7 @@ import Home from './components/pages/PrivateProfile/Home/Home';
 import Portfolio from './components/pages/PrivateProfile/PortfolioPage/PortfolioPage';
 import AccountSettings from './components/HomePage/Setting/AccountSettings/AccountSettings';
 import SettingsProjects from './components/HomePage/Setting/SettingsProjects/SettingsProjects';
-import Resume from './components/HomePage/ResumePage/Resume/Resume';
+import Resume from './components/pages/PrivateProfile/ResumePage/ResumePage';
 import ResumeSettings from './components/HomePage/Setting/ResumeSettings/ResumeSettings';
 import Skills from './components/pages/PrivateProfile/SkillsPage/SkillsPage';
 import SkillsSettings from './components/HomePage/Setting/SkillsSettings/SkillsSettings';

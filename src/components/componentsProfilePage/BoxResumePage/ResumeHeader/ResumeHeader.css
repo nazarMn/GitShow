@@ -1,0 +1,23 @@
+.resume-containerTop{
+    width: 100%;
+    height: 20%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    line-height: 58px;
+    padding-top: 18px;
+  }
+  .resume-containerTop h2{
+    font-size: 48px;
+    font-weight: 500;
+    letter-spacing: 2px;
+    color: #fff;
+  }
+  .resume-containerTop h3{
+    color: #72726fd1;
+    font-size: 24px;
+    font-weight: 400;
+    letter-spacing: 2px;
+    line-height: 45px;
+  }
