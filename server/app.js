@@ -893,6 +893,42 @@ app.get('/api/user/:userId/resume', async (req, res) => {
 });
 
 
+app.post('/api/follow/:userId', async (req, res) => {
+  const { userId } = req.params;
+  const currentUserId = req.user._id; // передбачаємо, що користувач автентифікований
+
+  try {
+    const userToFollow = await User.findById(userId);
+    const currentUser = await User.findById(currentUserId);
+
+    if (!userToFollow || !currentUser) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    // Перевірка, чи вже підписано
+    if (currentUser.following.includes(userId)) {
+      return res.status(400).json({ message: 'Already following' });
+    }
+
+    // Додавання підписки та підписника
+    currentUser.following.push(userId);
+    userToFollow.followers.push(currentUserId);
+
+    await currentUser.save();
+    await userToFollow.save();
+
+    res.status(200).json({
+      message: 'Successfully followed',
+      follower: {
+        username: currentUser.username,
+        avatarUrl: currentUser.avatarUrl,
+        userId: currentUser._id
+      }
+    });
+  } catch (error) {
+    res.status(500).json({ message: 'Error following user' });
+  }
+});
 
 
 // Error handling middleware

@@ -16,7 +16,9 @@ const UserSchema = new mongoose.Schema({
   facebook: { type: String },
   YearsOfExperience: { type: Number },
   contributions: { type: Array, default: [] },
-  bookmarkedProjects: { type: Array, default: [] } 
+  bookmarkedProjects: { type: Array, default: [] }, 
+  followers: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
+  following: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
 });
 
 
