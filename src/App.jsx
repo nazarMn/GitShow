@@ -22,7 +22,7 @@ import Offline from './components/Offline/Offline.jsx';
 import PublicHome from './components/pages/PublicProfile/PublicHome/PublicHome';
 import PublicPortfolio from './components/pages/PublicProfile/PublicPortfolioPage/PublicPortfolioPage';
 import PublicSkills from './components/pages/PublicProfile/PublicSkillsPage/PublicSkillsPage';
-import PublicResume from './components/ProfilePublicContainer/ProfilePublicResume/PublicResume.jsx';
+import PublicResume from './components/pages/PublicProfile/PublicResumePage/PublicResumePage';
 
 const App = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(null);
