@@ -1,5 +1,7 @@
 import React from 'react';
 
+import './SkillCard.css';
+
 export default function SkillCard({ number, title, description }) {
   return (
     <div className="skill-card">
