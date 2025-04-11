@@ -3,86 +3,58 @@ import './FollowMessage.css';
 
 export default function FollowMessage({ user }) {
   const [isFollowing, setIsFollowing] = useState(false);
-  const [currentUserId, setCurrentUserId] = useState(null);
 
   useEffect(() => {
-    const fetchFollowStatus = async () => {
-      try {
-        const currentUserRes = await fetch('/api/current-user');
-        const currentUserData = await currentUserRes.json();
+    const checkFollowing = async () => {
+      const res = await fetch('/api/current-user');
+      const { id: currentUserId } = await res.json();
 
-        setCurrentUserId(currentUserData.id);
-
-        const currentUserFullRes = await fetch(`/api/user/${currentUserData.id}`);
-        const currentUserFull = await currentUserFullRes.json();
-
-        if (currentUserFull.following.includes(user._id)) {
-          setIsFollowing(true);
-        }
-      } catch (error) {
-        console.error('Error checking follow status:', error);
+      if (user.followers.includes(currentUserId)) {
+        setIsFollowing(true);
       }
     };
 
-    fetchFollowStatus();
-  }, [user._id]);
+    checkFollowing();
+  }, [user]);
 
   const handleFollow = async () => {
-    try {
-      const response = await fetch(`/api/follow/${user._id}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
+    const response = await fetch(`/api/follow/${user._id}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+    });
 
-      const data = await response.json();
-      if (response.ok) {
-        setIsFollowing(true);
-      } else {
-        alert(data.message);
-      }
-    } catch (error) {
-      console.error('Error following user:', error);
+    const data = await response.json();
+    if (response.ok) {
+      setIsFollowing(true);
+    } else {
+      alert(data.message);
     }
   };
 
   const handleUnfollow = async () => {
-    try {
-      const response = await fetch(`/api/unfollow/${user._id}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
+    const response = await fetch(`/api/unfollow/${user._id}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+    });
 
-      const data = await response.json();
-      if (response.ok) {
-        setIsFollowing(false);
-      } else {
-        alert(data.message);
-      }
-    } catch (error) {
-      console.error('Error unfollowing user:', error);
+    const data = await response.json();
+    if (response.ok) {
+      setIsFollowing(false);
+    } else {
+      alert(data.message);
     }
   };
 
-  if (!currentUserId || currentUserId === user._id) return null; 
+  
 
   return (
     <div className="follow-message">
       {!isFollowing ? (
-        <button className="follow-btn" onClick={handleFollow}>
-          Follow
-        </button>
+        <button className="follow-btn" onClick={handleFollow}>Follow</button>
       ) : (
         <div className="button-group">
-          <button className="unfollow-btn" onClick={handleUnfollow}>
-            Unfollow
-          </button>
-          <button className="message-btn">
-            Message
-          </button>
+          <button className="unfollow-btn" onClick={handleUnfollow}>Unfollow</button>
+          <button className="message-btn">Message</button>
         </div>
       )}
     </div>
