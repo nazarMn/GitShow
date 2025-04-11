@@ -59,12 +59,11 @@ export default function PublicPortfolio() {
 
       <PortfolioGrid projects={currentProjects}/>
 
-      <Pagination
-        currentPage={currentPage}
-        totalPages={totalPages}
-        onNext={handleNextPage}
-        onPrev={handlePreviousPage}
-      />
+        <Pagination 
+             currentPage={currentPage}
+             totalPages={totalPages}
+             onPageChange={(page) => setCurrentPage(page)}
+           />
 
       <ToastContainer />
     </div>
