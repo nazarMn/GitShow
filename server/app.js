@@ -47,7 +47,7 @@ passport.use(
     {
       clientID: process.env.GITHUB_CLIENT_ID,
       clientSecret: process.env.GITHUB_CLIENT_SECRET,
-      callbackURL: 'https://gitshow.onrender.com/auth/github/callback',
+      callbackURL: '/auth/github/callback',
 
     },
     async (accessToken, refreshToken, profile, done) => {
