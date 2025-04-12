@@ -188,6 +188,8 @@ app.get('/api/user', async (req, res) => {
     twitter: req.user.twitter,
     profileUrl: req.user.profileUrl,
     email: req.user.email,
+    followers: req.user.followers,
+    following: req.user.following
   });
 });
 

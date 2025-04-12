@@ -19,6 +19,7 @@ export default function Home() {
       .then((data) => setUser(data))
       .catch(() => setUser(null));
   }, []);
+  
 
   const handleLogout = () => {
     window.location.href = '/logout';
@@ -45,7 +46,8 @@ export default function Home() {
         <div className="homeBottomLeft">
           <h2>{user.name}</h2>
           <ContributionsChart contributions={user.contributions} />
-          <FollowsCard />
+          <FollowsCard user={user} />
+
         </div>
       </div>
     </div>

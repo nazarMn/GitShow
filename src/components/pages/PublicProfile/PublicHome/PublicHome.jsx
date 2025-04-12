@@ -50,7 +50,8 @@ export default function PublicHome() {
          <div className="homeBottomLeft">
            <h2>{user.name}</h2>
            <ContributionsChart contributions={user.contributions} />
-           <FollowsCard />
+           <FollowsCard user={user} />
+
          </div>
        </div>
      </div>
