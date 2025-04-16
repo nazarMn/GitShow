@@ -174,24 +174,38 @@ app.get('/api/user', async (req, res) => {
     return res.status(401).json({ message: 'Unauthorized' });
   }
 
-  res.json({
-    username: req.user.username,
-    name: req.user.name,
-    avatarUrl: req.user.avatarUrl,
-    location: req.user.location,
-    bio: req.user.bio,
-    company: req.user.company,
-    contributions: req.user.contributions, // Відправляємо contributions
-    YearsOfExperience: req.user.YearsOfExperience,
-    instagram: req.user.instagram,
-    facebook: req.user.facebook,
-    twitter: req.user.twitter,
-    profileUrl: req.user.profileUrl,
-    email: req.user.email,
-    followers: req.user.followers,
-    following: req.user.following
-  });
+  try {
+    const user = await User.findById(req.user._id)
+      .populate('followers', 'username avatarUrl _id') // витягуємо тільки name, avatarUrl і _id
+      .populate('following', 'username avatarUrl _id');
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    res.json({
+      username: user.username,
+      name: user.name,
+      avatarUrl: user.avatarUrl,
+      location: user.location,
+      bio: user.bio,
+      company: user.company,
+      contributions: user.contributions,
+      YearsOfExperience: user.YearsOfExperience,
+      instagram: user.instagram,
+      facebook: user.facebook,
+      twitter: user.twitter,
+      profileUrl: user.profileUrl,
+      email: user.email,
+      followers: user.followers,   // тут уже об'єкти з name, avatarUrl
+      following: user.following    // те саме
+    });
+  } catch (error) {
+    console.error('Error fetching user:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
 });
+
 
 
 app.put('/api/user', ensureAuthenticated, async (req, res) => {

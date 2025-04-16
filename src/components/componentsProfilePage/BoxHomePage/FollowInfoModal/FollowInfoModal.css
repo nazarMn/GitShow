@@ -1,93 +1,126 @@
-.overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
-}
-
-.modal {
-  position: absolute;
-  background: white;
-  padding: 20px;
-  width: 300px;
-  max-height: 80vh;
-  overflow-y: auto;
-  border-radius: 10px;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-}
-
-.userList {
-  list-style: none;
-  padding: 0;
-  margin-top: 15px;
-}
-
-.userList li {
-  padding: 8px 0;
-  border-bottom: 1px solid #ddd;
-}
-
-.closeBtn {
-  position: absolute;
-  top: 10px;
-  right: 15px;
-  font-size: 20px;
-  background: none;
-  border: none;
-  cursor: pointer;
-}
 .customOverlay {
     position: fixed;
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: rgba(0, 0, 0, 0.5);
+    background: rgba(0, 0, 0, 0.6);
     z-index: 1000;
+    backdrop-filter: blur(4px);
   }
   
   .customModal {
     position: absolute;
     top: 50%;
     left: 50%;
-    right: auto;
-    bottom: auto;
     transform: translate(-50%, -50%);
-    background: #fff;
-    border-radius: 12px;
+    background: #ffffff;
+    border-radius: 16px;
     width: 90%;
     max-width: 400px;
     max-height: 80vh;
-    padding: 20px;
+    padding: 24px;
     overflow-y: auto;
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.25);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+    animation: fadeIn 0.3s ease-in-out;
   }
   
   .modalHeader {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    margin-bottom: 16px;
+  }
+  
+  .modalTitle {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #333;
   }
   
   .closeBtn {
     background: none;
     border: none;
-    font-size: 1.5rem;
+    font-size: 1.6rem;
     cursor: pointer;
+    color: #888;
+    transition: color 0.2s ease;
+  }
+  .closeBtn:hover {
+    color: #333;
   }
   
   .userList {
     list-style: none;
-    margin-top: 15px;
     padding: 0;
+    margin: 0;
   }
   
-  .userList li {
-    padding: 10px 0;
+  .userListItem {
+    display: flex;
+    align-items: center;
+    padding: 12px 0;
     border-bottom: 1px solid #eee;
+    transition: background 0.2s;
+    cursor: pointer;
+  }
+  .userListItem:hover {
+    background-color: #f9f9f9;
+  }
+  
+  .userAvatar {
+    width: 55px;
+    height: 55px;
+    object-fit: cover;
+    border-radius: 50%;
+    margin-right: 12px;
+    border: 2px solid #ddd;
+  }
+  
+  .userName {
+    font-size: 1.2rem;
+    color: #444;
+    font-weight: 500;
+  }
+  
+  .emptyText {
+    text-align: center;
+    color: #aaa;
+    font-style: italic;
+    margin-top: 20px;
+  }
+  
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translate(-50%, -60%);
+    }
+    to {
+      opacity: 1;
+      transform: translate(-50%, -50%);
+    }
+  }
+  .userList {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    max-height: 300px; 
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: #ccc transparent;
+  }
+  
+
+  .userList::-webkit-scrollbar {
+    width: 6px;
+  }
+  
+  .userList::-webkit-scrollbar-thumb {
+    background-color: #ccc;
+    border-radius: 10px;
+  }
+  
+  .userList::-webkit-scrollbar-track {
+    background-color: transparent;
   }
   
