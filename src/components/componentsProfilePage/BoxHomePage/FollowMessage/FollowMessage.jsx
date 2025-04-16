@@ -3,18 +3,27 @@ import './FollowMessage.css';
 
 export default function FollowMessage({ user }) {
   const [isFollowing, setIsFollowing] = useState(false);
+  const [currentUserId, setCurrentUserId] = useState(null);
 
   useEffect(() => {
-    const checkFollowing = async () => {
-      const res = await fetch('/api/current-user');
-      const { id: currentUserId } = await res.json();
+    const fetchCurrentUser = async () => {
+      try {
+        const res = await fetch('/api/current-user');
+        const data = await res.json();
+        setCurrentUserId(data.id);
 
-      if (user.followers.includes(currentUserId)) {
-        setIsFollowing(true);
+        // Перевірити, чи поточний користувач є серед підписників user
+        if (user.followers.some(follower => follower._id === data.id)) {
+          setIsFollowing(true);
+        } else {
+          setIsFollowing(false);
+        }
+      } catch (err) {
+        console.error('Error fetching current user', err);
       }
     };
 
-    checkFollowing();
+    fetchCurrentUser();
   }, [user]);
 
   const handleFollow = async () => {
@@ -44,8 +53,6 @@ export default function FollowMessage({ user }) {
       alert(data.message);
     }
   };
-
-  
 
   return (
     <div className="follow-message">
