@@ -1,22 +1,29 @@
-import React from 'react'
-import './FollowInfoModal.css'
-import ReactModal from 'react-modal'
+import React from 'react';
+import ReactModal from 'react-modal';
+import './FollowInfoModal.css';
 
-export default function FollowInfoModal() {
+export default function FollowInfoModal({ isOpen, onRequestClose, data = [], type }) {
   return (
     <ReactModal
-      isOpen
-      style={{
-        content: {
-          top: '50%',
-          left: '50%',
-          right: 'auto',
-          bottom: 'auto',
-          marginRight: '-50%',
-          transform: 'translate(-50%, -50%)',
-        },
-      }}
+      isOpen={isOpen}
+      onRequestClose={onRequestClose}
+      className="customModal"
+      overlayClassName="customOverlay"
+      ariaHideApp={false}
     >
-      </ReactModal>
-  )
+      <div className="modalHeader">
+        <h2>{type === 'followers' ? 'Followers' : 'Following'}</h2>
+        <button className="closeBtn" onClick={onRequestClose}>×</button>
+      </div>
+      <ul className="userList">
+        {data.length > 0 ? (
+          data.map((user, i) => (
+            <li key={i}>{user.name || user}</li>
+          ))
+        ) : (
+          <p>No {type}</p>
+        )}
+      </ul>
+    </ReactModal>
+  );
 }
