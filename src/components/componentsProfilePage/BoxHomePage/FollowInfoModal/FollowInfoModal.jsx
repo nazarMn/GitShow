@@ -3,6 +3,10 @@ import ReactModal from 'react-modal';
 import styles from './FollowInfoModal.module.css';
 
 export default function FollowInfoModal({ isOpen, onRequestClose, data = [], type }) {
+
+  const handleUserClick = (userId) => {
+    window.location.href = `/public-profile/${userId}`;
+  };
   return (
     <ReactModal
       isOpen={isOpen}
@@ -19,7 +23,7 @@ export default function FollowInfoModal({ isOpen, onRequestClose, data = [], typ
       <ul className={styles.userList}>
         {data.length > 0 ? (
           data.map((user, i) => (
-            <li key={i} className={styles.userListItem}>
+            <li key={i} className={styles.userListItem} onClick={() => handleUserClick(user._id)}>
               <img
                 src={user.avatarUrl || './img/account.png'}
                 alt={user.username}
