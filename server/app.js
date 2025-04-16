@@ -870,10 +870,15 @@ app.get('/api/current-user', async (req, res) => {
 
 app.get('/api/user/:userId', async (req, res) => {
   try {
-    const user = await User.findById(req.params.userId).select('-password'); // Виключаємо пароль
+    const user = await User.findById(req.params.userId)
+      .select('-password')
+      .populate('followers', 'username avatarUrl _id')
+      .populate('following', 'username avatarUrl _id');
+
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
+
     res.json(user);
   } catch (error) {
     res.status(500).json({ message: 'Error fetching user profile' });
