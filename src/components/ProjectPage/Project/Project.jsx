@@ -43,6 +43,7 @@ export default function Project() {
               link={project.link}
               websiteUrl={project.websiteUrl}
               userAvatar={project.userAvatar}
+              userId={project.userId}
             />
           ))
         ) : (

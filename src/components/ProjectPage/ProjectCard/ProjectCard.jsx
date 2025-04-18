@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faGithub } from '@fortawesome/free-brands-svg-icons';
 import { faPaperclip, faStar as solidStar, faStar as regularStar } from '@fortawesome/free-solid-svg-icons';
 
-export default function ProjectCard({ title, description, imageUrl, link, websiteUrl, userAvatar }) {
+export default function ProjectCard({ title, description, imageUrl, link, websiteUrl, userAvatar, userId  }) {
   const [isSaved, setIsSaved] = useState(false);
 
   useEffect(() => {
@@ -62,6 +62,11 @@ export default function ProjectCard({ title, description, imageUrl, link, websit
     );
   };
 
+  const handleUserClick = (userId) => {
+    window.location.href = `/public-profile/${userId}`;
+  };
+  
+
   return (
     <div className="projectCard">
       <div className="cardImage">{renderImage()}</div>
@@ -71,9 +76,10 @@ export default function ProjectCard({ title, description, imageUrl, link, websit
       </div>
       <div className="cardIcons">
         <div className="cardIconsLeft">
-          <div className="userAvatar">
-            <img src={userAvatar || './img/account.png'} alt="User Avatar" className="avatar" />
-          </div>
+        <div className="userAvatar" onClick={() => handleUserClick(userId)} style={{ cursor: 'pointer' }}>
+  <img src={userAvatar || './img/account.png'} alt="User Avatar" className="avatar" />
+</div>
+
         </div>
         <div className="cardIconsRight">
           <a href={link} className="githubIcon" target="_blank" rel="noopener noreferrer">
