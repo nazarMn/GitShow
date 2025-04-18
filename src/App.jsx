@@ -10,7 +10,7 @@ import Resume from './components/pages/PrivateProfile/ResumePage/ResumePage';
 import ResumeSettings from './components/HomePage/Setting/ResumeSettings/ResumeSettings';
 import Skills from './components/pages/PrivateProfile/SkillsPage/SkillsPage';
 import SkillsSettings from './components/HomePage/Setting/SkillsSettings/SkillsSettings';
-import Reviews from './components/HomePage/ReviewsPage/Reviews/Reviews';
+import Reviews from './components/pages/PrivateProfile/ReviewsPage/ReviewsPage';
 import Navigation from './components/NavigationСomponent/NavigationСomponent';
 import Project from './components/ProjectPage/Project/Project';
 import CVModels from './components/CVComponents/CVModels/CVModels';
