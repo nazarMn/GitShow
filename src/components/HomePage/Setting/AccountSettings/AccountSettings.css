@@ -91,6 +91,25 @@ textarea {
     border: 2px solid #fff;
     object-fit: cover;
 }
+input[type="file"] {
+  display: none;
+}
+
+.btn-choose-photo {
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  font-size: 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+  display: inline-block;
+  text-align: center;
+}
+
+.btn-choose-photo:hover {
+  background-color: #218838;
+}
 
 .btn-edit-photo {
     background-color: #007bff;

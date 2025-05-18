@@ -241,17 +241,28 @@ export default function AccountSettings() {
            <FontAwesomeIcon icon={faTimes} className="btn-go-home" onClick={handleGoHome}/> 
         
         </div>
-        <div className="profile-picture-wrapper">
-            {user && (
-              <div className="profile-picture">
-                <img src={user.avatarUrl} alt="Profile" />
-                <input type="file" accept="image/*" onChange={handleFileChange} />
-                <button className="btn-edit-photo" onClick={handleUpload}>
-                  <FontAwesomeIcon icon={faPencil} /> UpdatePhoto
-                </button>
-              </div>
-            )}
-          </div>
+    <div className="profile-picture-wrapper">
+  {user && (
+    <div className="profile-picture">
+      <img src={user.avatarUrl} alt="Profile" />
+      
+      <label htmlFor="file-upload" className="btn-choose-photo">
+        <FontAwesomeIcon icon={faPencil} />
+      </label>
+      <input
+        id="file-upload"
+        type="file"
+        accept="image/*"
+        onChange={handleFileChange}
+      />
+
+      <button className="btn-edit-photo" onClick={handleUpload}>
+        <FontAwesomeIcon icon={faFileLines} /> Зберегти
+      </button>
+    </div>
+  )}
+</div>
+
       </div>
       <ToastContainer />
     </div>
