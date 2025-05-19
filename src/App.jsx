@@ -23,6 +23,7 @@ import PublicHome from './components/pages/PublicProfile/PublicHome/PublicHome';
 import PublicPortfolio from './components/pages/PublicProfile/PublicPortfolioPage/PublicPortfolioPage';
 import PublicSkills from './components/pages/PublicProfile/PublicSkillsPage/PublicSkillsPage';
 import PublicResume from './components/pages/PublicProfile/PublicResumePage/PublicResumePage';
+import ChatPage from './components/componentsProfilePage/ChatPage/ChatPage.jsx';
 
 const App = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(null);
@@ -78,7 +79,7 @@ const App = () => {
         />
         <Route path="/shared-cv/:shareLink" element={<SharedCVRevue />} />
         <Route path="/settings-projects" element={isAuthenticated ? <SettingsProjects /> : <Navigate to="/" replace />} />
-        <Route path="/home" element={isAuthenticated ? (<><Navigation /><Home /><Portfolio /><Skills /><Resume /><Reviews /></>) : (<Navigate to="/" replace />)} />
+        <Route path="/home" element={isAuthenticated ? (<><Navigation /><Home /><Portfolio /><Skills /><Resume /><Reviews /> <ChatPage /> </>) : (<Navigate to="/" replace />)} />
         <Route path="/project" element={isAuthenticated ? (<><Navigation /><Project /></>) : (<Navigate to="/home" replace />)} />
         <Route path="/ResumeSettings" element={isAuthenticated ? <ResumeSettings /> : <Navigate to="/" replace />} />
         <Route path="/PublicProfileSettings" element={isAuthenticated ? <AccountSettings /> : <Navigate to="/" replace />} />
@@ -88,6 +89,7 @@ const App = () => {
         <Route path="/GlobalSettings" element={isAuthenticated ? <GlobalSettings /> : <Navigate to="/" replace />} />
         <Route path="/bookmarks" element={isAuthenticated ? (<><Navigation /><BookmarksPage /></>) : (<Navigate to="/home" replace />)} />
         <Route path="/public-profile/:userId" element={<><Navigation /><PublicHome /> <PublicPortfolio /> <PublicSkills /> <PublicResume /> </>} />
+        
       </Routes>
     </Router>
   );
