@@ -23,14 +23,20 @@ export default function FollowInfoModal({ isOpen, onRequestClose, data = [], typ
       <ul className={styles.userList}>
         {data.length > 0 ? (
           data.map((user, i) => (
-            <li key={i} className={styles.userListItem} onClick={() => handleUserClick(user._id)}>
-              <img
-                src={user.avatarUrl || './img/account.png'}
-                alt={user.username}
-                className={styles.userAvatar}
-              />
-              <span className={styles.userName}>{user.username || 'No Name'}</span>
-            </li>
+          <li key={i} className={styles.userListItem} onClick={() => handleUserClick(user._id)}>
+  <img
+    src={user.avatarUrl || './img/account.png'}
+    alt={user.username}
+    className={styles.userAvatar}
+  />
+  <span className={styles.userName}>{user.username || 'No Name'}</span>
+
+  <div className={styles.buttonGroup}>
+    <button className={styles.messageBtn}>Message</button>
+    <button className={styles.unfollowBtn}>Unfollow</button>
+  </div>
+</li>
+
           ))
         ) : (
           <p className={styles.emptyText}>No {type}</p>
