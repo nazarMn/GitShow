@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import './FollowMessage.css';
 
+import { useNavigate } from 'react-router-dom';
+
 export default function FollowMessage({ user }) {
   const [isFollowing, setIsFollowing] = useState(false);
   const [currentUserId, setCurrentUserId] = useState(null);
+  const navigate = useNavigate(); 
 
   useEffect(() => {
     const fetchCurrentUser = async () => {
@@ -12,7 +15,6 @@ export default function FollowMessage({ user }) {
         const data = await res.json();
         setCurrentUserId(data.id);
 
-        // Перевірити, чи поточний користувач є серед підписників user
         if (user.followers.some(follower => follower._id === data.id)) {
           setIsFollowing(true);
         } else {
@@ -54,6 +56,12 @@ export default function FollowMessage({ user }) {
     }
   };
 
+
+  const handleMessage = () => {
+    if (!currentUserId || !user._id) return;
+    navigate(`/chat/${currentUserId}-${user._id}`);
+  };
+
   return (
     <div className="follow-message">
       {!isFollowing ? (
@@ -61,7 +69,7 @@ export default function FollowMessage({ user }) {
       ) : (
         <div className="button-group">
           <button className="unfollow-btn" onClick={handleUnfollow}>Unfollow</button>
-          <button className="message-btn">Message</button>
+          <button className="message-btn" onClick={handleMessage}>Message</button>
         </div>
       )}
     </div>

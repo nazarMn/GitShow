@@ -89,7 +89,7 @@ const App = () => {
         <Route path="/GlobalSettings" element={isAuthenticated ? <GlobalSettings /> : <Navigate to="/" replace />} />
         <Route path="/bookmarks" element={isAuthenticated ? (<><Navigation /><BookmarksPage /></>) : (<Navigate to="/home" replace />)} />
         <Route path="/public-profile/:userId" element={<><Navigation /><PublicHome /> <PublicPortfolio /> <PublicSkills /> <PublicResume /> </>} />
-        
+        <Route path="/chat/:chatId" element={<ChatPage />} />
       </Routes>
     </Router>
   );
