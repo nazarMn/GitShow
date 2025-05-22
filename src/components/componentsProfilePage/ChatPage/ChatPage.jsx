@@ -30,7 +30,7 @@ export default function ChatPage() {
     <div className="chat-container dark">
       <header className="chat-header">
         <img src="/img/account.png" alt="Avatar" className="chat-avatar" />
-        <h2 className="chat-title">Чат з Назарієм</h2>
+        <h2 className="chat-title">Сhat with Назарієм</h2>
       </header>
 
       <div className="chat-messages">
@@ -49,11 +49,11 @@ export default function ChatPage() {
     <div className="chat-icons">
       <label>
         <input type="file" hidden />
-        <span title="Додати фото">📷</span>
+        <span title="Add a photo">📷</span>
       </label>
       <label>
         <input type="file" hidden />
-        <span title="Файл">📎</span>
+        <span title="File">📎</span>
       </label>
       <button title="Emoji">😊</button>
     </div>
@@ -62,7 +62,7 @@ export default function ChatPage() {
       type="text"
       value={newMessage}
       onChange={(e) => setNewMessage(e.target.value)}
-      placeholder="Напишіть повідомлення..."
+      placeholder="Write a message..."
       onKeyDown={(e) => e.key === "Enter" && sendMessage()}
     />
   </div>
