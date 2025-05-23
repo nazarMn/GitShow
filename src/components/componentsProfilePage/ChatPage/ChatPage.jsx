@@ -73,7 +73,7 @@ const addEmoji = (emoji) => {
               😊
             </button>
 
-    {showEmojiPicker && (
+ {showEmojiPicker && (
   <div
     style={{
       position: "fixed",
@@ -81,11 +81,31 @@ const addEmoji = (emoji) => {
       left: "50%",
       transform: "translate(-50%, -50%)",
       zIndex: 1000,
+      backgroundColor: "#1e1e1e",
+      borderRadius: "10px",
+      padding: "10px",
+      boxShadow: "0 0 10px rgba(0, 0, 0, 0.5)",
     }}
   >
+    <div style={{ display: "flex", justifyContent: "flex-end" }}>
+      <button
+        onClick={() => setShowEmojiPicker(false)}
+        style={{
+          background: "transparent",
+          color: "#fff",
+          border: "none",
+          fontSize: "18px",
+          cursor: "pointer",
+          marginBottom: "5px",
+        }}
+      >
+        ✕
+      </button>
+    </div>
     <Picker data={data} onEmojiSelect={addEmoji} theme="dark" />
   </div>
 )}
+
 
 
 
