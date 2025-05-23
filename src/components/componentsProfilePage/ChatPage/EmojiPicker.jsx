@@ -1,6 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
 import Picker from "@emoji-mart/react";
-
 import data from "@emoji-mart/data";
 
 export default function EmojiPicker({ onClose, onEmojiSelect }) {
@@ -28,11 +27,22 @@ export default function EmojiPicker({ onClose, onEmojiSelect }) {
 
   const handleMouseMove = (e) => {
     if (!dragging.current) return;
-    const newPos = {
-      x: e.clientX - offset.current.x,
-      y: e.clientY - offset.current.y,
-    };
-    setPickerPosition(newPos);
+
+    const pickerWidth = pickerRef.current?.clientWidth || 0;
+    const pickerHeight = pickerRef.current?.clientHeight || 0;
+    const windowWidth = window.innerWidth;
+    const windowHeight = window.innerHeight;
+
+    let newX = e.clientX - offset.current.x;
+    let newY = e.clientY - offset.current.y;
+
+    if (newX < 0) newX = 0;
+    else if (newX + pickerWidth > windowWidth) newX = windowWidth - pickerWidth;
+
+    if (newY < 0) newY = 0;
+    else if (newY + pickerHeight > windowHeight) newY = windowHeight - pickerHeight;
+
+    setPickerPosition({ x: newX, y: newY });
   };
 
   const handleMouseUp = () => {
