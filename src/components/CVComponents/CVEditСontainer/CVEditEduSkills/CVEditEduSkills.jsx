@@ -18,7 +18,6 @@ export default function CVEditEduSkills() {
   useEffect(() => {
     axios.get('/api/cv')
       .then(res => {
-        // Make sure we have at least one skill field to start with
         const skills = res.data.skills && res.data.skills.length > 0 ? 
           res.data.skills : [''];
         setCvData({...res.data, skills});

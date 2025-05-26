@@ -15,13 +15,13 @@ export default function CVEditContRefsSummary() {
     location: '',
     email: '',
     references: ['', '', ''],
-    avatarUrl: '' // Add avatarUrl to the state
+    avatarUrl: '' 
   });
 
   useEffect(() => {
     axios.get('/api/cv')
       .then(res => {
-        setCvData(res.data); // Fetch data and set it in state
+        setCvData(res.data);
       })
       .catch(err => console.error('Error fetching CV:', err));
   }, []);
