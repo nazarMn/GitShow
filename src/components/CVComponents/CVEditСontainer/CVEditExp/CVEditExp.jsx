@@ -164,7 +164,6 @@ export default function CVEditExp() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     
-    // Підготувати дані перед відправкою
     const formattedExperience = cvData.experience.map(exp => {
       return {
         ...exp,
