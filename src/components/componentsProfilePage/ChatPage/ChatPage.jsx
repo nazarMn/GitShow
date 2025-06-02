@@ -5,14 +5,33 @@ import "./ChatPage.css";
 
 export default function ChatPage() {
   const { chatId } = useParams();
-  
-
   const [newMessage, setNewMessage] = useState("");
   const [messages, setMessages] = useState([]);
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+  const [chatUser, setChatUser] = useState(null);
+  const [currentUserId, setCurrentUserId] = useState(null);
 
   useEffect(() => {
-    console.log("Chat ID:", chatId);
+    const fetchUsers = async () => {
+      try {
+        const currentRes = await fetch("/api/current-user");
+        const currentData = await currentRes.json();
+        const [id1, id2] = chatId.split("-");
+
+        const myId = currentData.id;
+        setCurrentUserId(myId);
+
+        const otherUserId = myId === id1 ? id2 : id1;
+
+        const userRes = await fetch(`/api/user/${otherUserId}`);
+        const userData = await userRes.json();
+        setChatUser(userData);
+      } catch (error) {
+        console.error("Error fetching chat user:", error);
+      }
+    };
+
+    fetchUsers();
   }, [chatId]);
 
   const sendMessage = () => {
@@ -28,8 +47,14 @@ export default function ChatPage() {
   return (
     <div className="chat-container dark" style={{ position: "relative" }}>
       <header className="chat-header">
-        <img src="/img/account.png" alt="Avatar" className="chat-avatar" />
-        <h2 className="chat-title">Сhat with Name</h2>
+        <img
+          src={chatUser?.avatarUrl || "/img/account.png"}
+          alt="Avatar"
+          className="chat-avatar"
+        />
+        <h2 className="chat-title">
+          Chat with {chatUser?.username || "User"}
+        </h2>
       </header>
 
       <div className="chat-messages">
