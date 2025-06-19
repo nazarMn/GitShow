@@ -88,8 +88,8 @@ const App = () => {
         <Route path="/CVEdit" element={isAuthenticated ? <CVEdit /> : <Navigate to="/" replace />} />
         <Route path="/GlobalSettings" element={isAuthenticated ? <GlobalSettings /> : <Navigate to="/" replace />} />
         <Route path="/bookmarks" element={isAuthenticated ? (<><Navigation /><BookmarksPage /></>) : (<Navigate to="/home" replace />)} />
-        <Route path="/public-profile/:userId" element={<><Navigation /><PublicHome /> <PublicPortfolio /> <PublicSkills /> <PublicResume /> </>} />
-        <Route path="/chat/:chatId" element={<ChatPage />} />
+        <Route path="/public-profile/:userId" element={isAuthenticated ? (<><Navigation /><PublicHome /> <PublicPortfolio /> <PublicSkills /> <PublicResume /> </>) : (<Navigate to="/" replace />)} />
+        <Route path="/chat/:chatId" element={isAuthenticated ? <ChatPage /> : <Navigate to="/" replace />} />
       </Routes>
     </Router>
   );
