@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import './FollowMessage.css';
-
 import { useNavigate } from 'react-router-dom';
 
 export default function FollowMessage({ user }) {
   const [isFollowing, setIsFollowing] = useState(false);
   const [currentUserId, setCurrentUserId] = useState(null);
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchCurrentUser = async () => {
@@ -15,11 +14,8 @@ export default function FollowMessage({ user }) {
         const data = await res.json();
         setCurrentUserId(data.id);
 
-        if (user.followers.some(follower => follower._id === data.id)) {
-          setIsFollowing(true);
-        } else {
-          setIsFollowing(false);
-        }
+        const isUserFollowing = user.followers.some(follower => follower._id === data.id);
+        setIsFollowing(isUserFollowing);
       } catch (err) {
         console.error('Error fetching current user', err);
       }
@@ -29,37 +25,45 @@ export default function FollowMessage({ user }) {
   }, [user]);
 
   const handleFollow = async () => {
-    const response = await fetch(`/api/follow/${user._id}`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-    });
-
-    const data = await response.json();
-    if (response.ok) {
-      setIsFollowing(true);
-    } else {
-      alert(data.message);
+    try {
+      const response = await fetch(`/api/follow/${user._id}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+      });
+      const data = await response.json();
+      if (response.ok) {
+        setIsFollowing(true);
+      } else {
+        alert(data.message);
+      }
+    } catch (error) {
+      console.error('Follow error:', error);
     }
   };
 
   const handleUnfollow = async () => {
-    const response = await fetch(`/api/unfollow/${user._id}`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-    });
-
-    const data = await response.json();
-    if (response.ok) {
-      setIsFollowing(false);
-    } else {
-      alert(data.message);
+    try {
+      const response = await fetch(`/api/unfollow/${user._id}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+      });
+      const data = await response.json();
+      if (response.ok) {
+        setIsFollowing(false);
+      } else {
+        alert(data.message);
+      }
+    } catch (error) {
+      console.error('Unfollow error:', error);
     }
   };
 
-
   const handleMessage = () => {
     if (!currentUserId || !user._id) return;
-    navigate(`/chat/${currentUserId}-${user._id}`);
+
+    // Відсортуємо id, щоб URL був стабільним
+    const sortedIds = [currentUserId, user._id].sort();
+    navigate(`/chat/${sortedIds[0]}-${sortedIds[1]}`);
   };
 
   return (

@@ -16,12 +16,13 @@ export default function ChatPage() {
       try {
         const currentRes = await fetch("/api/current-user");
         const currentData = await currentRes.json();
-        const [id1, id2] = chatId.split("-");
 
+        const [id1, id2] = chatId.split("-");
         const myId = currentData.id;
         setCurrentUserId(myId);
 
-        const otherUserId = myId === id1 ? id2 : id1;
+        // Визначаємо id співрозмовника — той, що не співпадає з currentUserId
+        const otherUserId = id1 === myId ? id2 : id1;
 
         const userRes = await fetch(`/api/user/${otherUserId}`);
         const userData = await userRes.json();
@@ -36,7 +37,10 @@ export default function ChatPage() {
 
   const sendMessage = () => {
     if (!newMessage.trim()) return;
-    setMessages([...messages, { id: Date.now(), text: newMessage, sender: "me" }]);
+    setMessages((prevMessages) => [
+      ...prevMessages,
+      { id: Date.now(), text: newMessage, sender: "me" },
+    ]);
     setNewMessage("");
   };
 
