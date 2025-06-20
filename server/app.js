@@ -995,23 +995,28 @@ const chatRoutes = require('./routes/chatRoutes');
 app.use('/api/messages', chatRoutes);
 
 
-io.on('connection', (socket) => {
-  console.log('🟢 User connected:', socket.id);
+io.on("connection", (socket) => {
+  console.log("User connected:", socket.id);
 
-  socket.on('joinRoom', (chatId) => {
+  socket.on("joinRoom", (chatId) => {
     socket.join(chatId);
-    console.log(`User joined room: ${chatId}`);
+    console.log(`Socket ${socket.id} joined room ${chatId}`);
   });
 
-  socket.on('sendMessage', ({ chatId, message }) => {
-    socket.to(chatId).emit('receiveMessage', message);
+  socket.on("leaveRoom", (chatId) => {
+    socket.leave(chatId);
+    console.log(`Socket ${socket.id} left room ${chatId}`);
   });
 
-  socket.on('disconnect', () => {
-    console.log('🔴 User disconnected:', socket.id);
+  socket.on("sendMessage", ({ chatId, message }) => {
+    // Відправляємо іншим у кімнаті
+    socket.to(chatId).emit("receiveMessage", message);
+  });
+
+  socket.on("disconnect", () => {
+    console.log("User disconnected:", socket.id);
   });
 });
-
 
 
 // Error handling middleware

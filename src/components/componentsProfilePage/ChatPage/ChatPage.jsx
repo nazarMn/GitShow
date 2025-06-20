@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useParams } from "react-router-dom";
 import { io } from "socket.io-client";
 import EmojiPicker from "./EmojiPicker";
 import "./ChatPage.css";
 
-const socket = io("http://localhost:3000"); // змінити на твій продакшн URL
+const socket = io("http://localhost:3000"); // змінити на свій сервер
 
 export default function ChatPage() {
   const { chatId } = useParams();
@@ -13,6 +13,8 @@ export default function ChatPage() {
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const [chatUser, setChatUser] = useState(null);
   const [currentUserId, setCurrentUserId] = useState(null);
+
+
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -36,60 +38,53 @@ export default function ChatPage() {
     fetchUsers();
   }, [chatId]);
 
+  // Завантаження локальних повідомлень із localStorage
   useEffect(() => {
-    const fetchMessages = async () => {
-      try {
-        const res = await fetch(`/api/messages/${chatId}`);
-        const data = await res.json();
-        setMessages(data);
-      } catch (err) {
-        console.error("Error fetching messages:", err);
-      }
-    };
+    const savedMessages = localStorage.getItem(`chat-${chatId}`);
+    if (savedMessages) {
+      setMessages(JSON.parse(savedMessages));
+    }
+  }, [chatId]);
 
-    fetchMessages();
+  // Підписка на сокети
+  useEffect(() => {
     socket.emit("joinRoom", chatId);
 
     socket.on("receiveMessage", (message) => {
-      setMessages((prev) => [...prev, message]);
+      setMessages((prev) => {
+        const updated = [...prev, message];
+        localStorage.setItem(`chat-${chatId}`, JSON.stringify(updated));
+        return updated;
+      });
     });
 
     return () => {
       socket.off("receiveMessage");
+      socket.emit("leaveRoom", chatId);
     };
   }, [chatId]);
 
-  const sendMessage = async () => {
+  const sendMessage = () => {
     if (!newMessage.trim()) return;
 
-    try {
-      const res = await fetch("/api/messages", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ chatId, text: newMessage }),
-      });
+    const messageObj = {
+      id: Date.now(),
+      text: newMessage,
+      sender: { _id: currentUserId },
+      createdAt: new Date().toISOString(),
+    };
 
-      if (!res.ok) {
-        console.error("Failed to send message");
-        return;
-      }
+    // Локально додаємо повідомлення
+    setMessages((prev) => {
+      const updated = [...prev, messageObj];
+      localStorage.setItem(`chat-${chatId}`, JSON.stringify(updated));
+      return updated;
+    });
 
-      const data = await res.json();
-      const messageObj = { ...data, sender: { _id: currentUserId } };
+    // Відправляємо на сервер
+    socket.emit("sendMessage", { chatId, message: messageObj });
 
-      // Додаємо собі
-      setMessages((prev) => [...prev, messageObj]);
-
-      // Відправляємо іншим
-      socket.emit("sendMessage", {
-        chatId,
-        message: messageObj,
-      });
-
-      setNewMessage("");
-    } catch (err) {
-      console.error("Error sending message:", err);
-    }
+    setNewMessage("");
   };
 
   const handleEmojiSelect = (emoji) => {
