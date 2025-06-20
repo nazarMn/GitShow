@@ -982,6 +982,9 @@ app.post('/api/unfollow/:userId', async (req, res) => {
   }
 });
 
+// app.js
+const chatRoutes = require('./routes/chatRoutes');
+app.use('/api/messages', chatRoutes);
 
 
 

@@ -35,18 +35,49 @@ export default function ChatPage() {
     fetchUsers();
   }, [chatId]);
 
-  const sendMessage = () => {
-    if (!newMessage.trim()) return;
-    setMessages((prevMessages) => [
-      ...prevMessages,
-      { id: Date.now(), text: newMessage, sender: "me" },
-    ]);
-    setNewMessage("");
+  const sendMessage = async () => {
+  if (!newMessage.trim()) return;
+
+  try {
+    const res = await fetch('/api/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ chatId, text: newMessage }),
+    });
+
+    if (!res.ok) {
+      console.error('Failed to send message');
+      return;
+    }
+
+    const data = await res.json();
+
+    setMessages((prev) => [...prev, { ...data, sender: { _id: currentUserId } }]);
+    setNewMessage('');
+  } catch (err) {
+    console.error('Error sending message:', err);
+  }
+};
+
+const handleEmojiSelect = (emoji) => {
+  setNewMessage((prev) => prev + (emoji.native || emoji.colons || ""));
+};
+
+
+
+  useEffect(() => {
+  const fetchMessages = async () => {
+    try {
+      const res = await fetch(`/api/messages/${chatId}`);
+      const data = await res.json();
+      setMessages(data);
+    } catch (err) {
+      console.error('Error fetching messages:', err);
+    }
   };
 
-  const handleEmojiSelect = (emoji) => {
-    setNewMessage((prev) => prev + emoji.native);
-  };
+  fetchMessages();
+}, [chatId]);
 
   return (
     <div className="chat-container dark" style={{ position: "relative" }}>
@@ -61,16 +92,17 @@ export default function ChatPage() {
         </h2>
       </header>
 
-      <div className="chat-messages">
-        {messages.map((msg) => (
-          <div
-            key={msg.id}
-            className={`chat-message ${msg.sender === "me" ? "me" : "them"}`}
-          >
-            {msg.text}
-          </div>
-        ))}
-      </div>
+     <div className="chat-messages">
+  {messages.map((msg) => (
+    <div
+      key={msg._id || msg.id}
+      className={`chat-message ${msg.sender._id === currentUserId ? "me" : "them"}`}
+    >
+      {msg.text}
+    </div>
+  ))}
+</div>
+
 
       <div className="chat-input-area">
         <div className="chat-input-wrapper">
