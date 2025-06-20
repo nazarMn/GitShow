@@ -120,14 +120,14 @@ const handleEmojiSelect = (emoji) => {
       <div className="chat-input-area">
         <div className="chat-input-wrapper">
           <div className="chat-icons" style={{ position: "relative" }}>
-            <label>
+            {/* <label>
               <input type="file" hidden />
               <span title="Add a photo">📷</span>
             </label>
             <label>
               <input type="file" hidden />
               <span title="File">📎</span>
-            </label>
+            </label> */}
             <button
               title="Emoji"
               type="button"
