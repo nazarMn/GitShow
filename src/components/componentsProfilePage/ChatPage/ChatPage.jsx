@@ -1,10 +1,11 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { io } from "socket.io-client";
 import EmojiPicker from "./EmojiPicker";
+import { saveMessages, loadMessages } from "./indexedDB.js";
 import "./ChatPage.css";
 
-const socket = io("http://localhost:3000"); // змінити на свій сервер
+const socket = io("http://localhost:3000"); // Замінити на свій продакшн URL
 
 export default function ChatPage() {
   const { chatId } = useParams();
@@ -14,8 +15,7 @@ export default function ChatPage() {
   const [chatUser, setChatUser] = useState(null);
   const [currentUserId, setCurrentUserId] = useState(null);
 
-
-
+  // Отримання даних користувача
   useEffect(() => {
     const fetchUsers = async () => {
       try {
@@ -38,22 +38,23 @@ export default function ChatPage() {
     fetchUsers();
   }, [chatId]);
 
-  // Завантаження локальних повідомлень із localStorage
+  // Завантаження повідомлень з IndexedDB
   useEffect(() => {
-    const savedMessages = localStorage.getItem(`chat-${chatId}`);
-    if (savedMessages) {
-      setMessages(JSON.parse(savedMessages));
-    }
+    const load = async () => {
+      const msgs = await loadMessages(chatId);
+      setMessages(msgs);
+    };
+    load();
   }, [chatId]);
 
-  // Підписка на сокети
+  // Підписка на сокет
   useEffect(() => {
     socket.emit("joinRoom", chatId);
 
-    socket.on("receiveMessage", (message) => {
+    socket.on("receiveMessage", async (message) => {
       setMessages((prev) => {
         const updated = [...prev, message];
-        localStorage.setItem(`chat-${chatId}`, JSON.stringify(updated));
+        saveMessages(chatId, updated);
         return updated;
       });
     });
@@ -64,6 +65,7 @@ export default function ChatPage() {
     };
   }, [chatId]);
 
+  // Відправлення повідомлення
   const sendMessage = () => {
     if (!newMessage.trim()) return;
 
@@ -74,22 +76,20 @@ export default function ChatPage() {
       createdAt: new Date().toISOString(),
     };
 
-    // Локально додаємо повідомлення
     setMessages((prev) => {
       const updated = [...prev, messageObj];
-      localStorage.setItem(`chat-${chatId}`, JSON.stringify(updated));
+      saveMessages(chatId, updated);
       return updated;
     });
 
-    // Відправляємо на сервер
     socket.emit("sendMessage", { chatId, message: messageObj });
-
     setNewMessage("");
   };
 
-  const handleEmojiSelect = (emoji) => {
-    setNewMessage((prev) => prev + (emoji.native || emoji.colons || ""));
-  };
+const handleEmojiSelect = (emoji) => {
+  setNewMessage((prev) => prev + emoji.native);
+};
+
 
   return (
     <div className="chat-container dark" style={{ position: "relative" }}>
