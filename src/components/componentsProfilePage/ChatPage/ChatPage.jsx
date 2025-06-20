@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
+import { io } from "socket.io-client";
 import EmojiPicker from "./EmojiPicker";
 import "./ChatPage.css";
+
+const socket = io("http://localhost:3000"); // змінити на твій продакшн URL
 
 export default function ChatPage() {
   const { chatId } = useParams();
@@ -21,9 +24,7 @@ export default function ChatPage() {
         const myId = currentData.id;
         setCurrentUserId(myId);
 
-        // Визначаємо id співрозмовника — той, що не співпадає з currentUserId
         const otherUserId = id1 === myId ? id2 : id1;
-
         const userRes = await fetch(`/api/user/${otherUserId}`);
         const userData = await userRes.json();
         setChatUser(userData);
@@ -35,49 +36,65 @@ export default function ChatPage() {
     fetchUsers();
   }, [chatId]);
 
-  const sendMessage = async () => {
-  if (!newMessage.trim()) return;
+  useEffect(() => {
+    const fetchMessages = async () => {
+      try {
+        const res = await fetch(`/api/messages/${chatId}`);
+        const data = await res.json();
+        setMessages(data);
+      } catch (err) {
+        console.error("Error fetching messages:", err);
+      }
+    };
 
-  try {
-    const res = await fetch('/api/messages', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ chatId, text: newMessage }),
+    fetchMessages();
+    socket.emit("joinRoom", chatId);
+
+    socket.on("receiveMessage", (message) => {
+      setMessages((prev) => [...prev, message]);
     });
 
-    if (!res.ok) {
-      console.error('Failed to send message');
-      return;
-    }
+    return () => {
+      socket.off("receiveMessage");
+    };
+  }, [chatId]);
 
-    const data = await res.json();
+  const sendMessage = async () => {
+    if (!newMessage.trim()) return;
 
-    setMessages((prev) => [...prev, { ...data, sender: { _id: currentUserId } }]);
-    setNewMessage('');
-  } catch (err) {
-    console.error('Error sending message:', err);
-  }
-};
-
-const handleEmojiSelect = (emoji) => {
-  setNewMessage((prev) => prev + (emoji.native || emoji.colons || ""));
-};
-
-
-
-  useEffect(() => {
-  const fetchMessages = async () => {
     try {
-      const res = await fetch(`/api/messages/${chatId}`);
+      const res = await fetch("/api/messages", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ chatId, text: newMessage }),
+      });
+
+      if (!res.ok) {
+        console.error("Failed to send message");
+        return;
+      }
+
       const data = await res.json();
-      setMessages(data);
+      const messageObj = { ...data, sender: { _id: currentUserId } };
+
+      // Додаємо собі
+      setMessages((prev) => [...prev, messageObj]);
+
+      // Відправляємо іншим
+      socket.emit("sendMessage", {
+        chatId,
+        message: messageObj,
+      });
+
+      setNewMessage("");
     } catch (err) {
-      console.error('Error fetching messages:', err);
+      console.error("Error sending message:", err);
     }
   };
 
-  fetchMessages();
-}, [chatId]);
+  const handleEmojiSelect = (emoji) => {
+    setNewMessage((prev) => prev + (emoji.native || emoji.colons || ""));
+  };
 
   return (
     <div className="chat-container dark" style={{ position: "relative" }}>
@@ -92,17 +109,18 @@ const handleEmojiSelect = (emoji) => {
         </h2>
       </header>
 
-     <div className="chat-messages">
-  {messages.map((msg) => (
-    <div
-      key={msg._id || msg.id}
-      className={`chat-message ${msg.sender._id === currentUserId ? "me" : "them"}`}
-    >
-      {msg.text}
-    </div>
-  ))}
-</div>
-
+      <div className="chat-messages">
+        {messages.map((msg) => (
+          <div
+            key={msg._id || msg.id}
+            className={`chat-message ${
+              msg.sender._id === currentUserId ? "me" : "them"
+            }`}
+          >
+            {msg.text}
+          </div>
+        ))}
+      </div>
 
       <div className="chat-input-area">
         <div className="chat-input-wrapper">

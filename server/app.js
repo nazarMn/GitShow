@@ -12,9 +12,17 @@ const crypto = require('crypto');
 const { v4: uuidv4 } = require('uuid')
 require('dotenv').config();
 
+const http = require('http');
+const { Server } = require('socket.io');
+const app = express();
+const server = http.createServer(app);
+
+const io = new Server(server, {
+  cors: { origin: '*' }
+});
 const User = require('./models/User'); 
 
-const app = express();
+
 
 // Middleware
 app.use(helmet());
@@ -987,6 +995,24 @@ const chatRoutes = require('./routes/chatRoutes');
 app.use('/api/messages', chatRoutes);
 
 
+io.on('connection', (socket) => {
+  console.log('🟢 User connected:', socket.id);
+
+  socket.on('joinRoom', (chatId) => {
+    socket.join(chatId);
+    console.log(`User joined room: ${chatId}`);
+  });
+
+  socket.on('sendMessage', ({ chatId, message }) => {
+    socket.to(chatId).emit('receiveMessage', message);
+  });
+
+  socket.on('disconnect', () => {
+    console.log('🔴 User disconnected:', socket.id);
+  });
+});
+
+
 
 // Error handling middleware
 app.use((err, req, res, next) => {
@@ -1011,6 +1037,6 @@ app.get('*', (req, res) => {
 });
 
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
+server.listen(3000, () => {
+  console.log('Server running on port 3000');
 });
