@@ -178,3 +178,29 @@
   from { opacity: 0; transform: translateY(5px); }
   to { opacity: 1; transform: translateY(0); }
 }
+
+.chat-input {
+  resize: none;
+  width: 100%;
+  border: none;
+  border-radius: 10px;
+  padding: 8px;
+  font-size: 16px;
+  outline: none;
+  background: #333;
+  color: white;
+}
+.code-block {
+  background: #2d2d2d;
+  border-radius: 8px;
+  padding: 10px;
+  margin-top: 5px;
+  overflow-x: auto;
+  font-size: 14px;
+}
+.copy-button:hover {
+  background: #666;
+}
+.language-icon.javascript::before { content: "🟨 JS"; color: yellow; }
+.language-icon.python::before { content: "🐍 PY"; color: lightblue; }
+.language-icon.cpp::before { content: "🔵 C++"; color: skyblue; }
