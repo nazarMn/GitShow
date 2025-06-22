@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './SettingsProjects.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPencil } from '@fortawesome/free-solid-svg-icons';
+import { faUpload } from '@fortawesome/free-solid-svg-icons';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 export default function SettingsProjects() {
@@ -15,7 +15,8 @@ export default function SettingsProjects() {
   const [image, setImage] = useState(null);
 
   const handleImageChange = (event) => {
-    setImage(event.target.files[0]);
+    const file = event.target.files[0];
+    if (file) setImage(file);
   };
 
   const handleSave = async () => {
@@ -34,7 +35,6 @@ export default function SettingsProjects() {
     try {
       const response = await fetch('/api/projects', { method: 'POST', body: formData });
       if (response.ok) {
-        console.log('Project saved');
         navigate('/home');
       } else {
         console.error('Failed to save project');
@@ -46,23 +46,28 @@ export default function SettingsProjects() {
 
   return (
     <div className="settingsProjects">
-      <button className="closeButton" onClick={() => navigate(-1)}>X</button>
+      <button className="closeButton" onClick={() => navigate(-1)}>✖</button>
       <div className="contentContainer">
         <div className="settingsProjectsLeft">
-          <h2 className="photoTitle">Project Photo</h2>
-          <img src={image ? URL.createObjectURL(image) : ''} alt="Project" />
-          <FontAwesomeIcon 
-            icon={faPencil} 
-            className="editIcon" 
-            onClick={() => document.getElementById('fileInput').click()} 
-          />
-          <input 
-            id="fileInput" 
-            type="file" 
-            style={{ display: 'none' }} 
-            onChange={handleImageChange} 
-          />
+          <div className="imageUploadContainer" onClick={() => document.getElementById('fileInput').click()}>
+            {image ? (
+              <img src={URL.createObjectURL(image)} alt="Project" className="previewImage" />
+            ) : (
+              <div className="uploadPlaceholder">
+                <FontAwesomeIcon icon={faUpload} className="uploadIcon" />
+                <p>Upload Project Image</p>
+              </div>
+            )}
+            <input
+              id="fileInput"
+              type="file"
+              accept="image/*"
+              style={{ display: 'none' }}
+              onChange={handleImageChange}
+            />
+          </div>
         </div>
+
         <div className="settingsProjectsRight">
           <div className="form-group">
             <label htmlFor="nameproject">Project Name</label>
