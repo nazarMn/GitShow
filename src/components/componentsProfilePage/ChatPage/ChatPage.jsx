@@ -10,7 +10,7 @@ import { oneDark } from "react-syntax-highlighter/dist/esm/styles/prism";
 import hljs from "highlight.js";
 import "highlight.js/styles/github.css";
 
-const socket = io("https://gitshow.onrender.com");
+const socket = io("http://localhost:3000/");
 
 export default function ChatPage() {
   const { chatId } = useParams();
