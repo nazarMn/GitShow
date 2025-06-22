@@ -201,3 +201,42 @@
 .btn-go-home:hover {
   color: #218838;
 }
+
+
+  
+  .CV-Share-Box {
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px solid #ddd;
+  }
+  
+  .CV-Models .CV-Share-Box {
+    margin-top: 15px;
+  }
+  
+  .CV-Models .Share-Link-Container {
+    display: flex;
+    margin: 10px 0;
+  }
+  
+  .CV-Models .Share-Link-Input {
+    flex-grow: 1;
+    padding: 8px 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px 0 0 4px;
+    font-size: 14px;
+  }
+  
+  .CV-Models .Copy-Link-Button {
+    background-color: #4a90e2;
+    color: white;
+    border: none;
+    border-radius: 0 4px 4px 0;
+    padding: 8px 15px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .CV-Models .Copy-Link-Button:hover {
+    background-color: #357ac7;
+  }
