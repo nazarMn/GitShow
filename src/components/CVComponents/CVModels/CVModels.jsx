@@ -205,12 +205,14 @@ export default function CVModels() {
             <div className="CV-Share-Box">
               <p>Share your CV with this link:</p>
               <div className="Share-Link-Container">
-                <input 
-                  type="text" 
-                  value={shareLink} 
-                  readOnly 
-                  className="Share-Link-Input"
-                />
+              <input
+  type="text"
+  value={shareLink}
+  readOnly
+  className="Share-Link-Input"
+  onClick={() => window.open(shareLink, '_blank')}
+/>
+
                 <button 
                   onClick={copyShareLink} 
                   className="Copy-Link-Button"
