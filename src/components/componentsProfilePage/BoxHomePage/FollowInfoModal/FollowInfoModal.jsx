@@ -1,28 +1,41 @@
 import React from 'react';
 import ReactModal from 'react-modal';
+import { useNavigate } from 'react-router-dom';
 import styles from './FollowInfoModal.module.css';
 
 export default function FollowInfoModal({ isOpen, onRequestClose, data = [], type }) {
   const [users, setUsers] = React.useState(data);
+  const [currentUserId, setCurrentUserId] = React.useState(null);
+  const navigate = useNavigate();
 
   React.useEffect(() => {
     setUsers(data);
   }, [data]);
+
+  React.useEffect(() => {
+    const fetchCurrentUser = async () => {
+      try {
+        const res = await fetch('/api/current-user');
+        const data = await res.json();
+        setCurrentUserId(data.id);
+      } catch (err) {
+        console.error('Error fetching current user', err);
+      }
+    };
+    fetchCurrentUser();
+  }, []);
 
   const handleUserClick = (userId) => {
     window.location.href = `/public-profile/${userId}`;
   };
 
   const handleUnfollow = async (e, userId) => {
-    e.stopPropagation(); 
-
+    e.stopPropagation();
     try {
       const response = await fetch(`/api/unfollow/${userId}`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        credentials: 'include', 
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
       });
 
       if (response.ok) {
@@ -35,6 +48,12 @@ export default function FollowInfoModal({ isOpen, onRequestClose, data = [], typ
       console.error('Unfollow error:', error);
       alert('Error unfollowing user');
     }
+  };
+
+  const handleMessage = (targetUserId) => {
+    if (!currentUserId || !targetUserId) return;
+    const sortedIds = [currentUserId, targetUserId].sort();
+    navigate(`/chat/${sortedIds[0]}-${sortedIds[1]}`);
   };
 
   return (
@@ -62,7 +81,15 @@ export default function FollowInfoModal({ isOpen, onRequestClose, data = [], typ
               <span className={styles.userName}>{user.username || 'No Name'}</span>
 
               <div className={styles.buttonGroup}>
-                <button className={styles.messageBtn}>Message</button>
+                <button
+                  className={styles.messageBtn}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleMessage(user._id);
+                  }}
+                >
+                  Message
+                </button>
                 {type === 'following' && (
                   <button
                     className={styles.unfollowBtn}
