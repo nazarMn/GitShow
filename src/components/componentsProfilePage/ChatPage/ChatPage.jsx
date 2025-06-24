@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { io } from "socket.io-client";
 import EmojiPicker from "./EmojiPicker";
 import { saveMessages, loadMessages } from "./indexedDB.js";
@@ -20,6 +20,8 @@ export default function ChatPage() {
   const [chatUser, setChatUser] = useState(null);
   const [currentUserId, setCurrentUserId] = useState(null);
  const messagesContainerRef = useRef(null);
+ const navigate = useNavigate();
+
 
 
 useEffect(() => {
@@ -180,16 +182,20 @@ const renderLivePreview = (text) => {
 };
   return (
     <div className="chat-container dark" style={{ position: "relative" }}>
-      <header className="chat-header">
-        <img
-          src={chatUser?.avatarUrl || "/img/account.png"}
-          alt="Avatar"
-          className="chat-avatar"
-        />
-        <h2 className="chat-title">
-          Chat with {chatUser?.username || "User"}
-        </h2>
-      </header>
+     <header className="chat-header">
+  <button className="back-button" onClick={() => navigate(-1)} title="Назад">
+    ⬅
+  </button>
+  <img
+    src={chatUser?.avatarUrl || "/img/account.png"}
+    alt="Avatar"
+    className="chat-avatar"
+  />
+  <h2 className="chat-title">
+    Chat with {chatUser?.username || "User"}
+  </h2>
+</header>
+
 
     <div className="chat-messages" ref={messagesContainerRef}>
   {messages.map((msg) => (

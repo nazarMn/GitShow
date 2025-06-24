@@ -204,3 +204,16 @@
 .language-icon.javascript::before { content: "🟨 JS"; color: yellow; }
 .language-icon.python::before { content: "🐍 PY"; color: lightblue; }
 .language-icon.cpp::before { content: "🔵 C++"; color: skyblue; }
+.back-button {
+  background: transparent;
+  border: none;
+  color: white;
+  font-size: 20px;
+  margin-right: 12px;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.back-button:hover {
+  color: #0078ff;
+}
