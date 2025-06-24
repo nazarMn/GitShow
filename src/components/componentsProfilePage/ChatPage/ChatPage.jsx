@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useParams } from "react-router-dom";
 import { io } from "socket.io-client";
 import EmojiPicker from "./EmojiPicker";
@@ -19,6 +19,14 @@ export default function ChatPage() {
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const [chatUser, setChatUser] = useState(null);
   const [currentUserId, setCurrentUserId] = useState(null);
+ const messagesContainerRef = useRef(null);
+
+
+useEffect(() => {
+  if (messagesContainerRef.current) {
+    messagesContainerRef.current.scrollTop = messagesContainerRef.current.scrollHeight;
+  }
+}, [messages]);
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -183,16 +191,19 @@ const renderLivePreview = (text) => {
         </h2>
       </header>
 
-      <div className="chat-messages">
-        {messages.map((msg) => (
-          <div
-            key={msg._id || msg.id}
-            className={`chat-message ${msg.sender._id === currentUserId ? "me" : "them"}`}
-          >
-            {renderMessageContent(msg.text)}
-          </div>
-        ))}
-      </div>
+    <div className="chat-messages" ref={messagesContainerRef}>
+  {messages.map((msg) => (
+    <div
+      key={msg._id || msg.id}
+      className={`chat-message ${msg.sender._id === currentUserId ? "me" : "them"}`}
+    >
+      {renderMessageContent(msg.text)}
+    </div>
+  ))}
+</div>
+
+
+
 
      <div className="chat-input-area">
   <div className="chat-input-wrapper">
