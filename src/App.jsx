@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import General from './components/MainPage/Page/General';
 import Header from './components/MainPage/Header/Header';
 import Home from './components/pages/PrivateProfile/Home/Home';
@@ -61,37 +62,43 @@ const App = () => {
     return <p>Loading...</p>;
   }
 
+  const queryClient = new QueryClient();
+
+
   return (
-    <Router>
-      <Routes>
-        <Route
-          path="/"
-          element={
-            isAuthenticated ? (
-              <Navigate to="/home" replace />
-            ) : (
-              <>
-                <Header />
-                <General />
-              </>
-            )
-          }
-        />
-        <Route path="/shared-cv/:shareLink" element={<SharedCVRevue />} />
-        <Route path="/settings-projects" element={isAuthenticated ? <SettingsProjects /> : <Navigate to="/" replace />} />
-        <Route path="/home" element={isAuthenticated ? (<><Navigation /><Home /><Portfolio /><Skills /><Resume /><Reviews /> <ChatPage /> </>) : (<Navigate to="/" replace />)} />
-        <Route path="/project" element={isAuthenticated ? (<><Navigation /><Project /></>) : (<Navigate to="/home" replace />)} />
-        <Route path="/ResumeSettings" element={isAuthenticated ? <ResumeSettings /> : <Navigate to="/" replace />} />
-        <Route path="/PublicProfileSettings" element={isAuthenticated ? <AccountSettings /> : <Navigate to="/" replace />} />
-        <Route path="/SkillsSettings" element={isAuthenticated ? <SkillsSettings /> : <Navigate to="/" replace />} />
-        <Route path="/CVModels" element={isAuthenticated ? <CVModels /> : <Navigate to="/" replace />} />
-        <Route path="/CVEdit" element={isAuthenticated ? <CVEdit /> : <Navigate to="/" replace />} />
-        <Route path="/GlobalSettings" element={isAuthenticated ? <GlobalSettings /> : <Navigate to="/" replace />} />
-        <Route path="/bookmarks" element={isAuthenticated ? (<><Navigation /><BookmarksPage /></>) : (<Navigate to="/home" replace />)} />
-        <Route path="/public-profile/:userId" element={isAuthenticated ? (<><Navigation /><PublicHome /> <PublicPortfolio /> <PublicSkills /> <PublicResume /> </>) : (<Navigate to="/" replace />)} />
-        <Route path="/chat/:chatId" element={isAuthenticated ? <ChatPage /> : <Navigate to="/" replace />} />
-      </Routes>
-    </Router>
+   <QueryClientProvider client={queryClient}>
+  <Router>
+    <Routes>
+      <Route
+        path="/"
+        element={
+          isAuthenticated ? (
+            <Navigate to="/home" replace />
+          ) : (
+            <>
+              <Header />
+              <General />
+            </>
+          )
+        }
+      />
+      <Route path="/shared-cv/:shareLink" element={<SharedCVRevue />} />
+      <Route path="/settings-projects" element={isAuthenticated ? <SettingsProjects /> : <Navigate to="/" replace />} />
+      <Route path="/home" element={isAuthenticated ? (<><Navigation /><Home /><Portfolio /><Skills /><Resume /><Reviews /> <ChatPage /> </>) : (<Navigate to="/" replace />)} />
+      <Route path="/project" element={isAuthenticated ? (<><Navigation /><Project /></>) : (<Navigate to="/home" replace />)} />
+      <Route path="/ResumeSettings" element={isAuthenticated ? <ResumeSettings /> : <Navigate to="/" replace />} />
+      <Route path="/PublicProfileSettings" element={isAuthenticated ? <AccountSettings /> : <Navigate to="/" replace />} />
+      <Route path="/SkillsSettings" element={isAuthenticated ? <SkillsSettings /> : <Navigate to="/" replace />} />
+      <Route path="/CVModels" element={isAuthenticated ? <CVModels /> : <Navigate to="/" replace />} />
+      <Route path="/CVEdit" element={isAuthenticated ? <CVEdit /> : <Navigate to="/" replace />} />
+      <Route path="/GlobalSettings" element={isAuthenticated ? <GlobalSettings /> : <Navigate to="/" replace />} />
+      <Route path="/bookmarks" element={isAuthenticated ? (<><Navigation /><BookmarksPage /></>) : (<Navigate to="/home" replace />)} />
+      <Route path="/public-profile/:userId" element={isAuthenticated ? (<><Navigation /><PublicHome /> <PublicPortfolio /> <PublicSkills /> <PublicResume /> </>) : (<Navigate to="/" replace />)} />
+      <Route path="/chat/:chatId" element={isAuthenticated ? <ChatPage /> : <Navigate to="/" replace />} />
+    </Routes>
+  </Router>
+</QueryClientProvider>
+
   );
 };
 

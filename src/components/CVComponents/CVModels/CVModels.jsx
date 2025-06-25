@@ -37,7 +37,6 @@ export default function CVModels() {
           const data = await response.json();
           setHasCV(data.hasCV);
           
-          // Якщо у користувача вже є CV, отримуємо посилання для поширення
           if (data.hasCV) {
             fetchShareLink();
           }
@@ -78,95 +77,95 @@ export default function CVModels() {
   };
 
   const handleSaveCV = async () => {
-    if (!selectedCV) {
-      toast.warn('Please select a CV template');
-      return;
-    }
+  if (!selectedCV) {
+    toast.warn('Please select a CV template');
+    return;
+  }
 
-    if (hasCV) {
-      toast.error('You already have a saved CV.');
-      return;
-    }
+  if (hasCV) {
+    toast.error('You already have a saved CV.');
+    return;
+  }
 
-    if (!userData) {
-      toast.error('User data is missing.');
-      return;
-    }
+  if (!userData) {
+    toast.error('User data is missing.');
+    return;
+  }
 
-    try {
-      const response = await fetch('/api/cv', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          templateId: selectedCV,
-          name: userData.name,
-          avatarUrl: userData.avatarUrl,
-          email: userData.email,
-          location: userData.location,
-        }),
-      });
+  try {
+    const response = await fetch('/api/cv', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        templateId: selectedCV,
+        name: userData.name,
+        avatarUrl: userData.avatarUrl,
+        email: userData.email,
+        location: userData.location,
+      }),
+    });
 
-      const data = await response.json();
-      if (response.ok) {
-        toast.success('CV saved successfully!');
-        setHasCV(true);
-        
-        // Встановлюємо посилання для поширення з відповіді сервера
-        if (data.shareableLink) {
-          const baseUrl = window.location.origin;
-          setShareLink(`${baseUrl}/shared-cv/${data.shareableLink}`);
-        }
-      } else {
-        toast.error(`Error: ${data.message}`);
+    const data = await response.json();
+    if (response.ok) {
+      toast.success('CV saved successfully!');
+      setHasCV(true); 
+
+      if (data.shareableLink) {
+        const baseUrl = window.location.origin;
+        setShareLink(`${baseUrl}/shared-cv/${data.shareableLink}`);
       }
-    } catch (error) {
-      console.error('Error saving CV:', error);
-      toast.error('Failed to save CV');
+    } else {
+      toast.error(`Error: ${data.message}`);
     }
-  };
+  } catch (error) {
+    console.error('Error saving CV:', error);
+    toast.error('Failed to save CV');
+  }
+};
 
-  const confirmDelete = async (toastId) => {
-    try {
-      const response = await fetch('/api/cv/delete', {
-        method: 'DELETE',
-        headers: { 'Content-Type': 'application/json' },
-      });
-  
-      const data = await response.json();
-      if (response.ok) {
-        toast.dismiss(toastId);
-        toast.success('CV deleted successfully!');
-        setHasCV(false);
-        setShareLink('');
-      } else {
-        toast.error(`Error: ${data.message}`);
-      }
-    } catch (error) {
-      console.error('Error deleting CV:', error);
-      toast.error('Failed to delete CV');
+
+const confirmDelete = async (toastId) => {
+  try {
+    const response = await fetch('/api/cv/delete', {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' },
+    });
+
+    const data = await response.json();
+    if (response.ok) {
+      toast.dismiss(toastId);
+      toast.success('CV deleted successfully!');
+      setHasCV(false);    
+      setShareLink('');
+      setSelectedCV(null); 
+    } else {
+      toast.error(`Error: ${data.message}`);
     }
-  };
+  } catch (error) {
+    console.error('Error deleting CV:', error);
+    toast.error('Failed to delete CV');
+  }
+};
+
 
   const handleDeleteCV = () => {
-    const toastId = toast.info(
-      <div>
-        <p>Are you sure you want to delete your CV?</p>
-        <button
-      onClick={() => {
-        confirmDelete(toastId);
-        setTimeout(() => {
-          window.location.reload();
-        }, 1000);
-      }}
-      className="btn-confirm"
-    >
-      Yes
-    </button>
-        <button onClick={() => toast.dismiss(toastId)} className="btn-cancel">No</button>
-      </div>,
-      { position: 'top-center', autoClose: false, closeOnClick: false }
-    );
-  };
+  const toastId = toast.info(
+    <div>
+      <p>Are you sure you want to delete your CV?</p>
+      <button
+        onClick={() => confirmDelete(toastId)}
+        className="btn-confirm"
+      >
+        Yes
+      </button>
+      <button onClick={() => toast.dismiss(toastId)} className="btn-cancel">
+        No
+      </button>
+    </div>,
+    { position: 'top-center', autoClose: false, closeOnClick: false }
+  );
+};
+
 
 
   const handleGoHome = () => {
@@ -176,7 +175,8 @@ export default function CVModels() {
   return (
 
     <div className="CV-Models">
-      <SettingsSidebar />
+   <SettingsSidebar hasCV={hasCV} />
+
       
 <div className="CV-Models-Content">
 
@@ -229,12 +229,8 @@ export default function CVModels() {
 
       {!hasCV && selectedCV && (
         <div className="CV-Models-Save">
-          <button onClick={() => {
-        handleSaveCV();
-        setTimeout(() => {
-          window.location.reload();
-        }, 1000);
-      }} >Continue</button>
+         <button onClick={() => handleSaveCV()}>Continue</button>
+
         </div>
       )}
 
