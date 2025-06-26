@@ -4,7 +4,7 @@
     box-sizing: border-box;
     font-family:  'Montserrat', sans-serif;
 }
-/* Загальні стилі */
+
 .account-settings {
     display: flex;
     width: 100%;
@@ -13,7 +13,7 @@
     color: #fff;
 }
 
-/* Контент */
+
 .settings-content {
     display: flex;
     flex: 1;

@@ -7,7 +7,7 @@ import { faTimes } from '@fortawesome/free-solid-svg-icons';
 export default function GlobalSettings() {
 
   const handleGoHome = () => {
-    window.location.href = '/home'; // Перенаправлення на сторінку home
+    window.location.href = '/home'; 
   };
   return (
     <div className='GlobalSettings'>

@@ -115,7 +115,6 @@ export default function CVEditContRefsSummary() {
 
         <div className="CVECRS-picture-wrapper">
           <div className="CVECRS-picture">
-            {/* Update img src to use the avatarUrl from state */}
             <img src={cvData.avatarUrl} alt="ProfileCVECRS" />
             <button className="CVECRS-btn-edit-photo">
               <FontAwesomeIcon icon={faPencil} /> Edit Photo

@@ -8,7 +8,7 @@ import 'react-toastify/dist/ReactToastify.css';
 
 export default function AccountSettings() {
   const [user, setUser] = useState(null);
-  const [selectedFile, setSelectedFile] = useState(null); // Додано useState
+  const [selectedFile, setSelectedFile] = useState(null); 
   const [formData, setFormData] = useState({
     name: '',
     bio: '',
@@ -131,7 +131,7 @@ export default function AccountSettings() {
   };
 
   const handleGoHome = () => {
-    window.location.href = '/home'; // Перенаправлення на сторінку home
+    window.location.href = '/home'; 
   };
 
   return (

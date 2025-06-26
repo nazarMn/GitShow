@@ -55,11 +55,11 @@
   }
   
   .branch-left .resume-dot {
-    left: -10px; /* З'єднання з центральною лінією */
+    left: -10px; 
   }
   
   .branch-right .resume-dot {
-    right: -10px; /* З'єднання з центральною лінією */
+    right: -10px;
   }
   
   .resume-card:hover .resume-dot {

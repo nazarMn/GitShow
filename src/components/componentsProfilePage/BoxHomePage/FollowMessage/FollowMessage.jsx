@@ -61,7 +61,6 @@ export default function FollowMessage({ user }) {
   const handleMessage = () => {
     if (!currentUserId || !user._id) return;
 
-    // Відсортуємо id, щоб URL був стабільним
     const sortedIds = [currentUserId, user._id].sort();
     navigate(`/chat/${sortedIds[0]}-${sortedIds[1]}`);
   };

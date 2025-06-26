@@ -32,7 +32,7 @@ export default function CVEdit() {
 
 
   const handleGoHome = () => {
-    window.location.href = '/home'; // Перенаправлення на сторінку home
+    window.location.href = '/home'; 
   };
   
   return (
