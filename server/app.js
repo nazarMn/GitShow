@@ -48,7 +48,7 @@ const corsOptions = {
   credentials: true, // Якщо ви використовуєте авторизацію або куки
 };
 
-app.use(cors(corsOptions));  // Використовуємо ці налаштування на сервері
+app.use(cors(corsOptions)); 
 
 passport.use(
   new GitHubStrategy(
@@ -77,7 +77,7 @@ passport.use(
             location: profile._json.location || '',
             bio: profile._json.bio || '',
             company: profile._json.company || '',
-            contributions, // Додаємо contributions
+            contributions,
             email: null
           });
           await user.save();
@@ -205,8 +205,8 @@ app.get('/api/user', async (req, res) => {
       twitter: user.twitter,
       profileUrl: user.profileUrl,
       email: user.email,
-      followers: user.followers,   // тут уже об'єкти з name, avatarUrl
-      following: user.following    // те саме
+      followers: user.followers,   
+      following: user.following    
     });
   } catch (error) {
     console.error('Error fetching user:', error);

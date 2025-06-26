@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useParams } from 'react-router-dom'; // <-- для отримання userId з URL
+import { useParams } from 'react-router-dom'; 
 
 import './PublicSkillsPage.css';
 import SkillCard from '../../../componentsProfilePage/BoxSkillsPage/SkillCard/SkillCard';
@@ -15,7 +15,7 @@ export default function PublicSkills() {
   useEffect(() => {
     const fetchSkills = async () => {
       try {
-        const response = await axios.get(`/api/user/${userId}/skills`); // <-- динамічний запит
+        const response = await axios.get(`/api/user/${userId}/skills`); 
         setSkills(Array.isArray(response.data) ? response.data : []);
       } catch (error) {
         console.error('Error fetching skills:', error);

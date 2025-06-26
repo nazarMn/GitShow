@@ -159,7 +159,7 @@ export default function SkillsSettings() {
 
 
   const handleGoHome = () => {
-    window.location.href = '/home'; // Перенаправлення на сторінку home
+    window.location.href = '/home'; 
   };
   
   return (

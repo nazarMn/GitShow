@@ -37,7 +37,6 @@
   border-radius: 5px;
 }
 
-/* Скидаємо стилі для посилань */
 .settings-sidebar nav ul a {
   text-decoration: none; 
   color: #fff;

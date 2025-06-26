@@ -34,7 +34,7 @@ export default function BookmarksPage() {
         {Array.isArray(bookmarkedProjects) && bookmarkedProjects.length > 0 ? (
           bookmarkedProjects.map((project) => (
             <ProjectCard
-              key={project._id} // Використовуємо `project._id` замість `index`
+              key={project._id} 
               title={project.title}
               description={project.description}
               imageUrl={project.imageUrl}

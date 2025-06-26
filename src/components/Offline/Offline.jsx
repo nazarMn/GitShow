@@ -8,7 +8,7 @@ const TicTacToe = () => {
   const [winner, setWinner] = useState(null);
   const [stats, setStats] = useState({ wins: 0, losses: 0, draws: 0 });
   const [error, setError] = useState("");
-  const [isGameOver, setIsGameOver] = useState(false); // Додано для перевірки завершення гри
+  const [isGameOver, setIsGameOver] = useState(false); 
 
   // Визначення онлайн-статусу
   useEffect(() => {
@@ -95,7 +95,7 @@ const TicTacToe = () => {
       setTimeout(() => {
         const bestMove = getBestMove(board);
         handleClick(bestMove);
-      }, 1000); // Затримка 1 секунда
+      }, 1000); 
     }
   };
 

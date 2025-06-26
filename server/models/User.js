@@ -10,7 +10,7 @@ const UserSchema = new mongoose.Schema({
   location: { type: String },
   bio: { type: String },
   company: { type: String },
-  email: { type: String }, // Додано email
+  email: { type: String }, 
   instagram: { type: String },
   twitter: { type: String },
   facebook: { type: String },

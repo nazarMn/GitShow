@@ -42,7 +42,7 @@
     justify-content: space-between;
   }
   .resume-card {
-    width: calc(50% - 10px); /* Два елементи в ряд, з відступом */
+    width: calc(50% - 10px);
     background-color: #202020;
     padding: 20px;
     border: 1px solid #303030;

@@ -47,7 +47,7 @@ export default function Project() {
             />
           ))
         ) : (
-          <p className="no-projects">No projects found</p> // Додаємо повідомлення, якщо немає проектів
+          <p className="no-projects">No projects found</p>
         )}
       </div>
     </div>
