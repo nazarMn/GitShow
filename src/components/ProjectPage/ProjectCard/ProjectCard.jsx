@@ -1,59 +1,26 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import './ProjectCard.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faGithub } from '@fortawesome/free-brands-svg-icons';
 import { faPaperclip, faStar as solidStar, faStar as regularStar } from '@fortawesome/free-solid-svg-icons';
+import { useBookmarks, useToggleBookmark } from '../../hooks/useBookmarks';
 
-export default function ProjectCard({ title, description, imageUrl, link, websiteUrl, userAvatar, userId  }) {
-  const [isSaved, setIsSaved] = useState(false);
+export default function ProjectCard({ title, description, imageUrl, link, websiteUrl, userAvatar, userId }) {
+  const { data: bookmarks = [] } = useBookmarks();
+  const toggleBookmark = useToggleBookmark();
 
-  useEffect(() => {
-    const fetchBookmarks = async () => {
-      try {
-        const response = await fetch('/api/bookmarks');
-        const bookmarks = await response.json();
-        setIsSaved(bookmarks.some(proj => proj.title === title));
-      } catch (error) {
-        console.error('Помилка при отриманні закладок:', error);
-      }
-    };
+  const isSaved = bookmarks.some((proj) => proj.title === title);
 
-    fetchBookmarks();
-  }, [title]);
-
-  const toggleSave = async () => {
-    try {
-      const project = { title, description, imageUrl, link, websiteUrl, userAvatar };
-
-      if (isSaved) {
-        await fetch('/api/bookmark', {
-          method: 'DELETE',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ title })
-        });
-      } else {
-        await fetch('/api/bookmark', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(project)
-        });
-      }
-
-      setIsSaved(!isSaved);
-    } catch (error) {
-      console.error('Помилка при оновленні закладок:', error);
-    }
+  const handleToggle = () => {
+    const project = { title, description, imageUrl, link, websiteUrl, userAvatar };
+    toggleBookmark.mutate({ project, isSaved });
   };
 
   const renderImage = () => {
-    if (imageUrl && imageUrl.trim()) {
-      return <img src={imageUrl} alt="Project Thumbnail" />;
-    }
-
-    const firstLetter = title ? title[0].toUpperCase() : 'P';
-    const letterCode = firstLetter.charCodeAt(0);
-    const color1 = `hsl(${(letterCode * 30) % 360}, 70%, 50%)`;
-    const color2 = `hsl(${(letterCode * 70) % 360}, 70%, 50%)`;
+    if (imageUrl?.trim()) return <img src={imageUrl} alt="Project Thumbnail" />;
+    const firstLetter = title?.[0]?.toUpperCase() || 'P';
+    const color1 = `hsl(${firstLetter.charCodeAt(0) * 30 % 360}, 70%, 50%)`;
+    const color2 = `hsl(${firstLetter.charCodeAt(0) * 70 % 360}, 70%, 50%)`;
 
     return (
       <div className="defaultImage" style={{ background: `linear-gradient(135deg, ${color1}, ${color2})` }}>
@@ -61,11 +28,6 @@ export default function ProjectCard({ title, description, imageUrl, link, websit
       </div>
     );
   };
-
-  const handleUserClick = (userId) => {
-    window.location.href = `/public-profile/${userId}`;
-  };
-  
 
   return (
     <div className="projectCard">
@@ -76,10 +38,9 @@ export default function ProjectCard({ title, description, imageUrl, link, websit
       </div>
       <div className="cardIcons">
         <div className="cardIconsLeft">
-        <div className="userAvatar" onClick={() => handleUserClick(userId)} style={{ cursor: 'pointer' }}>
-  <img src={userAvatar || './img/account.png'} alt="User Avatar" className="avatar" />
-</div>
-
+          <div className="userAvatar" onClick={() => window.location.href = `/public-profile/${userId}`} style={{ cursor: 'pointer' }}>
+            <img src={userAvatar || './img/account.png'} alt="User Avatar" className="avatar" />
+          </div>
         </div>
         <div className="cardIconsRight">
           <a href={link} className="githubIcon" target="_blank" rel="noopener noreferrer">
@@ -90,7 +51,7 @@ export default function ProjectCard({ title, description, imageUrl, link, websit
               <FontAwesomeIcon icon={faPaperclip} size="2x" color="#fff" />
             </a>
           )}
-          <span className={`saveIcon ${isSaved ? 'starred' : ''}`} onClick={toggleSave}>
+          <span className={`saveIcon ${isSaved ? 'starred' : ''}`} onClick={handleToggle}>
             <FontAwesomeIcon icon={isSaved ? solidStar : regularStar} size="2x" color={isSaved ? 'gold' : 'white'} />
           </span>
         </div>

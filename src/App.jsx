@@ -62,10 +62,11 @@ const App = () => {
     return <p>Loading...</p>;
   }
 
-  const queryClient = new QueryClient();
+ const queryClient = new QueryClient();
 
 
   return (
+    <React.StrictMode>
    <QueryClientProvider client={queryClient}>
   <Router>
     <Routes>
@@ -98,6 +99,7 @@ const App = () => {
     </Routes>
   </Router>
 </QueryClientProvider>
+</React.StrictMode>
 
   );
 };
