@@ -22,62 +22,76 @@ export default function ChatPage() {
   const messagesContainerRef = useRef(null);
   const navigate = useNavigate();
 
+  // Скрол вниз при нових повідомленнях
   useEffect(() => {
     if (messagesContainerRef.current) {
       messagesContainerRef.current.scrollTop = messagesContainerRef.current.scrollHeight;
     }
   }, [messages]);
 
-  // Завантажуємо дані про співрозмовника і поточного користувача
+  // Завантажити інфо про співрозмовника і currentUserId
   useEffect(() => {
-    const fetchUsers = async () => {
+    async function fetchUsers() {
       try {
         const currentRes = await fetch("/api/current-user");
         const currentData = await currentRes.json();
-        setCurrentUserId(String(currentData.id || currentData._id));
+        setCurrentUserId(currentData.id);
 
         const [id1, id2] = chatId.split("-");
         const otherUserId = id1 === currentData.id ? id2 : id1;
         const userRes = await fetch(`/api/user/${otherUserId}`);
         const userData = await userRes.json();
         setChatUser(userData);
-      } catch (error) {
-        console.error("Error fetching chat user:", error);
+      } catch (err) {
+        console.error(err);
       }
-    };
+    }
     fetchUsers();
   }, [chatId]);
 
-  // Завантажуємо історію повідомлень з API і кешуємо
+  // Спочатку завантажуємо повідомлення з сервера
   useEffect(() => {
-    const fetchMessages = async () => {
+    async function fetchMessages() {
       try {
         const res = await fetch(`/api/messages/${chatId}`);
+        if (!res.ok) {
+          const text = await res.text();
+          console.error("Error loading messages:", text);
+          return;
+        }
         const data = await res.json();
-        setMessages(data);
-        saveMessages(chatId, data);
+        if (Array.isArray(data)) {
+          setMessages(data);
+          saveMessages(chatId, data);
+        } else {
+          console.warn("Messages data is not an array", data);
+        }
       } catch (err) {
         console.error("Error loading messages:", err);
       }
-    };
+    }
     fetchMessages();
   }, [chatId]);
 
-  // Завантажуємо повідомлення з IndexedDB для офлайн
+  // Завантажити кешовані повідомлення на випадок офлайн
   useEffect(() => {
-    const load = async () => {
+    async function loadCache() {
       const msgs = await loadMessages(chatId);
-      if (msgs && msgs.length) setMessages(msgs);
-    };
-    load();
+      if (msgs && msgs.length > 0) {
+        setMessages(msgs);
+      }
+    }
+    loadCache();
   }, [chatId]);
 
-  // Підписка на отримання повідомлень через сокети
+  // Слухаємо вхідні повідомлення по Socket.IO
   useEffect(() => {
     socket.emit("joinRoom", chatId);
 
     socket.on("receiveMessage", (message) => {
       setMessages((prev) => {
+        // Унікальні повідомлення, щоб не дублювати
+        if (prev.find((m) => m._id === message._id)) return prev;
         const updated = [...prev, message];
         saveMessages(chatId, updated);
         return updated;
@@ -90,41 +104,30 @@ export default function ChatPage() {
     };
   }, [chatId]);
 
-  const sendMessage = async () => {
-    if (!newMessage.trim()) return;
+  // Відправка повідомлення
+const sendMessage = async () => {
+  if (!newMessage.trim()) return;
 
-    const messageObj = {
-      chatId,
-      text: newMessage,
-    };
+  try {
+    const res = await fetch("/api/messages", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ chatId, text: newMessage }),
+    });
 
-    try {
-      // Надсилаємо через API, щоб сервер зберіг
-      const res = await fetch("/api/messages", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(messageObj),
-      });
-      const savedMessage = await res.json();
-
-      // Додаємо локально
-      setMessages((prev) => {
-        const updated = [...prev, savedMessage];
-        saveMessages(chatId, updated);
-        return updated;
-      });
-
-      // Відправляємо через Socket.IO іншим в кімнаті
-      socket.emit("sendMessage", {
-        chatId,
-        message: savedMessage,
-      });
-
-      setNewMessage("");
-    } catch (err) {
-      console.error("Failed to send message:", err);
+    if (!res.ok) {
+      const text = await res.text();
+      console.error("Error sending message:", text);
+      return;
     }
-  };
+
+    setNewMessage(""); // очищаємо поле вводу, але НЕ додаємо повідомлення вручну
+
+  } catch (err) {
+    console.error("Failed to send message:", err);
+  }
+};
+
 
   const handleEmojiSelect = (emoji) => {
     setNewMessage((prev) => prev + emoji.native);
@@ -196,16 +199,23 @@ export default function ChatPage() {
       </header>
 
       <div className="chat-messages" ref={messagesContainerRef}>
-        {messages.map((msg) => {
-          const senderId = typeof msg.sender === "string" ? msg.sender : msg.sender?._id;
-          const isMine = senderId === currentUserId;
+        {Array.isArray(messages) ? (
+          messages.map((msg) => {
+            const senderId = typeof msg.sender === 'string' ? msg.sender : msg.sender?._id;
+            const isMine = senderId === currentUserId;
 
-          return (
-            <div key={msg._id || msg.id} className={`chat-message ${isMine ? "me" : "them"}`}>
-              {renderMessageContent(msg.text)}
-            </div>
-          );
-        })}
+            return (
+              <div
+                key={msg._id || msg.id}
+                className={`chat-message ${isMine ? "me" : "them"}`}
+              >
+                {renderMessageContent(msg.text)}
+              </div>
+            );
+          })
+        ) : (
+          <p>Loading messages...</p>
+        )}
       </div>
 
       <div className="chat-input-area">
@@ -240,7 +250,9 @@ export default function ChatPage() {
         </button>
       </div>
 
-      {showEmojiPicker && <EmojiPicker onClose={() => setShowEmojiPicker(false)} onEmojiSelect={handleEmojiSelect} />}
+      {showEmojiPicker && (
+        <EmojiPicker onClose={() => setShowEmojiPicker(false)} onEmojiSelect={handleEmojiSelect} />
+      )}
     </div>
   );
 }

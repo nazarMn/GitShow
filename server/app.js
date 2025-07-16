@@ -991,9 +991,8 @@ app.post('/api/unfollow/:userId', async (req, res) => {
 });
 
 // app.js
-// app.js (або твій основний серверний файл)
-const Message = require('./models/Message');
 const chatRoutes = require('./routes/chatRoutes');
+const Message = require('./models/Message');
 
 app.use('/api/messages', chatRoutes);
 
@@ -1010,10 +1009,11 @@ io.on("connection", (socket) => {
     console.log(`Socket ${socket.id} left room ${chatId}`);
   });
 
+  // Приймаємо повідомлення і зберігаємо в БД
   socket.on("sendMessage", async ({ chatId, message }) => {
     try {
-      if (!message.sender || !message.sender._id) {
-        console.warn("Invalid sender in message:", message.sender);
+      if (!message.sender?._id || !message.text) {
+        console.warn("Invalid message data:", message);
         return;
       }
 
@@ -1021,16 +1021,19 @@ io.on("connection", (socket) => {
         chatId,
         sender: message.sender._id,
         text: message.text,
-        createdAt: message.createdAt,
+        createdAt: message.createdAt || Date.now(),
       });
 
       await newMessage.save();
 
-      const populatedMessage = await Message.findById(newMessage._id).populate('sender', 'username avatarUrl');
+      const populatedMessage = await Message.findById(newMessage._id)
+        .populate('sender', 'username avatarUrl');
 
+      // Відправляємо ВСІМ у кімнаті (включно з тим, хто відправив)
       io.to(chatId).emit("receiveMessage", populatedMessage);
+
     } catch (err) {
-      console.error("Error saving message:", err);
+      console.error("Error in socket sendMessage:", err);
     }
   });
 
@@ -1038,7 +1041,6 @@ io.on("connection", (socket) => {
     console.log("User disconnected:", socket.id);
   });
 });
-
 
 
 // Error handling middleware

@@ -3,39 +3,52 @@ const express = require('express');
 const router = express.Router();
 const Message = require('../models/Message');
 
-// Middleware авторизації (підлаштуй під свій механізм)
+// Проста перевірка авторизації (підміни на свою)
 const requireAuth = (req, res, next) => {
-  if (req.isAuthenticated()) return next();
+  if (req.isAuthenticated && req.isAuthenticated()) return next();
   res.status(401).json({ message: 'Unauthorized' });
 };
 
-// Отримати всі повідомлення для chatId (з populated sender)
+// Отримати всі повідомлення чату
 router.get('/:chatId', requireAuth, async (req, res) => {
   try {
     const messages = await Message.find({ chatId: req.params.chatId })
       .populate('sender', 'username avatarUrl')
-      .sort({ createdAt: 1 }); // за датою
+      .sort({ createdAt: 1 });
+
     res.json(messages);
   } catch (err) {
+    console.error("Error getting messages:", err);
     res.status(500).json({ message: 'Error getting messages' });
   }
 });
 
-// Надіслати повідомлення через API (можна через Socket.IO, це для надійності)
+// Відправити повідомлення
 router.post('/', requireAuth, async (req, res) => {
   const { chatId, text } = req.body;
-  if (!chatId || !text) return res.status(400).json({ message: 'Missing data' });
+  if (!chatId || !text) {
+    return res.status(400).json({ message: 'Missing chatId or text' });
+  }
+  if (!req.user || !req.user.id) {
+    return res.status(401).json({ message: 'User not authenticated' });
+  }
 
   try {
     const message = new Message({
       chatId,
-      sender: req.user._id, // ID залогіненого користувача
-      text
+      sender: req.user.id,
+      text,
     });
+
     await message.save();
-    const populatedMsg = await message.populate('sender', 'username avatarUrl').execPopulate();
-    res.json(populatedMsg);
+
+    // Повертаємо з populated sender
+    const populatedMessage = await Message.findById(message._id)
+      .populate('sender', 'username avatarUrl');
+
+    res.json(populatedMessage);
   } catch (err) {
+    console.error("Error sending message:", err);
     res.status(500).json({ message: 'Error sending message' });
   }
 });
