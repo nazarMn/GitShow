@@ -991,9 +991,11 @@ app.post('/api/unfollow/:userId', async (req, res) => {
 });
 
 // app.js
+// app.js (або твій основний серверний файл)
+const Message = require('./models/Message');
 const chatRoutes = require('./routes/chatRoutes');
-app.use('/api/messages', chatRoutes);
 
+app.use('/api/messages', chatRoutes);
 
 io.on("connection", (socket) => {
   console.log("User connected:", socket.id);
@@ -1008,15 +1010,35 @@ io.on("connection", (socket) => {
     console.log(`Socket ${socket.id} left room ${chatId}`);
   });
 
-  socket.on("sendMessage", ({ chatId, message }) => {
-    // Відправляємо іншим у кімнаті
-    socket.to(chatId).emit("receiveMessage", message);
+  socket.on("sendMessage", async ({ chatId, message }) => {
+    try {
+      if (!message.sender || !message.sender._id) {
+        console.warn("Invalid sender in message:", message.sender);
+        return;
+      }
+
+      const newMessage = new Message({
+        chatId,
+        sender: message.sender._id,
+        text: message.text,
+        createdAt: message.createdAt,
+      });
+
+      await newMessage.save();
+
+      const populatedMessage = await Message.findById(newMessage._id).populate('sender', 'username avatarUrl');
+
+      io.to(chatId).emit("receiveMessage", populatedMessage);
+    } catch (err) {
+      console.error("Error saving message:", err);
+    }
   });
 
   socket.on("disconnect", () => {
     console.log("User disconnected:", socket.id);
   });
 });
+
 
 
 // Error handling middleware
