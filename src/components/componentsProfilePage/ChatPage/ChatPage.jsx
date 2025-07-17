@@ -3,6 +3,8 @@ import { useParams, useNavigate } from "react-router-dom";
 import { io } from "socket.io-client";
 import EmojiPicker from "./EmojiPicker";
 import { saveMessages, loadMessages } from "./indexedDB.js";
+import CryptoJS from "crypto-js";
+import LZString from "lz-string";
 import "./ChatPage.css";
 
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
@@ -10,7 +12,25 @@ import { oneDark } from "react-syntax-highlighter/dist/esm/styles/prism";
 import hljs from "highlight.js";
 import "highlight.js/styles/github.css";
 
+const SECRET_KEY = "super-secret-key"; 
 const socket = io("http://localhost:3000");
+
+const encryptAndCompress = (text) => {
+  const compressed = LZString.compressToBase64(text);
+  return CryptoJS.AES.encrypt(compressed, SECRET_KEY).toString();
+};
+
+
+const decryptAndDecompress = (encrypted) => {
+  try {
+    const decrypted = CryptoJS.AES.decrypt(encrypted, SECRET_KEY).toString(CryptoJS.enc.Utf8);
+    return LZString.decompressFromBase64(decrypted);
+  } catch (err) {
+    console.error("Failed to decrypt/decompress:", err);
+    return "[Error decrypting message]";
+  }
+};
+
 
 export default function ChatPage() {
   const { chatId } = useParams();
@@ -53,10 +73,12 @@ export default function ChatPage() {
         const res = await fetch(`/api/messages/${chatId}`);
         if (!res.ok) return;
         const data = await res.json();
-        if (Array.isArray(data)) {
-          setMessages(data);
-          saveMessages(chatId, data);
-        }
+        const decrypted = data.map(msg => ({
+          ...msg,
+          text: decryptAndDecompress(msg.text),
+        }));
+        setMessages(decrypted);
+        saveMessages(chatId, decrypted);
       } catch (err) {
         console.error("Error loading messages:", err);
       }
@@ -67,21 +89,22 @@ export default function ChatPage() {
   useEffect(() => {
     async function loadCache() {
       const msgs = await loadMessages(chatId);
-      if (msgs && msgs.length > 0) {
-        setMessages(msgs);
-      }
+      if (msgs?.length) setMessages(msgs);
     }
     loadCache();
   }, [chatId]);
 
-  // Socket setup
   useEffect(() => {
     socket.emit("joinRoom", chatId);
 
     socket.on("receiveMessage", (message) => {
+      const decrypted = {
+        ...message,
+        text: decryptAndDecompress(message.text),
+      };
       setMessages((prev) => {
         if (prev.find((m) => m._id === message._id)) return prev;
-        const updated = [...prev, message];
+        const updated = [...prev, decrypted];
         saveMessages(chatId, updated);
         return updated;
       });
@@ -95,13 +118,12 @@ export default function ChatPage() {
 
   const sendMessage = () => {
     if (!newMessage.trim()) return;
-
+    const encryptedText = encryptAndCompress(newMessage);
     socket.emit("sendMessage", {
       chatId,
-      text: newMessage,
+      text: encryptedText,
       senderId: currentUserId,
     });
-
     setNewMessage("");
   };
 
@@ -118,13 +140,11 @@ export default function ChatPage() {
     while ((match = regex.exec(text)) !== null) {
       const [fullMatch, langHint, code] = match;
       const start = match.index;
-
       if (start > lastIndex) {
         parts.push(<p key={lastIndex}>{text.slice(lastIndex, start)}</p>);
       }
 
       const lang = langHint || hljs.highlightAuto(code).language || "text";
-
       parts.push(
         <div className="code-block" key={start} style={{ position: "relative" }}>
           <div style={{ fontSize: "12px", color: "#aaa", marginBottom: "4px" }}>
@@ -191,12 +211,7 @@ export default function ChatPage() {
       <div className="chat-input-area">
         <div className="chat-input-wrapper">
           <div className="chat-icons" style={{ position: "relative" }}>
-            <button
-              title="Emoji"
-              type="button"
-              onClick={() => setShowEmojiPicker((v) => !v)}
-              style={{ fontSize: "28px", cursor: "pointer" }}
-            >
+            <button title="Emoji" type="button" onClick={() => setShowEmojiPicker(v => !v)} style={{ fontSize: "28px" }}>
               😊
             </button>
           </div>

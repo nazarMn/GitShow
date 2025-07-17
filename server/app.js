@@ -996,25 +996,36 @@ const Message = require('./models/Message');
 
 app.use('/api/messages', chatRoutes);
 
+const CryptoJS = require("crypto-js");
+const LZString = require("lz-string");
+const SECRET_KEY = process.env.SECRET_KEY || "super-secret-key";
+
+const encryptAndCompress = (text) => {
+  const compressed = LZString.compressToBase64(text); // правильна версія
+  return CryptoJS.AES.encrypt(compressed, SECRET_KEY).toString();
+};
+
+
 io.on("connection", (socket) => {
   console.log("User connected:", socket.id);
 
   socket.on("joinRoom", (chatId) => {
     socket.join(chatId);
-    console.log(`Socket ${socket.id} joined room ${chatId}`);
   });
 
   socket.on("leaveRoom", (chatId) => {
     socket.leave(chatId);
-    console.log(`Socket ${socket.id} left room ${chatId}`);
   });
 
   socket.on("sendMessage", async ({ chatId, text, senderId }) => {
     try {
+      // Якщо клієнт вже шифрує, цей рядок НЕ потрібен:
+      // const encryptedText = encryptAndCompress(text);
+
       const newMessage = new Message({
         chatId,
         sender: senderId,
-        text,
+        text, // вже зашифроване
         createdAt: Date.now(),
       });
 
