@@ -1001,7 +1001,7 @@ const LZString = require("lz-string");
 const SECRET_KEY = process.env.SECRET_KEY || "super-secret-key";
 
 const encryptAndCompress = (text) => {
-  const compressed = LZString.compressToBase64(text); // правильна версія
+  const compressed = LZString.compressToBase64(text);
   return CryptoJS.AES.encrypt(compressed, SECRET_KEY).toString();
 };
 
