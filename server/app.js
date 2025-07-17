@@ -1025,7 +1025,7 @@ io.on("connection", (socket) => {
       const newMessage = new Message({
         chatId,
         sender: senderId,
-        text, // вже зашифроване
+        text,
         createdAt: Date.now(),
       });
 
