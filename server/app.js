@@ -1009,31 +1009,23 @@ io.on("connection", (socket) => {
     console.log(`Socket ${socket.id} left room ${chatId}`);
   });
 
-  // Приймаємо повідомлення і зберігаємо в БД
-  socket.on("sendMessage", async ({ chatId, message }) => {
+  socket.on("sendMessage", async ({ chatId, text, senderId }) => {
     try {
-      if (!message.sender?._id || !message.text) {
-        console.warn("Invalid message data:", message);
-        return;
-      }
-
       const newMessage = new Message({
         chatId,
-        sender: message.sender._id,
-        text: message.text,
-        createdAt: message.createdAt || Date.now(),
+        sender: senderId,
+        text,
+        createdAt: Date.now(),
       });
 
       await newMessage.save();
 
       const populatedMessage = await Message.findById(newMessage._id)
-        .populate('sender', 'username avatarUrl');
+        .populate("sender", "username avatarUrl");
 
-      // Відправляємо ВСІМ у кімнаті (включно з тим, хто відправив)
       io.to(chatId).emit("receiveMessage", populatedMessage);
-
     } catch (err) {
-      console.error("Error in socket sendMessage:", err);
+      console.error("Error sending message:", err);
     }
   });
 
@@ -1041,6 +1033,10 @@ io.on("connection", (socket) => {
     console.log("User disconnected:", socket.id);
   });
 });
+
+module.exports = { io, server };
+
+
 
 
 // Error handling middleware

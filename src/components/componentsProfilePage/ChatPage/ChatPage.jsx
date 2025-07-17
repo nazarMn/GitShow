@@ -22,14 +22,12 @@ export default function ChatPage() {
   const messagesContainerRef = useRef(null);
   const navigate = useNavigate();
 
-  // Скрол вниз при нових повідомленнях
   useEffect(() => {
     if (messagesContainerRef.current) {
       messagesContainerRef.current.scrollTop = messagesContainerRef.current.scrollHeight;
     }
   }, [messages]);
 
-  // Завантажити інфо про співрозмовника і currentUserId
   useEffect(() => {
     async function fetchUsers() {
       try {
@@ -49,22 +47,15 @@ export default function ChatPage() {
     fetchUsers();
   }, [chatId]);
 
-  // Спочатку завантажуємо повідомлення з сервера
   useEffect(() => {
     async function fetchMessages() {
       try {
         const res = await fetch(`/api/messages/${chatId}`);
-        if (!res.ok) {
-          const text = await res.text();
-          console.error("Error loading messages:", text);
-          return;
-        }
+        if (!res.ok) return;
         const data = await res.json();
         if (Array.isArray(data)) {
           setMessages(data);
           saveMessages(chatId, data);
-        } else {
-          console.warn("Messages data is not an array", data);
         }
       } catch (err) {
         console.error("Error loading messages:", err);
@@ -73,7 +64,6 @@ export default function ChatPage() {
     fetchMessages();
   }, [chatId]);
 
-  // Завантажити кешовані повідомлення на випадок офлайн
   useEffect(() => {
     async function loadCache() {
       const msgs = await loadMessages(chatId);
@@ -84,13 +74,12 @@ export default function ChatPage() {
     loadCache();
   }, [chatId]);
 
-  // Слухаємо вхідні повідомлення по Socket.IO
+  // Socket setup
   useEffect(() => {
     socket.emit("joinRoom", chatId);
 
     socket.on("receiveMessage", (message) => {
       setMessages((prev) => {
-        // Унікальні повідомлення, щоб не дублювати
         if (prev.find((m) => m._id === message._id)) return prev;
         const updated = [...prev, message];
         saveMessages(chatId, updated);
@@ -104,30 +93,17 @@ export default function ChatPage() {
     };
   }, [chatId]);
 
-  // Відправка повідомлення
-const sendMessage = async () => {
-  if (!newMessage.trim()) return;
+  const sendMessage = () => {
+    if (!newMessage.trim()) return;
 
-  try {
-    const res = await fetch("/api/messages", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ chatId, text: newMessage }),
+    socket.emit("sendMessage", {
+      chatId,
+      text: newMessage,
+      senderId: currentUserId,
     });
 
-    if (!res.ok) {
-      const text = await res.text();
-      console.error("Error sending message:", text);
-      return;
-    }
-
-    setNewMessage(""); // очищаємо поле вводу, але НЕ додаємо повідомлення вручну
-
-  } catch (err) {
-    console.error("Failed to send message:", err);
-  }
-};
-
+    setNewMessage("");
+  };
 
   const handleEmojiSelect = (emoji) => {
     setNewMessage((prev) => prev + emoji.native);
@@ -191,9 +167,7 @@ const sendMessage = async () => {
   return (
     <div className="chat-container dark" style={{ position: "relative" }}>
       <header className="chat-header">
-        <button className="back-button" onClick={() => navigate(-1)} title="Назад">
-          ⬅
-        </button>
+        <button className="back-button" onClick={() => navigate(-1)} title="Назад">⬅</button>
         <img src={chatUser?.avatarUrl || "/img/account.png"} alt="Avatar" className="chat-avatar" />
         <h2 className="chat-title">Chat with {chatUser?.username || "User"}</h2>
       </header>
@@ -203,12 +177,8 @@ const sendMessage = async () => {
           messages.map((msg) => {
             const senderId = typeof msg.sender === 'string' ? msg.sender : msg.sender?._id;
             const isMine = senderId === currentUserId;
-
             return (
-              <div
-                key={msg._id || msg.id}
-                className={`chat-message ${isMine ? "me" : "them"}`}
-              >
+              <div key={msg._id || msg.id} className={`chat-message ${isMine ? "me" : "them"}`}>
                 {renderMessageContent(msg.text)}
               </div>
             );
@@ -245,9 +215,7 @@ const sendMessage = async () => {
             rows={2}
           />
         </div>
-        <button className="chat-send-button" onClick={sendMessage}>
-          📤
-        </button>
+        <button className="chat-send-button" onClick={sendMessage}>📤</button>
       </div>
 
       {showEmojiPicker && (
