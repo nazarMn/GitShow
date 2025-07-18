@@ -1,10 +1,9 @@
-// routes/chatRoutes.js
 const express = require('express');
 const router = express.Router();
 const Message = require('../models/Message');
 const ReadStatus = require('../models/ReadStatus');
 
-// Проста перевірка авторизації (підміни на свою)
+// Перевірка авторизації 
 const requireAuth = (req, res, next) => {
   if (req.isAuthenticated && req.isAuthenticated()) return next();
   res.status(401).json({ message: 'Unauthorized' });

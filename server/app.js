@@ -1019,8 +1019,6 @@ io.on("connection", (socket) => {
 
   socket.on("sendMessage", async ({ chatId, text, senderId }) => {
     try {
-      // Якщо клієнт вже шифрує, цей рядок НЕ потрібен:
-      // const encryptedText = encryptAndCompress(text);
 
       const newMessage = new Message({
         chatId,
