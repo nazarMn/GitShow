@@ -2,12 +2,54 @@
 const express = require('express');
 const router = express.Router();
 const Message = require('../models/Message');
+const ReadStatus = require('../models/ReadStatus');
 
 // Проста перевірка авторизації (підміни на свою)
 const requireAuth = (req, res, next) => {
   if (req.isAuthenticated && req.isAuthenticated()) return next();
   res.status(401).json({ message: 'Unauthorized' });
 };
+
+router.get('/unread-count/:chatId', requireAuth, async (req, res) => {
+  try {
+    const { chatId } = req.params;
+    const userId = req.user.id;
+
+    const readStatus = await ReadStatus.findOne({ chatId, userId });
+    const lastReadAt = readStatus ? readStatus.lastReadAt : new Date(0);
+
+    const unreadCount = await Message.countDocuments({
+      chatId,
+      createdAt: { $gt: lastReadAt },
+      sender: { $ne: userId }
+    });
+
+    res.json({ unreadCount });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Error fetching unread count' });
+  }
+});
+
+router.post('/read', requireAuth, async (req, res) => {
+  try {
+    const { chatId } = req.body;
+    const userId = req.user.id;
+    const now = new Date();
+
+    await ReadStatus.findOneAndUpdate(
+      { chatId, userId },
+      { lastReadAt: now },
+      { upsert: true, new: true }
+    );
+
+    res.json({ message: 'Read status updated' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Error updating read status' });
+  }
+});
+
 
 // Отримати всі повідомлення чату
 router.get('/:chatId', requireAuth, async (req, res) => {
