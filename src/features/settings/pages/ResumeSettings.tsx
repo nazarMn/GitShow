@@ -4,8 +4,9 @@ import type { ExperienceResponse } from '@/shared/types/api';
 import { readJson } from '@/shared/lib/http';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus, faEdit, faTrash, faTimes ,faUser, faFileLines, faBrain } from '@fortawesome/free-solid-svg-icons';
+import { useNavigate } from 'react-router-dom';
 import SettingsSidebar from "@/features/settings/components/SettingsSidebar";
-import { ToastContainer, toast, type Id } from 'react-toastify';
+import { toast, type Id } from 'react-toastify';
 import { tw } from '@/shared/lib/tailwind';
 
 
@@ -210,8 +211,10 @@ export default function ResumeSettings() {
     fetchUserData();
   }, []);
 
+  const navigate = useNavigate();
+
   const handleGoHome = () => {
-    window.location.href = '/home';
+    navigate('/home');
   };
 
   return (
@@ -294,7 +297,6 @@ export default function ResumeSettings() {
             </button>
           ))}
         </div>
-        <ToastContainer />
         <FontAwesomeIcon icon={faTimes} className={tw("btn-go-home")} onClick={handleGoHome} />
       </div>
     </div>

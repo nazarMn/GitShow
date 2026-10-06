@@ -2,13 +2,14 @@ import React from 'react'
 import SettingsSidebar from "@/features/settings/components/SettingsSidebar"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
+import { useNavigate } from 'react-router-dom';
 import { tw } from '@/shared/lib/tailwind';
 
-
 export default function GlobalSettings() {
+  const navigate = useNavigate();
 
   const handleGoHome = () => {
-    window.location.href = '/home';
+    navigate('/home');
   };
   return (
     <div className={tw("GlobalSettings")}>

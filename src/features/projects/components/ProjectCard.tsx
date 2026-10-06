@@ -17,6 +17,8 @@ import type { BookmarkProject } from "@/shared/hooks/useBookmarks";
 import { tw } from '@/shared/lib/tailwind';
 
 
+import { Link } from 'react-router-dom';
+
 export default function ProjectCard({ title, description, imageUrl, link, websiteUrl, userAvatar, userId }: ProjectCardProps) {
   const { data: bookmarks = [] } = useBookmarks();
   const toggleBookmark = useToggleBookmark();
@@ -50,20 +52,38 @@ export default function ProjectCard({ title, description, imageUrl, link, websit
       </div>
       <div className={tw("cardIcons")}>
         <div className={tw("cardIconsLeft")}>
-          <div className={tw("userAvatar cursor-pointer")} onClick={() => window.location.href = `/public-profile/${userId}`} >
-            <img src={userAvatar || './img/account.png'} alt="User Avatar" className={tw("avatar")} />
-          </div>
+          {userId ? (
+            <Link to={`/public-profile/${userId}`} className={tw("userAvatar")} aria-label="View creator profile">
+              <img
+                src={userAvatar || '/img/account.svg'}
+                alt="User Avatar"
+                className={tw("avatar")}
+                onError={(e) => { (e.currentTarget as HTMLImageElement).src = '/img/account.svg'; }}
+              />
+            </Link>
+          ) : (
+            <div className={tw("userAvatar")}>
+              <img src="/img/account.svg" alt="User Avatar" className={tw("avatar")} />
+            </div>
+          )}
         </div>
         <div className={tw("cardIconsRight")}>
-          <a href={link} className={tw("githubIcon")} target="_blank" rel="noopener noreferrer">
+          <a href={link} className={tw("githubIcon")} target="_blank" rel="noopener noreferrer" aria-label="GitHub Repository">
             <FontAwesomeIcon icon={faGithub} size="2x" color="#fff" />
           </a>
           {websiteUrl && (
-            <a href={websiteUrl} className={tw("websiteIcon")} target="_blank" rel="noopener noreferrer">
+            <a href={websiteUrl} className={tw("websiteIcon")} target="_blank" rel="noopener noreferrer" aria-label="Project Website">
               <FontAwesomeIcon icon={faPaperclip} size="2x" color="#fff" />
             </a>
           )}
-          <span className={tw(`saveIcon ${isSaved ? 'starred' : ''}`)} onClick={handleToggle}>
+          <span
+            className={tw(`saveIcon ${isSaved ? 'starred' : ''}`)}
+            onClick={handleToggle}
+            role="button"
+            aria-label={isSaved ? "Remove from bookmarks" : "Save to bookmarks"}
+            tabIndex={0}
+            onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') handleToggle(); }}
+          >
             <FontAwesomeIcon icon={isSaved ? solidStar : regularStar} size="2x" color={isSaved ? 'gold' : 'white'} />
           </span>
         </div>

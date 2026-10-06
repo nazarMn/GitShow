@@ -2,6 +2,7 @@ const utilityClasses = require('./src/shared/lib/tailwindClasses.json');
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {
+  darkMode: ['selector', '[data-theme="dark"]'],
   content: ['./index.html', './src/**/*.{ts,tsx}'],
   safelist: [...new Set(Object.values(utilityClasses).flatMap((value) => value.split(/\s+/)))],
   corePlugins: { preflight: false },

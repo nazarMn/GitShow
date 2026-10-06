@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import type { CVRecord } from '@/shared/types/domain';
 import { tw } from '@/shared/lib/tailwind';
 
@@ -176,7 +176,6 @@ export default function CVEditEduSkills() {
           </form>
         </div>
       </div>
-      <ToastContainer />
     </div>
   );
 }

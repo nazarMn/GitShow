@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPencil } from '@fortawesome/free-solid-svg-icons';
 import type { CVRecord } from '@/shared/types/domain';
@@ -143,8 +143,6 @@ export default function CVEditContRefsSummary() {
           </div>
         </div>
       </div>
-
-      <ToastContainer />
     </div>
   );
 }

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import type { CVExperience, CVRecord } from '@/shared/types/domain';
 import { tw } from '@/shared/lib/tailwind';
 
@@ -184,7 +184,6 @@ export default function CVEditExp() {
 
   return (
     <div className={tw("CV-Edit-Exp")}>
-      <ToastContainer />
       <div className={tw("CVEE-Content")}>
         <div className={tw("CVEE-Main")}>
           <form onSubmit={handleSubmit}>

@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import LandingPage from '@/features/landing/pages/LandingPage';
 import SiteHeader from '@/features/landing/components/SiteHeader';
 import HomePage from '@/features/profile/pages/private/HomePage';
@@ -24,6 +26,7 @@ import PublicHomePage from '@/features/profile/pages/public/PublicHomePage';
 import PublicPortfolioPage from '@/features/profile/pages/public/PublicPortfolioPage';
 import PublicSkillsPage from '@/features/profile/pages/public/PublicSkillsPage';
 import PublicResumePage from '@/features/profile/pages/public/PublicResumePage';
+import PublicReviewsPage from '@/features/profile/pages/public/PublicReviewsPage';
 import ChatPage from '@/features/chat/components/ChatPage';
 
 const queryClient = new QueryClient();
@@ -160,11 +163,13 @@ export default function App() {
                 <PublicPortfolioPage />
                 <PublicSkillsPage />
                 <PublicResumePage />
+                <PublicReviewsPage />
               </>
             }
           />
           <Route path="/chat/:chatId" element={isAuthenticated ? <ChatPage /> : <Navigate to="/" replace />} />
         </Routes>
+        <ToastContainer position="top-right" autoClose={3000} theme="dark" />
       </BrowserRouter>
     </QueryClientProvider>
   );

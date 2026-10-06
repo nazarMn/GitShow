@@ -1,12 +1,12 @@
-import { ToastContainer, toast, type Id } from 'react-toastify';
+import { toast, type Id } from 'react-toastify';
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import CV1 from '@/assets/cv-template.png';
 import type { UserProfile } from '@/shared/types/domain';
 import type { ApiMessageResponse, CvCheckResponse, CvMutationResponse, CvShareLinkResponse } from '@/shared/types/api';
 import { readJson } from '@/shared/lib/http';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTrashAlt, faCopy } from '@fortawesome/free-solid-svg-icons';
-import { faTimes } from '@fortawesome/free-solid-svg-icons';
+import { faTrashAlt, faCopy, faTimes } from '@fortawesome/free-solid-svg-icons';
 import SettingsSidebar from "@/features/settings/components/SettingsSidebar";
 import { tw } from '@/shared/lib/tailwind';
 
@@ -171,8 +171,10 @@ const confirmDelete = async (toastId: Id) => {
 
 
 
+  const navigate = useNavigate();
+
   const handleGoHome = () => {
-    window.location.href = '/home';
+    navigate('/home');
   };
 
   return (
@@ -237,9 +239,7 @@ const confirmDelete = async (toastId: Id) => {
         </div>
       )}
 
-      <ToastContainer />
-
-         <FontAwesomeIcon icon={faTimes} className={tw("btn-go-home")} onClick={handleGoHome}/>
+      <FontAwesomeIcon icon={faTimes} className={tw("btn-go-home")} onClick={handleGoHome}/>
       </div>
     </div>
   );

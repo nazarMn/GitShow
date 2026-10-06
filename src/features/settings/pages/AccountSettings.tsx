@@ -4,8 +4,9 @@ import type { AvatarUploadResponse } from '@/shared/types/api';
 import { readJson } from '@/shared/lib/http';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser, faPencil, faLink, faTimes, faFileLines, faBrain } from '@fortawesome/free-solid-svg-icons';
+import { useNavigate } from 'react-router-dom';
 import SettingsSidebar from "@/features/settings/components/SettingsSidebar";
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import { tw } from '@/shared/lib/tailwind';
 
 
@@ -133,8 +134,10 @@ export default function AccountSettings() {
       .catch(() => toast.error('Error uploading avatar'));
   };
 
+  const navigate = useNavigate();
+
   const handleGoHome = () => {
-    window.location.href = '/home';
+    navigate('/home');
   };
 
   return (
@@ -267,7 +270,6 @@ export default function AccountSettings() {
 </div>
 
       </div>
-      <ToastContainer />
     </div>
   );
 }

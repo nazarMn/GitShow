@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import type { ProjectRecord } from '@/shared/types/domain';
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 
 import PortfolioWorks from "@/features/profile/components/portfolio/PortfolioWorks";
 import PortfolioGrid from "@/features/profile/components/portfolio/PortfolioGrid";
@@ -151,9 +151,6 @@ export default function Portfolio() {
   totalPages={totalPages}
   onPageChange={(page) => setCurrentPage(page)}
 />
-
-
-      <ToastContainer />
     </div>
   );
 }

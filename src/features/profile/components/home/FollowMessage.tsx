@@ -3,6 +3,7 @@ import type { UserProfile } from '@/shared/types/domain';
 import type { ApiMessageResponse, CurrentUserResponse } from '@/shared/types/api';
 import { readJson } from '@/shared/lib/http';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import { tw } from '@/shared/lib/tailwind';
 
 
@@ -39,11 +40,13 @@ export default function FollowMessage({ user }: FollowMessageProps) {
       const data = await readJson<ApiMessageResponse>(response);
       if (response.ok) {
         setIsFollowing(true);
+        toast.success(`You are now following ${user.username}`);
       } else {
-        alert(data.message);
+        toast.error(data.message || 'Failed to follow user');
       }
     } catch (error) {
       console.error('Follow error:', error);
+      toast.error('An error occurred while following user');
     }
   };
 
@@ -56,11 +59,13 @@ export default function FollowMessage({ user }: FollowMessageProps) {
       const data = await readJson<ApiMessageResponse>(response);
       if (response.ok) {
         setIsFollowing(false);
+        toast.info(`You unfollowed ${user.username}`);
       } else {
-        alert(data.message);
+        toast.error(data.message || 'Failed to unfollow user');
       }
     } catch (error) {
       console.error('Unfollow error:', error);
+      toast.error('An error occurred while unfollowing user');
     }
   };
 

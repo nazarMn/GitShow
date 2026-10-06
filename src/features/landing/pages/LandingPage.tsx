@@ -21,53 +21,51 @@ export default function General() {
     const closeModal2 = () => setIsOpen2(false);
 
   return (
-    <div className={tw("general max-lg:h-auto max-lg:min-h-[86vh] max-lg:justify-start max-lg:px-6")}>
-      <div className={tw("generalTop max-lg:h-auto max-lg:min-h-[8vh] max-lg:items-end")}>
+    <div className={tw("general")}>
+      <div className={tw("generalTop")}>
         <h2>GITHUB PORTFOLIO</h2>
       </div>
-      <div className={tw("generalMiddle max-lg:h-auto max-lg:items-start max-lg:py-3")}>
-        <h2 className={tw("max-lg:!text-[clamp(2.25rem,8vw,4rem)] max-lg:!leading-[1.1] break-words")}>
+      <div className={tw("generalMiddle")}>
+        <h2>
           Loved by developers. <br />
           You Can{' '}
-          <TypeIt
-              className={tw("gradient-text bg-clip-text")}
+          <span className="gradient-text">
+            <TypeIt
               options={{
                 strings: texts,
                 loop: true,
                 breakLines: false,
-                speed: 100,
-                deleteSpeed: 50,
+                speed: 80,
+                deleteSpeed: 40,
               }}
             />
+          </span>
         </h2>
       </div>
-      <div className={tw("generalBottom max-lg:h-auto max-lg:pt-4")}>
-        <div className={tw("generalBottomTittle max-lg:h-auto")}>
-          <h2 className={tw("max-lg:!text-[clamp(1rem,2.5vw,1.5rem)] max-lg:!leading-[1.5] max-lg:!tracking-normal break-words")}>
+      <div className={tw("generalBottom")}>
+        <div className={tw("generalBottomTittle")}>
+          <h2>
             GitShow is a platform for creating portfolios and connecting with developers. Showcase your
-            projects, <br /> share your experience, and network in a user-friendly format.
+            projects, <br className="hidden sm:inline" /> share your experience, and network in a user-friendly format.
           </h2>
         </div>
-        <div className={tw("generalBottomButton max-lg:h-auto max-lg:pt-8 max-lg:pb-6")}>
-
-            <button onClick={openModal}>Get Started</button>
-
+        <div className={tw("generalBottomButton")}>
+          <button onClick={openModal}>Get Started</button>
         </div>
       </div>
 
       <Modal
         isOpen={isOpen}
-        onRequestClose={() => {}}
-        className={tw('absolute top-[55%] left-1/2 right-auto bottom-auto mr-[-50%] translate-x-[-50%] translate-y-[-50%] rounded-[10px] border border-[#ccc] bg-white overflow-auto outline-none p-[20px] [-webkit-overflow-scrolling:touch]')}
-        overlayClassName={tw('fixed inset-0 bg-[rgba(0,0,0,0.5)]')}
+        onRequestClose={closeModal}
+        className={tw('fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 max-w-[480px] w-[92%] rounded-2xl border border-gray-200 bg-white p-6 shadow-2xl outline-none overflow-hidden z-[1001]')}
+        overlayClassName={tw('fixed inset-0 z-[1000] bg-black/60 backdrop-blur-sm flex items-center justify-center')}
       >
         <div className={tw("modal-general")}>
           <header className={tw("modal-general-header")}>
-
             <h2>Join GitShow</h2>
-
-           <button><FontAwesomeIcon icon={faTimes} size="lg" onClick={closeModal} /></button>
-
+            <button onClick={closeModal} aria-label="Close modal">
+              <FontAwesomeIcon icon={faTimes} size="lg" />
+            </button>
           </header>
 
           <div className={tw("modal-general-body")}>
@@ -125,12 +123,15 @@ export default function General() {
 
 
       <Modal
-      isOpen={isOpen2}
-      className={tw('absolute top-[55%] left-1/2 right-auto bottom-auto mr-[-50%] translate-x-[-50%] translate-y-[-50%] rounded-[10px] border border-[#ccc] bg-white overflow-auto outline-none p-[20px] [-webkit-overflow-scrolling:touch] max-w-[750px] w-[90%] shadow-[0_4px_10px_rgba(0,0,0,0.3)]')}
-      overlayClassName={tw('fixed inset-0 z-[1000] bg-[rgba(0,0,0,0.5)]')}
-    >
-      <div className={tw("modal-policy")}>
-        <button className={tw("close-btn")}><FontAwesomeIcon icon={faTimes} size="lg" onClick={closeModal2} /></button>
+        isOpen={isOpen2}
+        onRequestClose={closeModal2}
+        className={tw('absolute top-[55%] left-1/2 right-auto bottom-auto mr-[-50%] translate-x-[-50%] translate-y-[-50%] rounded-[10px] border border-[#ccc] bg-white overflow-auto outline-none p-[20px] [-webkit-overflow-scrolling:touch] max-w-[750px] w-[90%] max-h-[85vh] shadow-[0_4px_10px_rgba(0,0,0,0.3)]')}
+        overlayClassName={tw('fixed inset-0 z-[1000] bg-[rgba(0,0,0,0.5)]')}
+      >
+        <div className={tw("modal-policy")}>
+          <button className={tw("close-btn")} onClick={closeModal2} aria-label="Close privacy policy">
+            <FontAwesomeIcon icon={faTimes} size="lg" />
+          </button>
        <ul>
         <li>
           <h2 className={tw("modal-policy-title")}>Політика конфіденційності</h2>

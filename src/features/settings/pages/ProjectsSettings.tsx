@@ -1,20 +1,32 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import type { ProjectRecord } from '@/shared/types/domain';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUpload } from '@fortawesome/free-solid-svg-icons';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import { tw } from '@/shared/lib/tailwind';
-
 
 export default function SettingsProjects() {
   const location = useLocation();
   const navigate = useNavigate();
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const { project } = (location.state ?? {}) as { project?: ProjectRecord };
   const [name, setName] = useState(project?.name || '');
   const [link, setLink] = useState(project?.url || '');
   const [description, setDescription] = useState(project?.description || '');
   const [websiteUrl, setWebsiteUrl] = useState(project?.websiteUrl || '');
   const [image, setImage] = useState<File | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!image) {
+      setPreviewUrl(null);
+      return;
+    }
+    const url = URL.createObjectURL(image);
+    setPreviewUrl(url);
+    return () => URL.revokeObjectURL(url);
+  }, [image]);
 
   const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -22,13 +34,13 @@ export default function SettingsProjects() {
   };
 
   const handleSave = async () => {
-    if (!name) {
-      alert('Project name is required');
+    if (!name.trim()) {
+      toast.error('Project name is required');
       return;
     }
 
     const formData = new FormData();
-    formData.append('name', name);
+    formData.append('name', name.trim());
     if (link) formData.append('link', link);
     if (description) formData.append('description', description);
     if (websiteUrl) formData.append('websiteUrl', websiteUrl);
@@ -37,23 +49,25 @@ export default function SettingsProjects() {
     try {
       const response = await fetch('/api/projects', { method: 'POST', body: formData });
       if (response.ok) {
+        toast.success('Project created successfully!');
         navigate('/home');
       } else {
-        console.error('Failed to save project');
+        toast.error('Failed to save project');
       }
     } catch (error) {
       console.error('Error saving project:', error);
+      toast.error('Error saving project');
     }
   };
 
   return (
     <div className={tw("settingsProjects")}>
-      <button className={tw("closeButton")} onClick={() => navigate(-1)}>✖</button>
+      <button className={tw("closeButton")} onClick={() => navigate(-1)} aria-label="Go back">✖</button>
       <div className={tw("contentContainer")}>
         <div className={tw("settingsProjectsLeft")}>
-          <div className={tw("imageUploadContainer")} onClick={() => document.getElementById('fileInput')?.click()}>
-            {image ? (
-              <img src={URL.createObjectURL(image)} alt="Project" className={tw("previewImage")} />
+          <div className={tw("imageUploadContainer")} onClick={() => fileInputRef.current?.click()} role="button" aria-label="Upload project image">
+            {previewUrl ? (
+              <img src={previewUrl} alt="Project Preview" className={tw("previewImage")} />
             ) : (
               <div className={tw("uploadPlaceholder")}>
                 <FontAwesomeIcon icon={faUpload} className={tw("uploadIcon")} />

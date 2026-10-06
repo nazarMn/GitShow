@@ -52,8 +52,8 @@ export default function PortfolioWorks() {
   return (
     <div className={tw("portfolioWorks")}>
       <div className={tw("AddWorksBox")}>
-        <div className={tw("AddWorks")} onClick={handleOpenPopup}>
-          <FontAwesomeIcon icon={faPlus} size="2xl" color="#fff" cursor="pointer" rotate={45} />
+        <div className={tw("AddWorks")} onClick={handleOpenPopup} role="button" aria-label="Add project">
+          <FontAwesomeIcon icon={faPlus} size="2xl" color="#fff" cursor="pointer" />
         </div>
       </div>
 

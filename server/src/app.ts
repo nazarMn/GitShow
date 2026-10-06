@@ -61,7 +61,20 @@ const io = new Server(server, {
 
 
 // Middleware
-app.use(helmet());
+app.use(
+  helmet({
+    contentSecurityPolicy: {
+      directives: {
+        defaultSrc: ["'self'"],
+        imgSrc: ["'self'", 'data:', 'blob:', 'https://avatars.githubusercontent.com', 'https://github.com'],
+        scriptSrc: ["'self'", "'unsafe-inline'"],
+        styleSrc: ["'self'", "'unsafe-inline'", 'https://fonts.googleapis.com'],
+        fontSrc: ["'self'", 'https://fonts.gstatic.com'],
+        connectSrc: ["'self'", 'ws:', 'wss:', 'http:', 'https:'],
+      },
+    },
+  })
+);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(
@@ -148,28 +161,33 @@ passport.use(
 async function fetchGitHubContributions(username: string, token: string): Promise<Array<{ date: string; count: number }>> {
   try {
     const today = new Date();
-    const contributions: Array<{ date: string; count: number }> = [];
+    const dates: string[] = [];
 
     for (let i = 14; i >= 0; i--) {
       const date = new Date();
       date.setDate(today.getDate() - i);
-      const formattedDate = date.toISOString().split('T')[0];
-
-      // Робимо запит до GitHub API на комміти за конкретну дату
-      const response = await axios.get(
-        `https://api.github.com/search/commits?q=author:${username}+committer-date:${formattedDate}`,
-        {
-          headers: {
-            Authorization: `token ${token}`,
-            Accept: 'application/vnd.github.cloak-preview',
-          },
-        }
-      );
-
-      contributions.push({ date: formattedDate, count: response.data.total_count || 0 });
+      dates.push(date.toISOString().split('T')[0]);
     }
 
-    return contributions;
+    const requests = dates.map(async (formattedDate) => {
+      try {
+        const response = await axios.get<{ total_count?: number }>(
+          `https://api.github.com/search/commits?q=author:${encodeURIComponent(username)}+committer-date:${formattedDate}`,
+          {
+            headers: {
+              Authorization: `token ${token}`,
+              Accept: 'application/vnd.github.cloak-preview',
+            },
+            timeout: 5000,
+          }
+        );
+        return { date: formattedDate, count: response.data?.total_count || 0 };
+      } catch {
+        return { date: formattedDate, count: 0 };
+      }
+    });
+
+    return await Promise.all(requests);
   } catch (error) {
     console.error('Помилка при отриманні contributions:', error instanceof Error ? error.message : error);
     return [];
@@ -286,7 +304,7 @@ app.put<RouteParams, unknown, UserUpdateBody>('/api/user', ensureAuthenticated, 
         YearsOfExperience,
       },
       { new: true }
-    );
+    ).select('-apiKey');
 
     res.json(updatedUser);
   } catch (error) {
@@ -294,19 +312,6 @@ app.put<RouteParams, unknown, UserUpdateBody>('/api/user', ensureAuthenticated, 
     res.status(500).json({ message: 'Error updating user' });
   }
 });
-
-
-
-app.use(
-  helmet({
-    contentSecurityPolicy: {
-      directives: {
-        defaultSrc: ["'self'"],
-        imgSrc: ["'self'", 'data:', 'https://avatars.githubusercontent.com'],
-      },
-    },
-  })
-);
 
 
 
@@ -410,15 +415,15 @@ app.put<RouteParams, unknown, CvUpdateBody>('/api/cv', ensureAuthenticated, asyn
     const updatedCV = await CV.findOneAndUpdate(
       { userId: req.user!.id },
       {
-        name: req.body.name || existingCV.name,
-        specialty: req.body.specialty || existingCV.specialty,
-        summary: req.body.summary || existingCV.summary,
-        phoneNumber: req.body.phoneNumber || existingCV.phoneNumber,
-        location: req.body.location || existingCV.location,
-        email: req.body.email || existingCV.email,
-        references: req.body.references || existingCV.references || [],
-        education: req.body.education || existingCV.education || {},
-        skills: req.body.skills || existingCV.skills || [],
+        name: req.body.name !== undefined ? req.body.name : existingCV.name,
+        specialty: req.body.specialty !== undefined ? req.body.specialty : existingCV.specialty,
+        summary: req.body.summary !== undefined ? req.body.summary : existingCV.summary,
+        phoneNumber: req.body.phoneNumber !== undefined ? req.body.phoneNumber : existingCV.phoneNumber,
+        location: req.body.location !== undefined ? req.body.location : existingCV.location,
+        email: req.body.email !== undefined ? req.body.email : existingCV.email,
+        references: req.body.references !== undefined ? req.body.references : (existingCV.references || []),
+        education: req.body.education !== undefined ? req.body.education : (existingCV.education || {}),
+        skills: req.body.skills !== undefined ? req.body.skills : (existingCV.skills || []),
         experience: experience
       },
       { new: true }
@@ -709,15 +714,20 @@ app.post<RouteParams, unknown, ProjectBody>('/api/projects', ensureAuthenticated
 
 app.post('/api/upload-avatar', ensureAuthenticated, upload.single('avatar'), async (req, res) => {
   try {
-    if (!req.file || !req.file.path) {
+    if (!req.file) {
       return res.status(400).json({ message: 'No file uploaded' });
     }
 
+    const avatarUrl = `/uploads/${req.file.filename}`;
     const user = await User.findByIdAndUpdate(
       req.user!.id,
-      { avatarUrl: req.file.path },
+      { avatarUrl },
       { new: true }
     );
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
 
     res.json({ avatarUrl: user.avatarUrl });
   } catch (error) {
@@ -1034,13 +1044,18 @@ io.on("connection", (socket) => {
     socket.leave(chatId);
   });
 
-  socket.on("sendMessage", async ({ chatId, text, senderId }) => {
+  socket.on("sendMessage", async (payload) => {
     try {
+      if (!payload || typeof payload !== 'object') return;
+      const { chatId, text, senderId } = payload as { chatId?: unknown; text?: unknown; senderId?: unknown };
+      if (typeof chatId !== 'string' || !chatId.trim()) return;
+      if (typeof text !== 'string' || !text.trim()) return;
+      if (!senderId) return;
 
       const newMessage = new Message({
-        chatId,
+        chatId: chatId.trim(),
         sender: senderId,
-        text,
+        text: text.trim(),
         createdAt: Date.now(),
       });
 
@@ -1049,7 +1064,7 @@ io.on("connection", (socket) => {
       const populatedMessage = await Message.findById(newMessage._id)
         .populate("sender", "username avatarUrl");
 
-      io.to(chatId).emit("receiveMessage", populatedMessage);
+      io.to(chatId.trim()).emit("receiveMessage", populatedMessage);
     } catch (err) {
       console.error("Error sending message:", err);
     }

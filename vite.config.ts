@@ -41,7 +41,6 @@ export default defineConfig({
         manualChunks: {
           'vendor-react': ['react', 'react-dom', 'react-router-dom'],
           'vendor-charts': ['recharts'],
-          'vendor-pdf': ['@react-pdf/renderer'],
           'vendor-emoji': ['@emoji-mart/data', '@emoji-mart/react'],
           'vendor-syntax': ['highlight.js', 'react-syntax-highlighter'],
           'vendor-icons': [

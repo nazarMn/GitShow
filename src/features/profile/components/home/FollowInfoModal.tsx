@@ -4,8 +4,8 @@ import type { ApiMessageResponse, CurrentUserResponse, UnreadCountResponse } fro
 import { readJson } from '@/shared/lib/http';
 import ReactModal from 'react-modal';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import { tw } from '@/shared/lib/tailwind';
-
 
 interface FollowInfoModalProps {
   isOpen: boolean;
@@ -58,7 +58,8 @@ export default function FollowInfoModal({ isOpen, onRequestClose, data = [], typ
   }, [currentUserId, users]);
 
   const handleUserClick = (userId: string) => {
-    window.location.href = `/public-profile/${userId}`;
+    navigate(`/public-profile/${userId}`);
+    onRequestClose();
   };
 
   const handleUnfollow = async (e: React.MouseEvent<HTMLButtonElement>, userId: string) => {
@@ -72,13 +73,14 @@ export default function FollowInfoModal({ isOpen, onRequestClose, data = [], typ
 
       if (response.ok) {
         setUsers(prevUsers => prevUsers.filter(user => user._id !== userId));
+        toast.info('Successfully unfollowed');
       } else {
         const data = await readJson<ApiMessageResponse>(response);
-        alert(data.message || 'Failed to unfollow');
+        toast.error(data.message || 'Failed to unfollow');
       }
     } catch (error) {
       console.error('Unfollow error:', error);
-      alert('Error unfollowing user');
+      toast.error('Error unfollowing user');
     }
   };
 

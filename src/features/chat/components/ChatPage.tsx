@@ -75,6 +75,7 @@ export default function ChatPage() {
   }, [messages]);
 
   useEffect(() => {
+    if (!chatId) return;
     async function fetchUsers() {
       try {
         const currentRes = await fetch("/api/current-user");
@@ -94,6 +95,7 @@ export default function ChatPage() {
   }, [chatId]);
 
   useEffect(() => {
+    if (!chatId) return;
     async function fetchMessages() {
       try {
         const res = await fetch(`/api/messages/${chatId}`);
@@ -113,6 +115,7 @@ export default function ChatPage() {
   }, [chatId]);
 
   useEffect(() => {
+    if (!chatId) return;
     async function loadCache() {
       const msgs = await loadMessages(chatId);
       if (msgs?.length) setMessages(msgs);
@@ -121,6 +124,7 @@ export default function ChatPage() {
   }, [chatId]);
 
   useEffect(() => {
+    if (!chatId) return;
     socket.emit("joinRoom", chatId);
 
     socket.on("receiveMessage", (message) => {
@@ -205,6 +209,8 @@ export default function ChatPage() {
 
     return parts;
   };
+
+  if (!chatId) return null;
 
   return (
     <div className={tw("chat-container dark relative")}>

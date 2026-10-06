@@ -12,6 +12,11 @@ export default function Header() {
 
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
+    if (theme === 'dark') {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
     localStorage.setItem('theme', theme);
   }, [theme]);
 
@@ -24,14 +29,14 @@ export default function Header() {
   };
 
   return (
-    <div className={tw("header max-lg:h-[12vh] max-lg:px-6")}>
-      <div className={tw("headerLeft max-lg:w-1/3")}>
+    <div className={tw("header")}>
+      <div className={tw("headerLeft")}>
         <h1>GitShow</h1>
       </div>
-      <div className={tw("headerMiddle max-lg:hidden")}></div>
-      <div className={tw("headerRight max-lg:w-2/3 max-lg:justify-end max-lg:gap-4")}>
+      <div className={tw("headerMiddle")}></div>
+      <div className={tw("headerRight")}>
         <div className={tw("LangBox")}>
-          <FontAwesomeIcon icon={faGlobe} size="lg" color="#15014b"  className={tw("Icon")} />
+          <FontAwesomeIcon icon={faGlobe} size="lg" className={tw("Icon")} />
           <div className={tw("select-wrapper")}>
             <select
               name=""
@@ -48,16 +53,23 @@ export default function Header() {
             <span className={tw(`arrow ${isOpen ? 'open' : ''}`)}></span>
           </div>
         </div>
-        <h2 className={tw("Icon max-lg:hidden")}>Support</h2>
+        <h2 className={tw("Icon max-sm:hidden")}>Support</h2>
         <FontAwesomeIcon
           icon={theme === 'light' ? faMoon : faSun}
           size="2xl"
-          color="#15014b"
           cursor="pointer"
           onClick={toggleTheme}
           className={tw("Icon")}
+          aria-label="Toggle theme"
         />
-        <FontAwesomeIcon icon={faGithub} size="2xl" color="#15014b" cursor="pointer"  className={tw("Icon")}  />
+        <FontAwesomeIcon
+          icon={faGithub}
+          size="2xl"
+          cursor="pointer"
+          onClick={() => window.open('https://github.com', '_blank')}
+          className={tw("Icon")}
+          aria-label="GitHub repository"
+        />
       </div>
     </div>
   );

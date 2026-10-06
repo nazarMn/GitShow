@@ -4,7 +4,6 @@ import { readJson } from '@/shared/lib/http';
 import { useParams } from 'react-router-dom';
 import PortfolioGrid from "@/features/profile/components/portfolio/PortfolioGrid";
 import Pagination from "@/shared/components/Pagination";
-import { ToastContainer } from 'react-toastify';
 import { tw } from '@/shared/lib/tailwind';
 
 
@@ -58,8 +57,6 @@ export default function PublicPortfolio() {
              totalPages={totalPages}
              onPageChange={(page) => setCurrentPage(page)}
            />
-
-      <ToastContainer />
     </div>
   );
 }

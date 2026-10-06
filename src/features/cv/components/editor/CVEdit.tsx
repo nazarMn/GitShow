@@ -5,10 +5,12 @@ import CVEditEduSkills from "@/features/cv/components/editor/CVEditEducationSkil
 import CVEditExp from "@/features/cv/components/editor/CVEditExperience";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
+import { useNavigate } from 'react-router-dom';
 import { tw } from '@/shared/lib/tailwind';
 
 
 export default function CVEdit() {
+  const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState(1);
   const totalPages = 3;
 
@@ -33,7 +35,7 @@ export default function CVEdit() {
 
 
   const handleGoHome = () => {
-    window.location.href = '/home';
+    navigate('/home');
   };
 
   return (
